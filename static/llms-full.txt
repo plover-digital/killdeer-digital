@@ -1,0 +1,142 @@
+# killdeer.digital
+> Full plain-text bundle for humans, crawlers, and AI agents.
+
+## Site Summary
+
+killdeer.digital is the public landing page for Plover.digital's Killdeer VM hosting service.
+The product is SSH-first. The website is intentionally small and mainly points visitors toward
+the control plane and public docs.
+
+## Canonical Resources
+
+- Homepage (Markdown): https://killdeer.digital/index.md
+- Homepage (HTML): https://killdeer.digital/
+- Agent index: https://killdeer.digital/llms.txt
+- Normalized SSH help: https://killdeer.digital/ssh-help.txt
+- Sizes and pricing: https://killdeer.digital/sizes.txt
+- CLI metadata: https://killdeer.digital/api/v1/cli.json
+- Size metadata: https://killdeer.digital/api/v1/sizes.json
+- API catalog: https://killdeer.digital/.well-known/api-catalog
+- OpenAPI description: https://killdeer.digital/openapi.json
+- Agent skills index: https://killdeer.digital/.well-known/agent-skills/index.json
+- Killdeer CLI skill: https://killdeer.digital/.well-known/agent-skills/killdeer-cli/SKILL.md
+- Killdeer sizing skill: https://killdeer.digital/.well-known/agent-skills/killdeer-sizing/SKILL.md
+- robots.txt: https://killdeer.digital/robots.txt
+- sitemap.xml: https://killdeer.digital/sitemap.xml
+
+## Contact
+
+- Email: machines@plover.digital
+- Discord: https://discord.gg/AhD77Raqru
+
+## Access
+
+- Preferred login command: `ssh [username]@killdeer.digital`
+- Discovery command: `ssh killdeer.digital help`
+- Replace `[username]` with the user's Killdeer account username.
+- Omitting the subcommand after login enters the interactive menu.
+
+## Help Command Output
+
+- Normalized help reference: https://killdeer.digital/ssh-help.txt
+- The live helper still emits some examples with `killdeer.plover.digital`; the site normalizes them to `killdeer.digital`.
+
+## Agent Notes
+
+- Treat `killdeer.digital` as the public hostname for the control panel.
+- If the human did not supply a Killdeer username, ask for one before constructing login commands.
+- Do not invent HTTP VM-management API calls. The public control surface is SSH.
+- The public JSON API is read-only metadata for agents and docs.
+- The live helper still emits some examples with `killdeer.plover.digital`; this site intentionally normalizes them to `killdeer.digital`.
+- The public web docs intentionally omit administrator-only commands.
+- Standard user actions include listing, inspecting, creating, starting, stopping, restarting, deleting, and opening the serial console for VMs.
+- Timers accept values like `30m`, `2h`, and `1d`, with a maximum of 7 days.
+- Delete requires the `--confirm` flag.
+
+## Sizes And Pricing
+
+SIZE      CPU     RAM   DISK    BASE    RUNTIME     EST. 24/7
+Micro     1 vCPU  1 GB  10 GB   $2/mo   $0.0082/hr  ~$8/mo
+Basic     1 vCPU  2 GB  25 GB   $4/mo   $0.0151/hr  ~$15/mo
+Standard  2 vCPU  2 GB  50 GB   $6/mo   $0.0192/hr  ~$20/mo
+Premium   2 vCPU  4 GB  50 GB   $6/mo   $0.0260/hr  ~$25/mo
+Ultra     4 vCPU  4 GB  100 GB  $11/mo  $0.0397/hr  ~$40/mo
+Mega      4 vCPU  8 GB  100 GB  $11/mo  $0.0534/hr  ~$50/mo
+
+Base fee includes $1/mo for IPv4 + $1/mo per 10GB storage.
+IPv6-only VMs save $1/mo (no IPv4 charge).
+Runtime is charged hourly only when the VM is powered on.
+Base fee is prorated when VMs are created or deleted mid-cycle.
+
+## Structured Agent Metadata
+
+- The agent skills index is available at `/.well-known/agent-skills/index.json`.
+- The primary CLI skill is available at `/.well-known/agent-skills/killdeer-cli/SKILL.md`.
+- The sizing skill is available at `/.well-known/agent-skills/killdeer-sizing/SKILL.md`.
+- The API catalog is available at `/.well-known/api-catalog`.
+- The OpenAPI description is available at `/openapi.json`.
+- The metadata API has read-only docs endpoints at `/api/v1/cli.json` and `/api/v1/sizes.json`.
+- VM management remains SSH-first; do not treat the metadata API as a provisioning API.
+
+## Promotions
+
+- New users get $20 credit.
+- Students get double credit with a valid `.edu` email.
+- Referrals: $5 for you, $5 for them.
+
+## Mailing List
+
+The homepage places `Join the mailing list` inside the contact section.
+That action opens a Mailjet-hosted signup modal for occasional Killdeer.digital updates.
+If the modal is blocked, users can fall back to the listed email or Discord contact paths.
+
+## Footer Note
+
+killdeer.digital is a project by plover.digital, an independent service provider building tools and infrastructure for developers.
+
+## Normalized Command Help
+
+Killdeer VM Management v0.1.0
+
+Usage: ssh [username]@killdeer.digital <command> [args...]
+
+Commands:
+  list                          List all your VMs (Running VMs shown first)
+  status <name>                 Show detailed info for a VM
+  start <name>                  Power on a VM
+  stop <name>                   Graceful shutdown a VM
+  restart <name>                Restart a VM (stop + start)
+  delete <name> [--confirm]     Delete a VM (requires --confirm)
+  create <name> <size> <os> [ip-type]  Create a new VM
+                                ip-type: --ipv4 (default), --ipv6, --dualstack
+  console <name>                Attach to VM serial console (Ctrl+] exits)
+  add-ipv4 <name>               Add IPv4 to VM (requires restart, +$1/mo)
+  add-ipv6 <name>               Add IPv6 to VM (requires restart)
+  timer <name>                  Show active shutdown timer for a VM
+  timer <name> <duration>       Set shutdown timer (e.g., 30m, 2h, 1d)
+  timer <name> +<duration>      Add time to existing timer
+  timer <name> -<duration>      Remove time from timer
+  timer <name> cancel           Cancel active timer
+  timer <name> force            Change timer to force shutdown
+  sizes                         List available VM sizes and pricing
+  images                        List available OS images
+  help                          Show this help
+
+Aliases:
+  ls = list, st = status, info = status, rm = delete, os = images
+
+Examples:
+  ssh [username]@killdeer.digital list
+  ssh [username]@killdeer.digital start myvm
+  ssh [username]@killdeer.digital create myvm micro alpine-3.23
+  ssh [username]@killdeer.digital console myvm
+  ssh [username]@killdeer.digital timer myvm 30m
+  ssh [username]@killdeer.digital delete myvm --confirm
+
+Timer Durations:
+  30m    = 30 minutes
+  2h     = 2 hours
+  1d     = 1 day
+  Max: 7 days
+
+Omit the command to enter the interactive menu.

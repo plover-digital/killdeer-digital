@@ -1,0 +1,53 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "killdeer.digital Public Metadata API",
+    "version": "1.0.0",
+    "description": "Read-only public metadata that helps humans and AI agents understand the Killdeer SSH command line. VM management is performed over SSH, not this HTTP API."
+  },
+  "servers": [
+    {
+      "url": "https://killdeer.digital"
+    }
+  ],
+  "paths": {
+    "/api/v1/cli.json": {
+      "get": {
+        "summary": "Get Killdeer CLI guidance",
+        "description": "Returns the public SSH hostname, command syntax, agent guidance, and canonical documentation links.",
+        "operationId": "getKilldeerCliGuide",
+        "responses": {
+          "200": {
+            "description": "CLI guide",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sizes.json": {
+      "get": {
+        "summary": "Get Killdeer VM sizes",
+        "description": "Returns public size and pricing metadata for the Killdeer SSH CLI.",
+        "operationId": "getKilldeerSizes",
+        "responses": {
+          "200": {
+            "description": "VM sizes and billing notes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
