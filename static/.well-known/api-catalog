@@ -1,0 +1,33 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://killdeer.digital/api/v1/",
+      "service-desc": [
+        {
+          "href": "https://killdeer.digital/openapi.json",
+          "type": "application/vnd.oai.openapi+json",
+          "title": "OpenAPI description for public Killdeer metadata"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://killdeer.digital/llms-full.txt",
+          "type": "text/plain",
+          "title": "Full agent guide for Killdeer CLI usage"
+        },
+        {
+          "href": "https://killdeer.digital/ssh-help.txt",
+          "type": "text/plain",
+          "title": "Normalized SSH command help"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://killdeer.digital/healthz",
+          "type": "text/plain",
+          "title": "Site health check"
+        }
+      ]
+    }
+  ]
+}

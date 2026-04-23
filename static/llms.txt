@@ -1,0 +1,24 @@
+# killdeer.digital
+> Tiny SSH-first VM hosting site for plover.digital.
+
+## Canonical Resources
+- [Homepage (Markdown)](https://killdeer.digital/index.md): Markdown version of the homepage.
+- [Full Agent Guide](https://killdeer.digital/llms-full.txt): Full plain-text bundle for indexing and retrieval.
+- [Normalized SSH Help](https://killdeer.digital/ssh-help.txt): Public command help with admin-only commands removed.
+- [Sizes and Pricing](https://killdeer.digital/sizes.txt): Public VM size and pricing table.
+- [CLI Metadata](https://killdeer.digital/api/v1/cli.json): Structured command reference for the SSH CLI.
+- [Size Metadata](https://killdeer.digital/api/v1/sizes.json): Structured VM size and pricing data.
+- [Agent Skills Index](https://killdeer.digital/.well-known/agent-skills/index.json): Discoverable task skills for agents.
+- [Killdeer CLI Skill](https://killdeer.digital/.well-known/agent-skills/killdeer-cli/SKILL.md): How to help users operate Killdeer over SSH.
+
+## Notes
+- Public SSH endpoint: `killdeer.digital`
+- Preferred login syntax: `ssh [username]@killdeer.digital`
+- Discovery command: `ssh killdeer.digital help`
+- Omit the subcommand after login to enter the interactive menu.
+- If the human did not supply a Killdeer username, ask for one before constructing login commands.
+- Do not invent HTTP VM-management API calls. The public control surface is SSH.
+- The live helper still prints some examples with `killdeer.plover.digital`; this site normalizes them to `killdeer.digital`.
+- The public web docs intentionally omit administrator-only commands.
+- Contact: `machines@plover.digital` and https://discord.gg/AhD77Raqru
+- Mailing list signup is opened from the homepage contact section as a Mailjet-hosted modal.

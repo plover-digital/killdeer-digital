@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "killdeer-cli",
+      "type": "skill-md",
+      "description": "Use the Killdeer SSH command line to help a user manage developer VMs.",
+      "url": "/.well-known/agent-skills/killdeer-cli/SKILL.md",
+      "digest": "sha256:e6661cbfa48d69d2af38b817567030caf3dcb30abedb18778acf76f80f8d009d"
+    },
+    {
+      "name": "killdeer-sizing",
+      "type": "skill-md",
+      "description": "Help choose a Killdeer VM size and explain billing notes.",
+      "url": "/.well-known/agent-skills/killdeer-sizing/SKILL.md",
+      "digest": "sha256:8fac355f6ec40ab108536e83a105a2dba710ed68daa8673141be20d55cd675f4"
+    }
+  ]
+}

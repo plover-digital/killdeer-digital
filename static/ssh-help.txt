@@ -1,0 +1,44 @@
+Killdeer VM Management v0.1.0
+
+Usage: ssh [username]@killdeer.digital <command> [args...]
+
+Commands:
+  list                          List all your VMs (Running VMs shown first)
+  status <name>                 Show detailed info for a VM
+  start <name>                  Power on a VM
+  stop <name>                   Graceful shutdown a VM
+  restart <name>                Restart a VM (stop + start)
+  delete <name> [--confirm]     Delete a VM (requires --confirm)
+  create <name> <size> <os> [ip-type]  Create a new VM
+                                ip-type: --ipv4 (default), --ipv6, --dualstack
+  console <name>                Attach to VM serial console (Ctrl+] exits)
+  add-ipv4 <name>               Add IPv4 to VM (requires restart, +$1/mo)
+  add-ipv6 <name>               Add IPv6 to VM (requires restart)
+  timer <name>                  Show active shutdown timer for a VM
+  timer <name> <duration>       Set shutdown timer (e.g., 30m, 2h, 1d)
+  timer <name> +<duration>      Add time to existing timer
+  timer <name> -<duration>      Remove time from timer
+  timer <name> cancel           Cancel active timer
+  timer <name> force            Change timer to force shutdown
+  sizes                         List available VM sizes and pricing
+  images                        List available OS images
+  help                          Show this help
+
+Aliases:
+  ls = list, st = status, info = status, rm = delete, os = images
+
+Examples:
+  ssh [username]@killdeer.digital list
+  ssh [username]@killdeer.digital start myvm
+  ssh [username]@killdeer.digital create myvm micro alpine-3.23
+  ssh [username]@killdeer.digital console myvm
+  ssh [username]@killdeer.digital timer myvm 30m
+  ssh [username]@killdeer.digital delete myvm --confirm
+
+Timer Durations:
+  30m    = 30 minutes
+  2h     = 2 hours
+  1d     = 1 day
+  Max: 7 days
+
+Omit the command to enter the interactive menu.

@@ -1,0 +1,8 @@
+http://billing.killdeer.digital, https://billing.killdeer.digital {
+  redir https://billing.stripe.com/p/login/8wM4kaa9S7vb7u0bII 302
+}
+
+killdeer.digital, http://killdeer.digital {
+  encode zstd gzip
+  reverse_proxy killdeer-site:8080
+}

@@ -1,0 +1,87 @@
+{
+  "service": "killdeer.digital",
+  "summary": "SSH-first VM hosting control plane for Plover.digital.",
+  "publicHost": "killdeer.digital",
+  "preferredLoginSyntax": "ssh [username]@killdeer.digital",
+  "discoveryCommand": "ssh killdeer.digital help",
+  "agentGuidance": [
+    "If the human did not provide a Killdeer username, ask for it before constructing account-specific SSH commands.",
+    "Use killdeer.digital as the public hostname.",
+    "Do not invent HTTP VM-management API calls. The public control surface is the SSH command line.",
+    "Use ssh killdeer.digital help for discovery and ssh [username]@killdeer.digital without a subcommand for the interactive menu.",
+    "Destructive delete commands require --confirm and should be presented carefully."
+  ],
+  "commands": [
+    {
+      "name": "list",
+      "aliases": ["ls"],
+      "syntax": "ssh [username]@killdeer.digital list",
+      "description": "List all VMs for the authenticated user, with running VMs shown first."
+    },
+    {
+      "name": "status",
+      "aliases": ["st", "info"],
+      "syntax": "ssh [username]@killdeer.digital status <name>",
+      "description": "Show detailed information for a VM."
+    },
+    {
+      "name": "start",
+      "syntax": "ssh [username]@killdeer.digital start <name>",
+      "description": "Power on a VM."
+    },
+    {
+      "name": "stop",
+      "syntax": "ssh [username]@killdeer.digital stop <name>",
+      "description": "Gracefully shut down a VM."
+    },
+    {
+      "name": "restart",
+      "syntax": "ssh [username]@killdeer.digital restart <name>",
+      "description": "Restart a VM by stopping and starting it."
+    },
+    {
+      "name": "create",
+      "syntax": "ssh [username]@killdeer.digital create <name> <size> <os> [ip-type]",
+      "description": "Create a new VM. ip-type may be --ipv4, --ipv6, or --dualstack. --ipv4 is the default."
+    },
+    {
+      "name": "delete",
+      "aliases": ["rm"],
+      "syntax": "ssh [username]@killdeer.digital delete <name> --confirm",
+      "description": "Delete a VM. The --confirm flag is required."
+    },
+    {
+      "name": "console",
+      "syntax": "ssh [username]@killdeer.digital console <name>",
+      "description": "Attach to the VM serial console. Ctrl+] exits."
+    },
+    {
+      "name": "timer",
+      "syntax": "ssh [username]@killdeer.digital timer <name> [duration|+duration|-duration|cancel|force]",
+      "description": "Show, set, adjust, cancel, or force an active shutdown timer. Durations include 30m, 2h, and 1d, with a maximum of 7 days."
+    },
+    {
+      "name": "sizes",
+      "syntax": "ssh [username]@killdeer.digital sizes",
+      "description": "List available VM sizes and pricing."
+    },
+    {
+      "name": "images",
+      "aliases": ["os"],
+      "syntax": "ssh [username]@killdeer.digital images",
+      "description": "List available OS images."
+    },
+    {
+      "name": "help",
+      "syntax": "ssh killdeer.digital help",
+      "description": "Show public command help."
+    }
+  ],
+  "canonicalResources": {
+    "llms": "https://killdeer.digital/llms.txt",
+    "fullAgentGuide": "https://killdeer.digital/llms-full.txt",
+    "sshHelp": "https://killdeer.digital/ssh-help.txt",
+    "sizes": "https://killdeer.digital/sizes.txt",
+    "sizesJson": "https://killdeer.digital/api/v1/sizes.json"
+  }
+}

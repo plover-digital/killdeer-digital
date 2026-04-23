@@ -1,0 +1,71 @@
+{
+  "currency": "USD",
+  "billingNotes": [
+    "Base fee includes $1/mo for IPv4 plus $1/mo per 10GB storage.",
+    "IPv6-only VMs save $1/mo because there is no IPv4 charge.",
+    "Runtime is charged hourly only when the VM is powered on.",
+    "Base fee is prorated when VMs are created or deleted mid-cycle."
+  ],
+  "sizes": [
+    {
+      "name": "micro",
+      "label": "Micro",
+      "cpu": "1 vCPU",
+      "ramGb": 1,
+      "diskGb": 10,
+      "baseMonthlyUsd": 2,
+      "runtimeHourlyUsd": 0.0082,
+      "estimatedAlwaysOnMonthlyUsd": 8
+    },
+    {
+      "name": "basic",
+      "label": "Basic",
+      "cpu": "1 vCPU",
+      "ramGb": 2,
+      "diskGb": 25,
+      "baseMonthlyUsd": 4,
+      "runtimeHourlyUsd": 0.0151,
+      "estimatedAlwaysOnMonthlyUsd": 15
+    },
+    {
+      "name": "standard",
+      "label": "Standard",
+      "cpu": "2 vCPU",
+      "ramGb": 2,
+      "diskGb": 50,
+      "baseMonthlyUsd": 6,
+      "runtimeHourlyUsd": 0.0192,
+      "estimatedAlwaysOnMonthlyUsd": 20
+    },
+    {
+      "name": "premium",
+      "label": "Premium",
+      "cpu": "2 vCPU",
+      "ramGb": 4,
+      "diskGb": 50,
+      "baseMonthlyUsd": 6,
+      "runtimeHourlyUsd": 0.026,
+      "estimatedAlwaysOnMonthlyUsd": 25
+    },
+    {
+      "name": "ultra",
+      "label": "Ultra",
+      "cpu": "4 vCPU",
+      "ramGb": 4,
+      "diskGb": 100,
+      "baseMonthlyUsd": 11,
+      "runtimeHourlyUsd": 0.0397,
+      "estimatedAlwaysOnMonthlyUsd": 40
+    },
+    {
+      "name": "mega",
+      "label": "Mega",
+      "cpu": "4 vCPU",
+      "ramGb": 8,
+      "diskGb": 100,
+      "baseMonthlyUsd": 11,
+      "runtimeHourlyUsd": 0.0534,
+      "estimatedAlwaysOnMonthlyUsd": 50
+    }
+  ]
+}
