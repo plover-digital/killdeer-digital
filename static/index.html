@@ -38,6 +38,7 @@
       --control-bg: #ffffff;
       --control-hover-bg: #111111;
       --control-hover-ink: #ffffff;
+      --row-hover-bg: rgba(17, 17, 17, 0.035);
       --overlay-bg:
         linear-gradient(rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.96)),
         repeating-linear-gradient(
@@ -60,6 +61,7 @@
         --control-bg: #151b23;
         --control-hover-bg: #cfd7df;
         --control-hover-ink: #0d1117;
+        --row-hover-bg: rgba(207, 215, 223, 0.06);
         --overlay-bg:
           linear-gradient(rgba(13, 17, 23, 0.96), rgba(13, 17, 23, 0.96)),
           repeating-linear-gradient(
@@ -80,6 +82,7 @@
       --control-bg: #ffffff;
       --control-hover-bg: #111111;
       --control-hover-ink: #ffffff;
+      --row-hover-bg: rgba(17, 17, 17, 0.035);
       --overlay-bg:
         linear-gradient(rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.96)),
         repeating-linear-gradient(
@@ -100,6 +103,7 @@
       --control-bg: #151b23;
       --control-hover-bg: #cfd7df;
       --control-hover-ink: #0d1117;
+      --row-hover-bg: rgba(207, 215, 223, 0.06);
       --overlay-bg:
         linear-gradient(rgba(13, 17, 23, 0.96), rgba(13, 17, 23, 0.96)),
         repeating-linear-gradient(
@@ -344,7 +348,7 @@
 
     .pricing-table th,
     .pricing-table td {
-      padding: 0.28rem 0.7rem 0.28rem 0;
+      padding: 0.42rem 0.7rem 0.42rem 0;
       border-bottom: 1px solid var(--line);
       white-space: nowrap;
     }
@@ -356,7 +360,11 @@
 
     .pricing-table td:first-child,
     .pricing-table th:first-child {
-      padding-left: 0;
+      padding-left: 0.35rem;
+    }
+
+    .pricing-table tbody tr:hover {
+      background: var(--row-hover-bg);
     }
 
     details summary {
