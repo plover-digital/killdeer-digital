@@ -20,6 +20,15 @@
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
+  <script>
+    try {
+      const theme = window.localStorage.getItem("killdeer-theme");
+      if (theme === "light" || theme === "dark") {
+        document.documentElement.dataset.theme = theme;
+      }
+    } catch (error) {
+    }
+  </script>
   <style>
     :root {
       --bg: #ffffff;
@@ -61,6 +70,46 @@
             transparent 3px
           );
       }
+    }
+
+    :root[data-theme="light"] {
+      --bg: #ffffff;
+      --ink: #111111;
+      --muted: #5a5a5a;
+      --line: #7d7d7d;
+      --control-bg: #ffffff;
+      --control-hover-bg: #111111;
+      --control-hover-ink: #ffffff;
+      --overlay-bg:
+        linear-gradient(rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.96)),
+        repeating-linear-gradient(
+          0deg,
+          rgba(17, 17, 17, 0.03) 0,
+          rgba(17, 17, 17, 0.03) 1px,
+          transparent 1px,
+          transparent 3px
+        );
+      color-scheme: light;
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #0d1117;
+      --ink: #e6edf3;
+      --muted: #9aa7b2;
+      --line: #58626e;
+      --control-bg: #151b23;
+      --control-hover-bg: #e6edf3;
+      --control-hover-ink: #0d1117;
+      --overlay-bg:
+        linear-gradient(rgba(13, 17, 23, 0.96), rgba(13, 17, 23, 0.96)),
+        repeating-linear-gradient(
+          0deg,
+          rgba(230, 237, 243, 0.06) 0,
+          rgba(230, 237, 243, 0.06) 1px,
+          transparent 1px,
+          transparent 3px
+        );
+      color-scheme: dark;
     }
 
     * {
@@ -105,6 +154,62 @@
       width: min(100%, 64rem);
       margin: 0 auto;
       padding: 1.2rem 1rem 3rem;
+    }
+
+    .page-top {
+      display: flex;
+      justify-content: flex-end;
+      padding-bottom: 0.35rem;
+    }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .theme-toggle input {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    .theme-toggle-track {
+      position: relative;
+      inline-size: 2.35rem;
+      block-size: 1.25rem;
+      border: 1px solid var(--line);
+      background: var(--control-bg);
+      transition:
+        background-color 120ms ease,
+        border-color 120ms ease;
+    }
+
+    .theme-toggle-track::after {
+      content: "";
+      position: absolute;
+      inset-block-start: 0.18rem;
+      inset-inline-start: 0.18rem;
+      inline-size: 0.76rem;
+      block-size: 0.76rem;
+      background: var(--ink);
+      transition: transform 120ms ease;
+    }
+
+    .theme-toggle input:checked + .theme-toggle-track::after {
+      transform: translateX(1.08rem);
+    }
+
+    .theme-toggle input:focus-visible + .theme-toggle-track {
+      outline: 2px solid var(--ink);
+      outline-offset: 2px;
     }
 
     .section {
@@ -339,6 +444,13 @@
 </head>
 <body>
   <div class="page">
+    <div class="page-top">
+      <label class="theme-toggle">
+        <input id="theme-toggle" type="checkbox">
+        <span class="theme-toggle-track" aria-hidden="true"></span>
+        <span>dark</span>
+      </label>
+    </div>
     <main class="stack">
       <section class="section section-rule hero">
 
@@ -589,9 +701,51 @@ Example: 'alpine' or 'alpine-3.23' both work.</pre>
 
   <script>
     const html = document.documentElement;
+    const themeToggle = document.getElementById("theme-toggle");
+    const themeStorageKey = "killdeer-theme";
+    const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
     const modal = document.getElementById("mailing-list-modal");
     const modalOpen = document.getElementById("mailing-list-open");
     const modalClose = document.getElementById("mailing-list-close");
+
+    function storedTheme() {
+      try {
+        return window.localStorage.getItem(themeStorageKey);
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function storeTheme(theme) {
+      try {
+        window.localStorage.setItem(themeStorageKey, theme);
+      } catch (error) {
+        return;
+      }
+    }
+
+    function effectiveTheme() {
+      return storedTheme() || (systemDark.matches ? "dark" : "light");
+    }
+
+    function applyTheme(theme) {
+      html.dataset.theme = theme;
+      themeToggle.checked = theme === "dark";
+    }
+
+    applyTheme(effectiveTheme());
+
+    themeToggle.addEventListener("change", () => {
+      const theme = themeToggle.checked ? "dark" : "light";
+      storeTheme(theme);
+      applyTheme(theme);
+    });
+
+    systemDark.addEventListener("change", () => {
+      if (!storedTheme()) {
+        applyTheme(effectiveTheme());
+      }
+    });
 
     function legacyCopy(value) {
       const textArea = document.createElement("textarea");
