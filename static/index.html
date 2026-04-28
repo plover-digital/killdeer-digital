@@ -138,6 +138,7 @@
     h2,
     p,
     pre,
+    table,
     form,
     details {
       margin: 0;
@@ -326,6 +327,36 @@
       white-space: pre;
       font-size: 0.92rem;
       line-height: 1.45;
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+    }
+
+    .pricing-table {
+      width: 100%;
+      min-width: 44rem;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      text-align: left;
+    }
+
+    .pricing-table th,
+    .pricing-table td {
+      padding: 0.28rem 0.7rem 0.28rem 0;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+
+    .pricing-table th {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .pricing-table td:first-child,
+    .pricing-table th:first-child {
+      padding-left: 0;
     }
 
     details summary {
@@ -585,22 +616,78 @@ Omit the command to enter the interactive menu.</pre>
 
       <section class="section">
         <h2 class="section-title">-- Sizes And Pricing --</h2>
-        <pre class="panel">SIZE      CPU     RAM   DISK    BASE    RUNTIME     EST. 24/7
-Micro     1 vCPU  1 GB  10 GB   $2/mo   $0.0082/hr  ~$8/mo
-Basic     1 vCPU  2 GB  25 GB   $4/mo   $0.0151/hr  ~$15/mo
-Standard  2 vCPU  2 GB  50 GB   $6/mo   $0.0192/hr  ~$20/mo
-Premium   2 vCPU  4 GB  50 GB   $6/mo   $0.0260/hr  ~$25/mo
-Ultra     4 vCPU  4 GB  100 GB  $11/mo  $0.0397/hr  ~$40/mo
-Mega      4 vCPU  8 GB  100 GB  $11/mo  $0.0534/hr  ~$50/mo
-
-Base fee includes $1/mo for IPv4 + $1/mo per 10GB storage.
-IPv6-only VMs save $1/mo (no IPv4 charge).
-Runtime is charged hourly only when the VM is powered on.
-Base fee is prorated when VMs are created or deleted mid-cycle.</pre>
-      </section>
-
-      <section class="section">
-        <h2 class="section-title">-- Pricing Notes --</h2>
+        <div class="table-scroll">
+          <table class="pricing-table">
+            <thead>
+              <tr>
+                <th scope="col">Size</th>
+                <th scope="col">CPU</th>
+                <th scope="col">RAM</th>
+                <th scope="col">Disk</th>
+                <th scope="col">Base</th>
+                <th scope="col">Runtime</th>
+                <th scope="col">Est. 24/7</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Micro</td>
+                <td>1 vCPU</td>
+                <td>1 GB</td>
+                <td>10 GB</td>
+                <td>$2/mo</td>
+                <td>$0.0082/hr</td>
+                <td>~$8/mo</td>
+              </tr>
+              <tr>
+                <td>Basic</td>
+                <td>1 vCPU</td>
+                <td>2 GB</td>
+                <td>25 GB</td>
+                <td>$4/mo</td>
+                <td>$0.0151/hr</td>
+                <td>~$15/mo</td>
+              </tr>
+              <tr>
+                <td>Standard</td>
+                <td>2 vCPU</td>
+                <td>2 GB</td>
+                <td>50 GB</td>
+                <td>$6/mo</td>
+                <td>$0.0192/hr</td>
+                <td>~$20/mo</td>
+              </tr>
+              <tr>
+                <td>Premium</td>
+                <td>2 vCPU</td>
+                <td>4 GB</td>
+                <td>50 GB</td>
+                <td>$6/mo</td>
+                <td>$0.0260/hr</td>
+                <td>~$25/mo</td>
+              </tr>
+              <tr>
+                <td>Ultra</td>
+                <td>4 vCPU</td>
+                <td>4 GB</td>
+                <td>100 GB</td>
+                <td>$11/mo</td>
+                <td>$0.0397/hr</td>
+                <td>~$40/mo</td>
+              </tr>
+              <tr>
+                <td>Mega</td>
+                <td>4 vCPU</td>
+                <td>8 GB</td>
+                <td>100 GB</td>
+                <td>$11/mo</td>
+                <td>$0.0534/hr</td>
+                <td>~$50/mo</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="tiny">Billing notes</p>
         <div class="links">
           <p>Base fee includes <strong>$1/mo</strong> for IPv4 + <strong>$1/mo</strong> per 10GB storage.</p>
           <p>IPv6-only VMs save <strong>$1/mo</strong> because there is no IPv4 charge.</p>
