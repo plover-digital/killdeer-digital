@@ -17,13 +17,50 @@
   <link rel="alternate" type="text/plain" href="/llms.txt">
   <link rel="alternate" type="text/plain" href="/llms-full.txt">
   <link rel="alternate" type="application/xml" href="/sitemap.xml">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
   <style>
     :root {
       --bg: #ffffff;
       --ink: #111111;
       --muted: #5a5a5a;
       --line: #7d7d7d;
+      --control-bg: #ffffff;
+      --control-hover-bg: #111111;
+      --control-hover-ink: #ffffff;
+      --overlay-bg:
+        linear-gradient(rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.96)),
+        repeating-linear-gradient(
+          0deg,
+          rgba(17, 17, 17, 0.03) 0,
+          rgba(17, 17, 17, 0.03) 1px,
+          transparent 1px,
+          transparent 3px
+        );
       --mono: "Iosevka", "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      color-scheme: light dark;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1117;
+        --ink: #e6edf3;
+        --muted: #9aa7b2;
+        --line: #58626e;
+        --control-bg: #151b23;
+        --control-hover-bg: #e6edf3;
+        --control-hover-ink: #0d1117;
+        --overlay-bg:
+          linear-gradient(rgba(13, 17, 23, 0.96), rgba(13, 17, 23, 0.96)),
+          repeating-linear-gradient(
+            0deg,
+            rgba(230, 237, 243, 0.06) 0,
+            rgba(230, 237, 243, 0.06) 1px,
+            transparent 1px,
+            transparent 3px
+          );
+      }
     }
 
     * {
@@ -156,7 +193,7 @@
     .button {
       appearance: none;
       border: 1px solid var(--line);
-      background: #fff;
+      background: var(--control-bg);
       color: var(--ink);
       padding: 0.48rem 0.72rem;
       font: inherit;
@@ -168,8 +205,8 @@
 
     .button:hover,
     .button:focus-visible {
-      background: var(--ink);
-      color: #fff;
+      background: var(--control-hover-bg);
+      color: var(--control-hover-ink);
       outline: none;
     }
 
@@ -232,15 +269,7 @@
       z-index: 20;
       display: none;
       padding: 1rem;
-      background:
-        linear-gradient(rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.96)),
-        repeating-linear-gradient(
-          0deg,
-          rgba(17, 17, 17, 0.03) 0,
-          rgba(17, 17, 17, 0.03) 1px,
-          transparent 1px,
-          transparent 3px
-        );
+      background: var(--overlay-bg);
     }
 
     .modal-wrapper[data-open="true"] {
@@ -275,7 +304,7 @@
       border: 0;
       border-left: 1px solid var(--ink);
       border-bottom: 1px solid var(--ink);
-      background: #fff;
+      background: var(--control-bg);
       color: var(--ink);
       padding: 0.46rem 0.72rem;
       font: inherit;
@@ -284,8 +313,8 @@
 
     .modal-close:hover,
     .modal-close:focus-visible {
-      background: var(--ink);
-      color: #fff;
+      background: var(--control-hover-bg);
+      color: var(--control-hover-ink);
       outline: none;
     }
 
