@@ -337,7 +337,7 @@
       overflow-x: auto;
     }
 
-    .pricing-table {
+    .data-table {
       width: 100%;
       min-width: 44rem;
       border-collapse: collapse;
@@ -346,24 +346,24 @@
       text-align: left;
     }
 
-    .pricing-table th,
-    .pricing-table td {
+    .data-table th,
+    .data-table td {
       padding: 0.42rem 0.7rem 0.42rem 0;
       border-bottom: 1px solid var(--line);
       white-space: nowrap;
     }
 
-    .pricing-table th {
+    .data-table th {
       color: var(--muted);
       font-weight: 700;
     }
 
-    .pricing-table td:first-child,
-    .pricing-table th:first-child {
+    .data-table td:first-child,
+    .data-table th:first-child {
       padding-left: 0.35rem;
     }
 
-    .pricing-table tbody tr:hover {
+    .data-table tbody tr:hover {
       background: var(--row-hover-bg);
     }
 
@@ -625,7 +625,7 @@ Omit the command to enter the interactive menu.</pre>
       <section class="section">
         <h2 class="section-title">-- Sizes And Pricing --</h2>
         <div class="table-scroll">
-          <table class="pricing-table">
+          <table class="data-table">
             <thead>
               <tr>
                 <th scope="col">Size</th>
@@ -706,24 +706,51 @@ Omit the command to enter the interactive menu.</pre>
 
       <section class="section">
         <h2 class="section-title">-- OS Images --</h2>
-        <p class="tiny">Output of <code>ssh killdeer.digital os</code></p>
-        <pre class="panel">Available OS images:
-
-SHORTHAND     IMAGE         OS
-alpine        Alpine-3.23   Alpine
-alpine-3.23   Alpine-3.23   Alpine
-ubuntu        Ubuntu-24.04  Ubuntu
-ubuntu-24.04  Ubuntu-24.04  Ubuntu
-ubuntu-26.04  Ubuntu-26.04  Ubuntu
-debian        Debian-12     Debian
-debian-12     Debian-12     Debian
-fedora        Fedora-40     Fedora
-fedora-40     Fedora-40     Fedora
-rocky         Rocky-10      Rocky
-rocky-10      Rocky-10      Rocky
-
-You can use either the shorthand or full image name.
-Example: 'alpine' or 'alpine-3.23' both work.</pre>
+        <p class="tiny">Supported VM images</p>
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th scope="col">Distro</th>
+                <th scope="col">Version</th>
+                <th scope="col">Image</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Alpine</td>
+                <td>3.23</td>
+                <td>Alpine-3.23</td>
+              </tr>
+              <tr>
+                <td>Debian</td>
+                <td>12</td>
+                <td>Debian-12</td>
+              </tr>
+              <tr>
+                <td>Fedora</td>
+                <td>40</td>
+                <td>Fedora-40</td>
+              </tr>
+              <tr>
+                <td>Rocky</td>
+                <td>10</td>
+                <td>Rocky-10</td>
+              </tr>
+              <tr>
+                <td>Ubuntu</td>
+                <td>24.04</td>
+                <td>Ubuntu-24.04</td>
+              </tr>
+              <tr>
+                <td>Ubuntu</td>
+                <td>26.04</td>
+                <td>Ubuntu-26.04</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="tiny">Create VMs with the image name shown here. Common family shorthands such as <code>ubuntu</code> and <code>alpine</code> select the default version.</p>
       </section>
 
       <section class="section">
