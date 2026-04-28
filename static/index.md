@@ -23,6 +23,19 @@ Discovery and onboarding:
 
 Replace `[username]` with your Killdeer account username.
 
+## Access A VM
+
+VM login command:
+
+`ssh plover@[ip]`
+
+Replace `[ip]` with the VM IP address from `list` or `status`.
+
+Default VM user: `plover`.
+If your account was set up with SSH, your key is already installed for `plover`.
+If your account was not set up with SSH, the VM password will be emailed to you.
+If you connect through the Killdeer console, use the password from that email.
+
 ## Help Command Output
 
 See:
@@ -49,6 +62,32 @@ IPv6-only VMs save $1/mo (no IPv4 charge).
 Runtime is charged hourly only when the VM is powered on.
 Base fee is prorated when VMs are created or deleted mid-cycle.
 
+## OS Images
+
+Public command:
+
+`ssh killdeer.digital os`
+
+```text
+Available OS images:
+
+SHORTHAND     IMAGE         OS
+alpine        Alpine-3.23   Alpine
+alpine-3.23   Alpine-3.23   Alpine
+ubuntu        Ubuntu-24.04  Ubuntu
+ubuntu-24.04  Ubuntu-24.04  Ubuntu
+ubuntu-26.04  Ubuntu-26.04  Ubuntu
+debian        Debian-12     Debian
+debian-12     Debian-12     Debian
+fedora        Fedora-40     Fedora
+fedora-40     Fedora-40     Fedora
+rocky         Rocky-10      Rocky
+rocky-10      Rocky-10      Rocky
+
+You can use either the shorthand or full image name.
+Example: 'alpine' or 'alpine-3.23' both work.
+```
+
 ## Promotions
 
 - New users get $20 credit.
@@ -63,7 +102,9 @@ Base fee is prorated when VMs are created or deleted mid-cycle.
 - Full agent bundle: https://killdeer.digital/llms-full.txt
 - Normalized CLI help text: https://killdeer.digital/ssh-help.txt
 - Sizes and pricing: https://killdeer.digital/sizes.txt
+- OS images: https://killdeer.digital/os.txt
 - CLI metadata: https://killdeer.digital/api/v1/cli.json
+- OS image metadata: https://killdeer.digital/api/v1/images.json
 - Agent skills index: https://killdeer.digital/.well-known/agent-skills/index.json
 - Agent skill for CLI usage: https://killdeer.digital/.well-known/agent-skills/killdeer-cli/SKILL.md
 

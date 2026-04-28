@@ -32,6 +32,20 @@ ssh killdeer.digital help
 
 If a user omits the command after login, Killdeer opens the interactive menu.
 
+## Access A VM
+
+Use this VM login pattern:
+
+```sh
+ssh plover@[ip]
+```
+
+Replace `[ip]` with the VM IP address from `list` or `status`.
+
+The default VM user is `plover`. If the user's Killdeer account was set up with SSH,
+their key is already installed for `plover`. Otherwise, the VM password is emailed to them.
+If the user connects through the Killdeer console, they must use the password from that email.
+
 ## Common Commands
 
 List VMs:
@@ -96,6 +110,26 @@ List sizes and OS images:
 ```sh
 ssh [username]@killdeer.digital sizes
 ssh [username]@killdeer.digital images
+ssh [username]@killdeer.digital os
+```
+
+The `images` command and `os` alias list the same OS images. The CLI accepts either the image shorthand or full image name when creating a VM.
+
+Current public image list from `ssh killdeer.digital os`:
+
+```text
+SHORTHAND     IMAGE         OS
+alpine        Alpine-3.23   Alpine
+alpine-3.23   Alpine-3.23   Alpine
+ubuntu        Ubuntu-24.04  Ubuntu
+ubuntu-24.04  Ubuntu-24.04  Ubuntu
+ubuntu-26.04  Ubuntu-26.04  Ubuntu
+debian        Debian-12     Debian
+debian-12     Debian-12     Debian
+fedora        Fedora-40     Fedora
+fedora-40     Fedora-40     Fedora
+rocky         Rocky-10      Rocky
+rocky-10      Rocky-10      Rocky
 ```
 
 ## Aliases
@@ -110,4 +144,6 @@ ssh [username]@killdeer.digital images
 - CLI metadata: https://killdeer.digital/api/v1/cli.json
 - Normalized help text: https://killdeer.digital/ssh-help.txt
 - Size metadata: https://killdeer.digital/api/v1/sizes.json
+- OS image list: https://killdeer.digital/os.txt
+- OS image metadata: https://killdeer.digital/api/v1/images.json
 - Full agent guide: https://killdeer.digital/llms-full.txt

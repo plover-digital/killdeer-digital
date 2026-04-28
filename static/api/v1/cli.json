@@ -4,9 +4,21 @@
   "publicHost": "killdeer.digital",
   "preferredLoginSyntax": "ssh [username]@killdeer.digital",
   "discoveryCommand": "ssh killdeer.digital help",
+  "vmAccess": {
+    "defaultUser": "plover",
+    "syntax": "ssh plover@[ip]",
+    "notes": [
+      "Replace [ip] with the VM IP address from list or status.",
+      "If the user's Killdeer account was set up with SSH, their key is already installed for plover.",
+      "If the user's Killdeer account was not set up with SSH, the VM password is emailed to them.",
+      "If the user connects through the Killdeer console, they must use the password from that email."
+    ]
+  },
   "agentGuidance": [
     "If the human did not provide a Killdeer username, ask for it before constructing account-specific SSH commands.",
     "Use killdeer.digital as the public hostname.",
+    "Use ssh plover@[ip] to access a VM directly; plover is the default VM user.",
+    "For Killdeer console access, tell users to use the VM password from their email.",
     "Do not invent HTTP VM-management API calls. The public control surface is the SSH command line.",
     "Use ssh killdeer.digital help for discovery and ssh [username]@killdeer.digital without a subcommand for the interactive menu.",
     "Destructive delete commands require --confirm and should be presented carefully."
@@ -82,6 +94,8 @@
     "fullAgentGuide": "https://killdeer.digital/llms-full.txt",
     "sshHelp": "https://killdeer.digital/ssh-help.txt",
     "sizes": "https://killdeer.digital/sizes.txt",
-    "sizesJson": "https://killdeer.digital/api/v1/sizes.json"
+    "sizesJson": "https://killdeer.digital/api/v1/sizes.json",
+    "osImages": "https://killdeer.digital/os.txt",
+    "osImagesJson": "https://killdeer.digital/api/v1/images.json"
   }
 }

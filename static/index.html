@@ -366,6 +366,31 @@
       </section>
 
       <section class="section">
+        <h2 class="section-title">-- Access A VM --</h2>
+
+        <div class="command-block">
+          <p class="tiny">VM login command</p>
+          <div class="command-row">
+            <div class="command-line">
+              <span class="prompt">$</span>
+              <code>ssh plover@[ip]</code>
+            </div>
+            <button class="button" type="button" data-copy-target="ssh plover@[ip]">
+              copy
+            </button>
+          </div>
+          <p class="tiny">Replace <code>[ip]</code> with the VM IP address from <code>list</code> or <code>status</code>.</p>
+        </div>
+
+        <div class="links">
+          <p>Default VM user: <code>plover</code></p>
+          <p>If your account was set up with SSH, your key is already installed for <code>plover</code>.</p>
+          <p>If your account was not set up with SSH, the VM password will be emailed to you.</p>
+          <p>If you connect through the Killdeer console, use the password from that email.</p>
+        </div>
+      </section>
+
+      <section class="section">
         <h2 class="section-title">-- Help Command Output --</h2>
         <details>
           <summary>show the output of <code>ssh killdeer.digital help</code></summary>
@@ -434,6 +459,28 @@ Base fee is prorated when VMs are created or deleted mid-cycle.</pre>
       </section>
 
       <section class="section">
+        <h2 class="section-title">-- OS Images --</h2>
+        <p class="tiny">Output of <code>ssh killdeer.digital os</code></p>
+        <pre class="panel">Available OS images:
+
+SHORTHAND     IMAGE         OS
+alpine        Alpine-3.23   Alpine
+alpine-3.23   Alpine-3.23   Alpine
+ubuntu        Ubuntu-24.04  Ubuntu
+ubuntu-24.04  Ubuntu-24.04  Ubuntu
+ubuntu-26.04  Ubuntu-26.04  Ubuntu
+debian        Debian-12     Debian
+debian-12     Debian-12     Debian
+fedora        Fedora-40     Fedora
+fedora-40     Fedora-40     Fedora
+rocky         Rocky-10      Rocky
+rocky-10      Rocky-10      Rocky
+
+You can use either the shorthand or full image name.
+Example: 'alpine' or 'alpine-3.23' both work.</pre>
+      </section>
+
+      <section class="section">
         <h2 class="section-title">-- Promotions --</h2>
         <div class="links">
           <p>New users get <strong>$20</strong> credit.</p>
@@ -452,7 +499,9 @@ Base fee is prorated when VMs are created or deleted mid-cycle.</pre>
           <p>Full agent bundle: <a href="/llms-full.txt"><code>/llms-full.txt</code></a></p>
           <p>Normalized CLI help text: <a href="/ssh-help.txt"><code>/ssh-help.txt</code></a></p>
           <p>Sizes and pricing: <a href="/sizes.txt"><code>/sizes.txt</code></a></p>
+          <p>OS images: <a href="/os.txt"><code>/os.txt</code></a></p>
           <p>Structured CLI metadata: <a href="/api/v1/cli.json"><code>/api/v1/cli.json</code></a></p>
+          <p>Structured OS image metadata: <a href="/api/v1/images.json"><code>/api/v1/images.json</code></a></p>
           <p>Agent skills index: <a href="/.well-known/agent-skills/index.json"><code>/.well-known/agent-skills/index.json</code></a></p>
           <p>Killdeer CLI agent skill: <a href="/.well-known/agent-skills/killdeer-cli/SKILL.md"><code>/.well-known/agent-skills/killdeer-cli/SKILL.md</code></a></p>
         </div>
