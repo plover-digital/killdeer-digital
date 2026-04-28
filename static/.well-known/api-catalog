@@ -19,6 +19,11 @@
           "href": "https://killdeer.digital/ssh-help.txt",
           "type": "text/plain",
           "title": "Normalized SSH command help"
+        },
+        {
+          "href": "https://killdeer.digital/os.txt",
+          "type": "text/plain",
+          "title": "Available OS images from ssh killdeer.digital os"
         }
       ],
       "status": [

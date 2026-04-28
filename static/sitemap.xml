@@ -25,11 +25,19 @@
     <lastmod>2026-04-23</lastmod>
   </url>
   <url>
+    <loc>https://killdeer.digital/os.txt</loc>
+    <lastmod>2026-04-23</lastmod>
+  </url>
+  <url>
     <loc>https://killdeer.digital/api/v1/cli.json</loc>
     <lastmod>2026-04-23</lastmod>
   </url>
   <url>
     <loc>https://killdeer.digital/api/v1/sizes.json</loc>
+    <lastmod>2026-04-23</lastmod>
+  </url>
+  <url>
+    <loc>https://killdeer.digital/api/v1/images.json</loc>
     <lastmod>2026-04-23</lastmod>
   </url>
   <url>

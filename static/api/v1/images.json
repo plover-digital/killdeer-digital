@@ -1,0 +1,64 @@
+{
+  "sourceCommand": "ssh killdeer.digital os",
+  "notes": [
+    "The Killdeer CLI accepts either the shorthand or full image name.",
+    "The images command and os alias list the same OS images."
+  ],
+  "images": [
+    {
+      "shorthand": "alpine",
+      "image": "Alpine-3.23",
+      "os": "Alpine"
+    },
+    {
+      "shorthand": "alpine-3.23",
+      "image": "Alpine-3.23",
+      "os": "Alpine"
+    },
+    {
+      "shorthand": "ubuntu",
+      "image": "Ubuntu-24.04",
+      "os": "Ubuntu"
+    },
+    {
+      "shorthand": "ubuntu-24.04",
+      "image": "Ubuntu-24.04",
+      "os": "Ubuntu"
+    },
+    {
+      "shorthand": "ubuntu-26.04",
+      "image": "Ubuntu-26.04",
+      "os": "Ubuntu"
+    },
+    {
+      "shorthand": "debian",
+      "image": "Debian-12",
+      "os": "Debian"
+    },
+    {
+      "shorthand": "debian-12",
+      "image": "Debian-12",
+      "os": "Debian"
+    },
+    {
+      "shorthand": "fedora",
+      "image": "Fedora-40",
+      "os": "Fedora"
+    },
+    {
+      "shorthand": "fedora-40",
+      "image": "Fedora-40",
+      "os": "Fedora"
+    },
+    {
+      "shorthand": "rocky",
+      "image": "Rocky-10",
+      "os": "Rocky"
+    },
+    {
+      "shorthand": "rocky-10",
+      "image": "Rocky-10",
+      "os": "Rocky"
+    }
+  ]
+}

@@ -14,8 +14,10 @@ the control plane and public docs.
 - Agent index: https://killdeer.digital/llms.txt
 - Normalized SSH help: https://killdeer.digital/ssh-help.txt
 - Sizes and pricing: https://killdeer.digital/sizes.txt
+- OS images: https://killdeer.digital/os.txt
 - CLI metadata: https://killdeer.digital/api/v1/cli.json
 - Size metadata: https://killdeer.digital/api/v1/sizes.json
+- OS image metadata: https://killdeer.digital/api/v1/images.json
 - API catalog: https://killdeer.digital/.well-known/api-catalog
 - OpenAPI description: https://killdeer.digital/openapi.json
 - Agent skills index: https://killdeer.digital/.well-known/agent-skills/index.json
@@ -33,8 +35,18 @@ the control plane and public docs.
 
 - Preferred login command: `ssh [username]@killdeer.digital`
 - Discovery command: `ssh killdeer.digital help`
+- OS image discovery command: `ssh killdeer.digital os`
 - Replace `[username]` with the user's Killdeer account username.
 - Omitting the subcommand after login enters the interactive menu.
+
+## Access A VM
+
+- VM login command: `ssh plover@[ip]`
+- Replace `[ip]` with the VM IP address from `list` or `status`.
+- Default VM user: `plover`.
+- If the user's Killdeer account was set up with SSH, their key is already installed for `plover`.
+- If the user's Killdeer account was not set up with SSH, the VM password is emailed to them.
+- If the user connects through the Killdeer console, they must use the password from that email.
 
 ## Help Command Output
 
@@ -68,6 +80,26 @@ IPv6-only VMs save $1/mo (no IPv4 charge).
 Runtime is charged hourly only when the VM is powered on.
 Base fee is prorated when VMs are created or deleted mid-cycle.
 
+## OS Images
+
+Available OS images:
+
+SHORTHAND     IMAGE         OS
+alpine        Alpine-3.23   Alpine
+alpine-3.23   Alpine-3.23   Alpine
+ubuntu        Ubuntu-24.04  Ubuntu
+ubuntu-24.04  Ubuntu-24.04  Ubuntu
+ubuntu-26.04  Ubuntu-26.04  Ubuntu
+debian        Debian-12     Debian
+debian-12     Debian-12     Debian
+fedora        Fedora-40     Fedora
+fedora-40     Fedora-40     Fedora
+rocky         Rocky-10      Rocky
+rocky-10      Rocky-10      Rocky
+
+Use either the shorthand or full image name.
+Example: `alpine` and `alpine-3.23` both work.
+
 ## Structured Agent Metadata
 
 - The agent skills index is available at `/.well-known/agent-skills/index.json`.
@@ -75,7 +107,7 @@ Base fee is prorated when VMs are created or deleted mid-cycle.
 - The sizing skill is available at `/.well-known/agent-skills/killdeer-sizing/SKILL.md`.
 - The API catalog is available at `/.well-known/api-catalog`.
 - The OpenAPI description is available at `/openapi.json`.
-- The metadata API has read-only docs endpoints at `/api/v1/cli.json` and `/api/v1/sizes.json`.
+- The metadata API has read-only docs endpoints at `/api/v1/cli.json`, `/api/v1/sizes.json`, and `/api/v1/images.json`.
 - VM management remains SSH-first; do not treat the metadata API as a provisioning API.
 
 ## Promotions

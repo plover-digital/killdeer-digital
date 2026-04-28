@@ -9,9 +9,10 @@ Ongoing design + architecture notes live in [docs/BUILD_LOG.md](docs/BUILD_LOG.m
 - A single text-forward landing page at `static/index.html`
 - A normalized copy of `ssh killdeer.digital help` at `static/ssh-help.txt`
 - A plain-text copy of `ssh killdeer.digital sizes` at `static/sizes.txt`
+- A plain-text copy of `ssh killdeer.digital os` at `static/os.txt`
 - An agent-facing guide at `static/llms.txt`
 - A fuller agent bundle at `static/llms-full.txt`
-- Read-only public metadata at `static/api/v1/cli.json` and `static/api/v1/sizes.json`
+- Read-only public metadata at `static/api/v1/cli.json`, `static/api/v1/sizes.json`, and `static/api/v1/images.json`
 - Agent skills under `static/.well-known/agent-skills/`
 - API discovery through `static/.well-known/api-catalog` and `static/openapi.json`
 - A markdown version of the homepage at `static/index.md`
@@ -36,8 +37,10 @@ Useful local routes:
 - `/llms-full.txt` for the fuller agent bundle
 - `/ssh-help.txt` for normalized command help
 - `/sizes.txt` for sizes and pricing
+- `/os.txt` for available OS images
 - `/api/v1/cli.json` for structured SSH CLI guidance
 - `/api/v1/sizes.json` for structured size and pricing data
+- `/api/v1/images.json` for structured OS image data
 - `/.well-known/agent-skills/index.json` for agent skill discovery
 - `/.well-known/api-catalog` for public metadata API discovery
 - `/openapi.json` for the read-only metadata API description

@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-//go:embed static/index.html static/index.md static/llms.txt static/llms-full.txt static/ssh-help.txt static/sizes.txt static/robots.txt static/sitemap.xml static/api/v1/cli.json static/api/v1/sizes.json static/openapi.json static/.well-known/api-catalog static/.well-known/agent-skills/index.json static/.well-known/agent-skills/killdeer-cli/SKILL.md static/.well-known/agent-skills/killdeer-sizing/SKILL.md
+//go:embed static/index.html static/index.md static/llms.txt static/llms-full.txt static/ssh-help.txt static/sizes.txt static/os.txt static/robots.txt static/sitemap.xml static/api/v1/cli.json static/api/v1/sizes.json static/api/v1/images.json static/openapi.json static/.well-known/api-catalog static/.well-known/agent-skills/index.json static/.well-known/agent-skills/killdeer-cli/SKILL.md static/.well-known/agent-skills/killdeer-sizing/SKILL.md
 var staticFiles embed.FS
 
 const (
@@ -41,8 +41,10 @@ func main() {
 	mux.HandleFunc("/llms-full.txt", handleLLMSFull)
 	mux.HandleFunc("/ssh-help.txt", handleSSHHelp)
 	mux.HandleFunc("/sizes.txt", handleSizes)
+	mux.HandleFunc("/os.txt", handleOS)
 	mux.HandleFunc("/api/v1/cli.json", handleAPICLI)
 	mux.HandleFunc("/api/v1/sizes.json", handleAPISizes)
+	mux.HandleFunc("/api/v1/images.json", handleAPIImages)
 	mux.HandleFunc("/openapi.json", handleOpenAPI)
 	mux.HandleFunc("/.well-known/api-catalog", handleAPICatalog)
 	mux.HandleFunc("/.well-known/agent-skills/index.json", handleAgentSkillsIndex)
@@ -108,12 +110,20 @@ func handleSizes(w http.ResponseWriter, r *http.Request) {
 	serveEmbeddedFile(w, r, "static/sizes.txt", "text/plain; charset=utf-8")
 }
 
+func handleOS(w http.ResponseWriter, r *http.Request) {
+	serveEmbeddedFile(w, r, "static/os.txt", "text/plain; charset=utf-8")
+}
+
 func handleAPICLI(w http.ResponseWriter, r *http.Request) {
 	serveEmbeddedFile(w, r, "static/api/v1/cli.json", "application/json; charset=utf-8")
 }
 
 func handleAPISizes(w http.ResponseWriter, r *http.Request) {
 	serveEmbeddedFile(w, r, "static/api/v1/sizes.json", "application/json; charset=utf-8")
+}
+
+func handleAPIImages(w http.ResponseWriter, r *http.Request) {
+	serveEmbeddedFile(w, r, "static/api/v1/images.json", "application/json; charset=utf-8")
 }
 
 func handleOpenAPI(w http.ResponseWriter, r *http.Request) {
@@ -186,6 +196,7 @@ func setDiscoveryHeaders(w http.ResponseWriter) {
 	w.Header().Add("Link", `</llms-full.txt>; rel="alternate"; type="text/plain"`)
 	w.Header().Add("Link", `</ssh-help.txt>; rel="alternate"; type="text/plain"`)
 	w.Header().Add("Link", `</sizes.txt>; rel="alternate"; type="text/plain"`)
+	w.Header().Add("Link", `</os.txt>; rel="alternate"; type="text/plain"`)
 	w.Header().Add("Link", `</sitemap.xml>; rel="alternate"; type="application/xml"`)
 	w.Header().Add("Link", `</.well-known/api-catalog>; rel="api-catalog"; type="application/linkset+json"`)
 	w.Header().Add("Link", `</.well-known/agent-skills/index.json>; rel="agent-skills"; type="application/json"`)

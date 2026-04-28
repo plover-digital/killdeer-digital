@@ -1,0 +1,17 @@
+Available OS images:
+
+SHORTHAND     IMAGE         OS
+alpine        Alpine-3.23   Alpine
+alpine-3.23   Alpine-3.23   Alpine
+ubuntu        Ubuntu-24.04  Ubuntu
+ubuntu-24.04  Ubuntu-24.04  Ubuntu
+ubuntu-26.04  Ubuntu-26.04  Ubuntu
+debian        Debian-12     Debian
+debian-12     Debian-12     Debian
+fedora        Fedora-40     Fedora
+fedora-40     Fedora-40     Fedora
+rocky         Rocky-10      Rocky
+rocky-10      Rocky-10      Rocky
+
+You can use either the shorthand or full image name.
+Example: 'alpine' or 'alpine-3.23' both work.

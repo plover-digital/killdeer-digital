@@ -6,15 +6,22 @@
 - [Full Agent Guide](https://killdeer.digital/llms-full.txt): Full plain-text bundle for indexing and retrieval.
 - [Normalized SSH Help](https://killdeer.digital/ssh-help.txt): Public command help with admin-only commands removed.
 - [Sizes and Pricing](https://killdeer.digital/sizes.txt): Public VM size and pricing table.
+- [OS Images](https://killdeer.digital/os.txt): Public output of `ssh killdeer.digital os`.
 - [CLI Metadata](https://killdeer.digital/api/v1/cli.json): Structured command reference for the SSH CLI.
 - [Size Metadata](https://killdeer.digital/api/v1/sizes.json): Structured VM size and pricing data.
+- [OS Image Metadata](https://killdeer.digital/api/v1/images.json): Structured image shorthand and full image names.
 - [Agent Skills Index](https://killdeer.digital/.well-known/agent-skills/index.json): Discoverable task skills for agents.
 - [Killdeer CLI Skill](https://killdeer.digital/.well-known/agent-skills/killdeer-cli/SKILL.md): How to help users operate Killdeer over SSH.
 
 ## Notes
 - Public SSH endpoint: `killdeer.digital`
 - Preferred login syntax: `ssh [username]@killdeer.digital`
+- VM login syntax: `ssh plover@[ip]`
+- Default VM user: `plover`
+- If the user's Killdeer account was set up with SSH, their key is already installed for `plover`; otherwise, the VM password is emailed to them.
+- If the user connects through the Killdeer console, they must use the password from that email.
 - Discovery command: `ssh killdeer.digital help`
+- OS image discovery command: `ssh killdeer.digital os`
 - Omit the subcommand after login to enter the interactive menu.
 - If the human did not supply a Killdeer username, ask for one before constructing login commands.
 - Do not invent HTTP VM-management API calls. The public control surface is SSH.
