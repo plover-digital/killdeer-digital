@@ -1,10 +1,10 @@
 SIZE      CPU     RAM   DISK    BASE    RUNTIME     EST. 24/7
-Micro     1 vCPU  1 GB  10 GB   $2/mo   $0.0082/hr  ~$8/mo
-Basic     1 vCPU  2 GB  25 GB   $4/mo   $0.0151/hr  ~$15/mo
-Standard  2 vCPU  2 GB  50 GB   $6/mo   $0.0192/hr  ~$20/mo
-Premium   2 vCPU  4 GB  50 GB   $6/mo   $0.0260/hr  ~$25/mo
+Micro     1 vCPU  1 GB  10 GB   $2/mo   $0.0055/hr  ~$6/mo
+Basic     1 vCPU  2 GB  25 GB   $4/mo   $0.0110/hr  ~$12/mo
+Standard  2 vCPU  2 GB  50 GB   $6/mo   $0.0164/hr  ~$18/mo
+Premium   2 vCPU  4 GB  50 GB   $6/mo   $0.0247/hr  ~$24/mo
 Ultra     4 vCPU  4 GB  100 GB  $11/mo  $0.0397/hr  ~$40/mo
-Mega      4 vCPU  8 GB  100 GB  $11/mo  $0.0534/hr  ~$50/mo
+Mega      4 vCPU  8 GB  100 GB  $11/mo  $0.0507/hr  ~$48/mo
 
 Base fee includes $1/mo for IPv4 + $1/mo per 10GB storage.
 IPv6-only VMs save $1/mo (no IPv4 charge).

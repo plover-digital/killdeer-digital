@@ -68,12 +68,12 @@ the control plane and public docs.
 ## Sizes And Pricing
 
 SIZE      CPU     RAM   DISK    BASE    RUNTIME     EST. 24/7
-Micro     1 vCPU  1 GB  10 GB   $2/mo   $0.0082/hr  ~$8/mo
-Basic     1 vCPU  2 GB  25 GB   $4/mo   $0.0151/hr  ~$15/mo
-Standard  2 vCPU  2 GB  50 GB   $6/mo   $0.0192/hr  ~$20/mo
-Premium   2 vCPU  4 GB  50 GB   $6/mo   $0.0260/hr  ~$25/mo
+Micro     1 vCPU  1 GB  10 GB   $2/mo   $0.0055/hr  ~$6/mo
+Basic     1 vCPU  2 GB  25 GB   $4/mo   $0.0110/hr  ~$12/mo
+Standard  2 vCPU  2 GB  50 GB   $6/mo   $0.0164/hr  ~$18/mo
+Premium   2 vCPU  4 GB  50 GB   $6/mo   $0.0247/hr  ~$24/mo
 Ultra     4 vCPU  4 GB  100 GB  $11/mo  $0.0397/hr  ~$40/mo
-Mega      4 vCPU  8 GB  100 GB  $11/mo  $0.0534/hr  ~$50/mo
+Mega      4 vCPU  8 GB  100 GB  $11/mo  $0.0507/hr  ~$48/mo
 
 Base fee includes $1/mo for IPv4 + $1/mo per 10GB storage.
 IPv6-only VMs save $1/mo (no IPv4 charge).
@@ -85,19 +85,19 @@ Base fee is prorated when VMs are created or deleted mid-cycle.
 Available OS images:
 
 SHORTHAND     IMAGE         OS
-alpine        Alpine-3.23   Alpine
 alpine-3.23   Alpine-3.23   Alpine
-ubuntu        Ubuntu-24.04  Ubuntu
+alpine        Alpine-3.23   Alpine
+debian-13     Debian-13     Debian
+debian        Debian-13     Debian
+fedora-44     Fedora-44     Fedora
+fedora        Fedora-44     Fedora
+rocky-10      Rocky-10      Rocky
+rocky         Rocky-10      Rocky
 ubuntu-24.04  Ubuntu-24.04  Ubuntu
 ubuntu-26.04  Ubuntu-26.04  Ubuntu
-debian        Debian-12     Debian
-debian-12     Debian-12     Debian
-fedora        Fedora-40     Fedora
-fedora-40     Fedora-40     Fedora
-rocky         Rocky-10      Rocky
-rocky-10      Rocky-10      Rocky
+ubuntu        Ubuntu-26.04  Ubuntu
 
-Use either the shorthand or full image name.
+Use either the shorthand or full active image name.
 Example: `alpine` and `alpine-3.23` both work.
 
 ## Structured Agent Metadata

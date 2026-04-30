@@ -11,12 +11,12 @@ Use this skill when a user asks what Killdeer VM size to choose or how Killdeer 
 
 | Size | CPU | RAM | Disk | Base | Runtime | Estimated 24/7 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Micro | 1 vCPU | 1 GB | 10 GB | $2/mo | $0.0082/hr | ~$8/mo |
-| Basic | 1 vCPU | 2 GB | 25 GB | $4/mo | $0.0151/hr | ~$15/mo |
-| Standard | 2 vCPU | 2 GB | 50 GB | $6/mo | $0.0192/hr | ~$20/mo |
-| Premium | 2 vCPU | 4 GB | 50 GB | $6/mo | $0.0260/hr | ~$25/mo |
+| Micro | 1 vCPU | 1 GB | 10 GB | $2/mo | $0.0055/hr | ~$6/mo |
+| Basic | 1 vCPU | 2 GB | 25 GB | $4/mo | $0.0110/hr | ~$12/mo |
+| Standard | 2 vCPU | 2 GB | 50 GB | $6/mo | $0.0164/hr | ~$18/mo |
+| Premium | 2 vCPU | 4 GB | 50 GB | $6/mo | $0.0247/hr | ~$24/mo |
 | Ultra | 4 vCPU | 4 GB | 100 GB | $11/mo | $0.0397/hr | ~$40/mo |
-| Mega | 4 vCPU | 8 GB | 100 GB | $11/mo | $0.0534/hr | ~$50/mo |
+| Mega | 4 vCPU | 8 GB | 100 GB | $11/mo | $0.0507/hr | ~$48/mo |
 
 ## Billing Notes
 

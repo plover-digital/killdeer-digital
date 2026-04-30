@@ -2378,3 +2378,31 @@ Conclusion:
 
 Remaining cleanup:
 - Stop the temporary verification server on port `8086`.
+
+### 2026-04-29 :: pricing and OS listing refresh
+
+New user direction:
+- Update public listings from the latest `ssh killdeer.digital sizes` and `ssh killdeer.digital os` output.
+
+Changes made:
+- Updated `static/sizes.txt`, homepage pricing, Markdown docs, JSON size metadata, and the sizing agent skill with the lower runtime rates and new 24/7 estimates.
+- Updated `static/os.txt`, homepage OS table, Markdown docs, JSON image metadata, and the CLI agent skill for Debian 13, Fedora 44, Ubuntu 26.04 as the Ubuntu shorthand default, and the new active-image wording.
+- Expanded the homepage OS table to show shorthand, image, and OS columns so default shorthands are visible.
+
+Verification:
+- `GOCACHE=/private/tmp/killdeer-go-cache go test ./...`
+- `jq . static/api/v1/sizes.json`
+- `jq . static/api/v1/images.json`
+- `curl -s http://127.0.0.1:8090/sizes.txt`
+- `curl -s http://127.0.0.1:8090/os.txt`
+- `curl -s http://127.0.0.1:8090/api/v1/sizes.json`
+- `curl -s http://127.0.0.1:8090/api/v1/images.json`
+- `curl -s http://127.0.0.1:8090/`
+
+Observed result:
+- The Go app still compiles cleanly.
+- The served text routes, JSON metadata routes, and homepage all include the refreshed prices and OS image list.
+- A stale-value scan found no remaining old rates, old Debian/Fedora image versions, or old full-image wording.
+
+Cleanup:
+- The temporary verification server on port `8090` was stopped.

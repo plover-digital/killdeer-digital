@@ -113,23 +113,23 @@ ssh [username]@killdeer.digital images
 ssh [username]@killdeer.digital os
 ```
 
-The `images` command and `os` alias list the same OS images. The CLI accepts either the image shorthand or full image name when creating a VM.
+The `images` command and `os` alias list the same OS images. The CLI accepts either the image shorthand or full active image name when creating a VM.
 
 Current public image list from `ssh killdeer.digital os`:
 
 ```text
 SHORTHAND     IMAGE         OS
-alpine        Alpine-3.23   Alpine
 alpine-3.23   Alpine-3.23   Alpine
-ubuntu        Ubuntu-24.04  Ubuntu
+alpine        Alpine-3.23   Alpine
+debian-13     Debian-13     Debian
+debian        Debian-13     Debian
+fedora-44     Fedora-44     Fedora
+fedora        Fedora-44     Fedora
+rocky-10      Rocky-10      Rocky
+rocky         Rocky-10      Rocky
 ubuntu-24.04  Ubuntu-24.04  Ubuntu
 ubuntu-26.04  Ubuntu-26.04  Ubuntu
-debian        Debian-12     Debian
-debian-12     Debian-12     Debian
-fedora        Fedora-40     Fedora
-fedora-40     Fedora-40     Fedora
-rocky         Rocky-10      Rocky
-rocky-10      Rocky-10      Rocky
+ubuntu        Ubuntu-26.04  Ubuntu
 ```
 
 ## Aliases

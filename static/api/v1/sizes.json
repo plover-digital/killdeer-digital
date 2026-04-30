@@ -14,8 +14,8 @@
       "ramGb": 1,
       "diskGb": 10,
       "baseMonthlyUsd": 2,
-      "runtimeHourlyUsd": 0.0082,
-      "estimatedAlwaysOnMonthlyUsd": 8
+      "runtimeHourlyUsd": 0.0055,
+      "estimatedAlwaysOnMonthlyUsd": 6
     },
     {
       "name": "basic",
@@ -24,8 +24,8 @@
       "ramGb": 2,
       "diskGb": 25,
       "baseMonthlyUsd": 4,
-      "runtimeHourlyUsd": 0.0151,
-      "estimatedAlwaysOnMonthlyUsd": 15
+      "runtimeHourlyUsd": 0.011,
+      "estimatedAlwaysOnMonthlyUsd": 12
     },
     {
       "name": "standard",
@@ -34,8 +34,8 @@
       "ramGb": 2,
       "diskGb": 50,
       "baseMonthlyUsd": 6,
-      "runtimeHourlyUsd": 0.0192,
-      "estimatedAlwaysOnMonthlyUsd": 20
+      "runtimeHourlyUsd": 0.0164,
+      "estimatedAlwaysOnMonthlyUsd": 18
     },
     {
       "name": "premium",
@@ -44,8 +44,8 @@
       "ramGb": 4,
       "diskGb": 50,
       "baseMonthlyUsd": 6,
-      "runtimeHourlyUsd": 0.026,
-      "estimatedAlwaysOnMonthlyUsd": 25
+      "runtimeHourlyUsd": 0.0247,
+      "estimatedAlwaysOnMonthlyUsd": 24
     },
     {
       "name": "ultra",
@@ -64,8 +64,8 @@
       "ramGb": 8,
       "diskGb": 100,
       "baseMonthlyUsd": 11,
-      "runtimeHourlyUsd": 0.0534,
-      "estimatedAlwaysOnMonthlyUsd": 50
+      "runtimeHourlyUsd": 0.0507,
+      "estimatedAlwaysOnMonthlyUsd": 48
     }
   ]
 }
