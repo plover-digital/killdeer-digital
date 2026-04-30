@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1200, initial-scale=1">
+  <title>killdeer.digital social preview</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --ink: #cfd7df;
+      --muted: #8d99a6;
+      --line: #58626e;
+      --mono: "Iosevka", "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--mono);
+    }
+
+    body {
+      display: grid;
+      align-content: start;
+      padding: 56px 28px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    a {
+      color: inherit;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.2em;
+    }
+
+    .hero-composite {
+      margin: 0;
+      white-space: pre;
+      line-height: 1.04;
+      font-size: 18px;
+    }
+
+    .hero-note {
+      display: grid;
+      gap: 15px;
+      margin-top: 42px;
+      color: var(--muted);
+    }
+
+    .topline,
+    .subline,
+    .tiny {
+      margin: 0;
+      font-size: 25px;
+      line-height: 1.35;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <pre class="hero-composite">                          __   _ ____    __
+    ⣀⣀⣀⣀⡀               / /__(_) / /___/ /__  ___  _____
+   ⢸⣿⣿⣿⣿⣧⡀             / //_/ / / / __  / _ \/ _ \/ ___/
+   ⠈⣿⣿⣿⣿⣿⣇⡀           / ,&lt; / / / / /_/ /  __/  __/ /
+    ⢸⣿⡿⠛⠛⠛⠛⠻⣦⣀       /_/|_/_/_/_/\__,_/\___/\___/_/
+    ⠈⣿⡇ ⣀⣀⣀⣸⣿⣆                    ___       _ __        __
+      ⢹⣷⣤⣤⣤⣤⣾⠏ ⠈⢳⣄           ____/ (_)___ _(_) /_____ _/ /
+       ⠈⠉⠉⠉⠉⠁    ⠈⠓⢤⣀       / __  / / __ `/ / __/ __ `/ /
+                      ⠈⠳⣄   / /_/ / / /_/ / / /_/ /_/ / /
+                            \__,_/_/\__, /_/\__/\__,_/_/
+                                   /____/</pre>
+    <div class="hero-note">
+      <p class="topline">killdeer.digital :: VM hosting by <a href="https://plover.digital/">plover.digital</a></p>
+      <p class="subline">Independent VM hosting for developers, managed through your terminal!</p>
+      <p class="tiny">SSH Driven. IPv6-Ready. Agent-Friendly. No Frills. Just VMs.</p>
+    </div>
+  </main>
+</body>
+</html>
