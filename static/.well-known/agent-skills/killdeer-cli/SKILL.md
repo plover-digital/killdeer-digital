@@ -68,6 +68,12 @@ ssh [username]@killdeer.digital stop <name>
 ssh [username]@killdeer.digital restart <name>
 ```
 
+Resize a stopped VM:
+
+```sh
+ssh [username]@killdeer.digital resize <name> <size>
+```
+
 Create a VM:
 
 ```sh
@@ -118,19 +124,23 @@ The `images` command and `os` alias list the same OS images. The CLI accepts eit
 Current public image list from `ssh killdeer.digital os`:
 
 ```text
-SHORTHAND     IMAGE         OS
-alpine-3.23   Alpine-3.23   Alpine
-alpine        Alpine-3.23   Alpine
-debian-13     Debian-13     Debian
-debian        Debian-13     Debian
-fedora-44     Fedora-44     Fedora
-fedora        Fedora-44     Fedora
-rocky-10      Rocky-10      Rocky
-rocky         Rocky-10      Rocky
-ubuntu-24.04  Ubuntu-24.04  Ubuntu
-ubuntu-26.04  Ubuntu-26.04  Ubuntu
-ubuntu        Ubuntu-26.04  Ubuntu
+Main distros:
+
+DISTRO    VERSIONS
+Alpine    3.23
+Debian    13
+Fedora    44
+Rocky     10
+Ubuntu    26.04, 24.04
+
+Experimental distros:
+
+DISTRO      VERSIONS
+Arch Linux  current
+NixOS       25.11
 ```
+
+Ubuntu 26.04 is the default Ubuntu image. Run `ssh [username]@killdeer.digital os` when exact image names are needed.
 
 ## Aliases
 

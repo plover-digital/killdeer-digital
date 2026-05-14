@@ -390,6 +390,16 @@
       background: var(--row-hover-bg);
     }
 
+    .compact-table {
+      width: auto;
+      min-width: min(100%, 28rem);
+    }
+
+    .compact-table th,
+    .compact-table td {
+      padding-right: 2.4rem;
+    }
+
     details summary {
       cursor: pointer;
       text-decoration: underline;
@@ -607,6 +617,7 @@ Commands:
   start &lt;name&gt;                  Power on a VM
   stop &lt;name&gt;                   Graceful shutdown a VM
   restart &lt;name&gt;                Restart a VM (stop + start)
+  resize &lt;name&gt; &lt;size&gt;          Increase a stopped VM to a larger size
   delete &lt;name&gt; [--confirm]     Delete a VM (requires --confirm)
   create &lt;name&gt; &lt;size&gt; &lt;os&gt; [ip-type]
                                 Create a new VM
@@ -631,6 +642,8 @@ Examples:
   ssh [username]@killdeer.digital list
   ssh [username]@killdeer.digital start myvm
   ssh [username]@killdeer.digital create myvm micro alpine-3.23
+  ssh [username]@killdeer.digital create myvm micro nixos
+  ssh [username]@killdeer.digital resize myvm basic
   ssh [username]@killdeer.digital console myvm
   ssh [username]@killdeer.digital timer myvm 30m
   ssh [username]@killdeer.digital delete myvm --confirm
@@ -731,74 +744,60 @@ Omit the command to enter the interactive menu.</pre>
         <h2 class="section-title">-- OS Images --</h2>
         <p class="tiny">Supported VM images</p>
         <div class="table-scroll">
-          <table class="data-table">
+          <table class="data-table compact-table">
             <thead>
               <tr>
-                <th scope="col">Shorthand</th>
-                <th scope="col">Image</th>
-                <th scope="col">OS</th>
+                <th scope="col">Distro</th>
+                <th scope="col">Versions</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>alpine-3.23</td>
-                <td>Alpine-3.23</td>
                 <td>Alpine</td>
+                <td>3.23</td>
               </tr>
               <tr>
-                <td>alpine</td>
-                <td>Alpine-3.23</td>
-                <td>Alpine</td>
-              </tr>
-              <tr>
-                <td>debian-13</td>
-                <td>Debian-13</td>
                 <td>Debian</td>
+                <td>13</td>
               </tr>
               <tr>
-                <td>debian</td>
-                <td>Debian-13</td>
-                <td>Debian</td>
-              </tr>
-              <tr>
-                <td>fedora-44</td>
-                <td>Fedora-44</td>
                 <td>Fedora</td>
+                <td>44</td>
               </tr>
               <tr>
-                <td>fedora</td>
-                <td>Fedora-44</td>
-                <td>Fedora</td>
-              </tr>
-              <tr>
-                <td>rocky-10</td>
-                <td>Rocky-10</td>
                 <td>Rocky</td>
+                <td>10</td>
               </tr>
               <tr>
-                <td>rocky</td>
-                <td>Rocky-10</td>
-                <td>Rocky</td>
-              </tr>
-              <tr>
-                <td>ubuntu-24.04</td>
-                <td>Ubuntu-24.04</td>
                 <td>Ubuntu</td>
-              </tr>
-              <tr>
-                <td>ubuntu-26.04</td>
-                <td>Ubuntu-26.04</td>
-                <td>Ubuntu</td>
-              </tr>
-              <tr>
-                <td>ubuntu</td>
-                <td>Ubuntu-26.04</td>
-                <td>Ubuntu</td>
+                <td>26.04, 24.04</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <p class="tiny">Create VMs with either the shorthand or full active image name shown here.</p>
+        <p class="tiny">Experimental distros</p>
+        <div class="table-scroll">
+          <table class="data-table compact-table">
+            <thead>
+              <tr>
+                <th scope="col">Distro</th>
+                <th scope="col">Versions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Arch Linux</td>
+                <td>current</td>
+              </tr>
+              <tr>
+                <td>NixOS</td>
+                <td>25.11</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Ubuntu 26.04 is the default Ubuntu image.</p>
+        <p class="tiny">For exact image names, run <code>ssh killdeer.digital os</code>.</p>
       </section>
 
       <section class="section">

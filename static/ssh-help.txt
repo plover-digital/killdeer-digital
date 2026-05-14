@@ -8,6 +8,7 @@ Commands:
   start <name>                  Power on a VM
   stop <name>                   Graceful shutdown a VM
   restart <name>                Restart a VM (stop + start)
+  resize <name> <size>          Increase a stopped VM to a larger size
   delete <name> [--confirm]     Delete a VM (requires --confirm)
   create <name> <size> <os> [ip-type]  Create a new VM
                                 ip-type: --ipv4 (default), --ipv6, --dualstack
@@ -31,6 +32,8 @@ Examples:
   ssh [username]@killdeer.digital list
   ssh [username]@killdeer.digital start myvm
   ssh [username]@killdeer.digital create myvm micro alpine-3.23
+  ssh [username]@killdeer.digital create myvm micro nixos
+  ssh [username]@killdeer.digital resize myvm basic
   ssh [username]@killdeer.digital console myvm
   ssh [username]@killdeer.digital timer myvm 30m
   ssh [username]@killdeer.digital delete myvm --confirm

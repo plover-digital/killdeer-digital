@@ -71,21 +71,23 @@ Public command:
 ```text
 Available OS images:
 
-SHORTHAND     IMAGE         OS
-alpine-3.23   Alpine-3.23   Alpine
-alpine        Alpine-3.23   Alpine
-debian-13     Debian-13     Debian
-debian        Debian-13     Debian
-fedora-44     Fedora-44     Fedora
-fedora        Fedora-44     Fedora
-rocky-10      Rocky-10      Rocky
-rocky         Rocky-10      Rocky
-ubuntu-24.04  Ubuntu-24.04  Ubuntu
-ubuntu-26.04  Ubuntu-26.04  Ubuntu
-ubuntu        Ubuntu-26.04  Ubuntu
+Main distros:
 
-You can use either the shorthand or full active image name.
-Example: 'alpine' or 'alpine-3.23' both work.
+DISTRO    VERSIONS
+Alpine    3.23
+Debian    13
+Fedora    44
+Rocky     10
+Ubuntu    26.04, 24.04
+
+Experimental distros:
+
+DISTRO      VERSIONS
+Arch Linux  current
+NixOS       25.11
+
+Ubuntu 26.04 is the default Ubuntu image.
+The SSH CLI also accepts full active image names.
 ```
 
 ## Promotions

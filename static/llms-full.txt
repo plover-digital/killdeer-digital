@@ -84,21 +84,23 @@ Base fee is prorated when VMs are created or deleted mid-cycle.
 
 Available OS images:
 
-SHORTHAND     IMAGE         OS
-alpine-3.23   Alpine-3.23   Alpine
-alpine        Alpine-3.23   Alpine
-debian-13     Debian-13     Debian
-debian        Debian-13     Debian
-fedora-44     Fedora-44     Fedora
-fedora        Fedora-44     Fedora
-rocky-10      Rocky-10      Rocky
-rocky         Rocky-10      Rocky
-ubuntu-24.04  Ubuntu-24.04  Ubuntu
-ubuntu-26.04  Ubuntu-26.04  Ubuntu
-ubuntu        Ubuntu-26.04  Ubuntu
+Main distros:
 
-Use either the shorthand or full active image name.
-Example: `alpine` and `alpine-3.23` both work.
+DISTRO    VERSIONS
+Alpine    3.23
+Debian    13
+Fedora    44
+Rocky     10
+Ubuntu    26.04, 24.04
+
+Experimental distros:
+
+DISTRO      VERSIONS
+Arch Linux  current
+NixOS       25.11
+
+Ubuntu 26.04 is the default Ubuntu image.
+The SSH CLI also accepts full active image names.
 
 ## Structured Agent Metadata
 
@@ -138,6 +140,7 @@ Commands:
   start <name>                  Power on a VM
   stop <name>                   Graceful shutdown a VM
   restart <name>                Restart a VM (stop + start)
+  resize <name> <size>          Increase a stopped VM to a larger size
   delete <name> [--confirm]     Delete a VM (requires --confirm)
   create <name> <size> <os> [ip-type]  Create a new VM
                                 ip-type: --ipv4 (default), --ipv6, --dualstack
@@ -161,6 +164,8 @@ Examples:
   ssh [username]@killdeer.digital list
   ssh [username]@killdeer.digital start myvm
   ssh [username]@killdeer.digital create myvm micro alpine-3.23
+  ssh [username]@killdeer.digital create myvm micro nixos
+  ssh [username]@killdeer.digital resize myvm basic
   ssh [username]@killdeer.digital console myvm
   ssh [username]@killdeer.digital timer myvm 30m
   ssh [username]@killdeer.digital delete myvm --confirm

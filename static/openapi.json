@@ -52,7 +52,7 @@
     "/api/v1/images.json": {
       "get": {
         "summary": "Get Killdeer OS images",
-        "description": "Returns public OS image metadata for the Killdeer SSH CLI images command and os alias.",
+        "description": "Returns public OS distro metadata for the Killdeer SSH CLI images command and os alias.",
         "operationId": "getKilldeerImages",
         "responses": {
           "200": {
