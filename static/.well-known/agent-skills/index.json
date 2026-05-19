@@ -6,7 +6,7 @@
       "type": "skill-md",
       "description": "Use the Killdeer SSH command line to help a user manage developer VMs.",
       "url": "/.well-known/agent-skills/killdeer-cli/SKILL.md",
-      "digest": "sha256:174865c3dc3e53cf3c0ffd9fddba40c472fac76eab81c455068c82d2450b4c8d"
+      "digest": "sha256:57f38a055741345008af37e5c2176f1b8894fa1462eadc5b49a3c6f4341dc7be"
     },
     {
       "name": "killdeer-sizing",

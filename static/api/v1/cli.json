@@ -52,6 +52,11 @@
       "description": "Restart a VM by stopping and starting it."
     },
     {
+      "name": "resize",
+      "syntax": "ssh [username]@killdeer.digital resize <name> <size>",
+      "description": "Increase a stopped VM to a larger size."
+    },
+    {
       "name": "create",
       "syntax": "ssh [username]@killdeer.digital create <name> <size> <os> [ip-type]",
       "description": "Create a new VM. ip-type may be --ipv4, --ipv6, or --dualstack. --ipv4 is the default."

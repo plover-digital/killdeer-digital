@@ -9,7 +9,7 @@
 - [OS Images](https://killdeer.digital/os.txt): Public output of `ssh killdeer.digital os`.
 - [CLI Metadata](https://killdeer.digital/api/v1/cli.json): Structured command reference for the SSH CLI.
 - [Size Metadata](https://killdeer.digital/api/v1/sizes.json): Structured VM size and pricing data.
-- [OS Image Metadata](https://killdeer.digital/api/v1/images.json): Structured image shorthand and full active image names.
+- [OS Image Metadata](https://killdeer.digital/api/v1/images.json): Structured OS distro metadata.
 - [Agent Skills Index](https://killdeer.digital/.well-known/agent-skills/index.json): Discoverable task skills for agents.
 - [Killdeer CLI Skill](https://killdeer.digital/.well-known/agent-skills/killdeer-cli/SKILL.md): How to help users operate Killdeer over SSH.
 

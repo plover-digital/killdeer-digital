@@ -2406,3 +2406,39 @@ Observed result:
 
 Cleanup:
 - The temporary verification server on port `8090` was stopped.
+
+### 2026-05-14 :: OS listing regrouped by distro
+
+Linear:
+- KIL-44: Update public OS listing to match SSH images output
+
+New user direction:
+- Refresh the public OS listing against current `ssh killdeer.digital help`, `ssh killdeer.digital sizes`, and `ssh killdeer.digital os` output.
+- Do not show raw SSH image flags publicly.
+- Organize available OS images by distro, separate experimental distros, and avoid listing every CLI shorthand in the homepage table.
+
+Changes made:
+- Added the public `resize` command and current NixOS example from live SSH help while keeping admin-only commands redacted.
+- Reworked the homepage OS section into compact distro/version tables that do not stretch across the full page.
+- Split Arch Linux and NixOS into an experimental distro table.
+- Updated `/os.txt`, `index.md`, `llms-full.txt`, `api/v1/images.json`, OpenAPI wording, and the CLI agent skill to match the distro-grouped public presentation.
+- Updated the CLI agent skill digest in the agent skill index.
+
+Verification:
+- `GOCACHE=/private/tmp/killdeer-go-cache go test ./...`
+- `jq . static/api/v1/cli.json static/api/v1/sizes.json static/api/v1/images.json static/openapi.json static/.well-known/agent-skills/index.json`
+- `git diff --check`
+- `rg -n "FLAGS|flags|Family|family|CREATE WITH|Create with|SHORTHAND     IMAGE|experimental,local-build" static README.md docs/BUILD_LOG.md`
+- `GOCACHE=/private/tmp/killdeer-go-cache PORT=8093 go run .`
+- `curl -s http://127.0.0.1:8093/`
+- `curl -s http://127.0.0.1:8093/os.txt`
+- `curl -s http://127.0.0.1:8093/api/v1/images.json`
+- `curl -s http://127.0.0.1:8093/ssh-help.txt`
+
+Observed result:
+- The Go app still compiles cleanly.
+- JSON metadata parses cleanly.
+- The diff has no whitespace errors.
+- The homepage renders the OS section as compact distro/version tables without CLI shorthand columns.
+- `/os.txt` and `/api/v1/images.json` serve grouped distro data without raw SSH image flags.
+- `/ssh-help.txt` includes the live public `resize` command and current examples while keeping admin-only commands redacted.

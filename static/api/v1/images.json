@@ -1,64 +1,42 @@
 {
   "sourceCommand": "ssh killdeer.digital os",
   "notes": [
-    "The Killdeer CLI accepts either the shorthand or full active image name.",
-    "The images command and os alias list the same OS images."
+    "The website groups available images by distro for readability.",
+    "The images command and os alias list the same OS images.",
+    "Use the SSH os/images command for exact image names accepted by create.",
+    "Ubuntu 26.04 is the default Ubuntu image."
   ],
-  "images": [
+  "mainDistros": [
     {
-      "shorthand": "alpine-3.23",
-      "image": "Alpine-3.23",
-      "os": "Alpine"
+      "name": "Alpine",
+      "versions": ["3.23"]
     },
     {
-      "shorthand": "alpine",
-      "image": "Alpine-3.23",
-      "os": "Alpine"
+      "name": "Debian",
+      "versions": ["13"]
     },
     {
-      "shorthand": "debian-13",
-      "image": "Debian-13",
-      "os": "Debian"
+      "name": "Fedora",
+      "versions": ["44"]
     },
     {
-      "shorthand": "debian",
-      "image": "Debian-13",
-      "os": "Debian"
+      "name": "Rocky",
+      "versions": ["10"]
     },
     {
-      "shorthand": "fedora-44",
-      "image": "Fedora-44",
-      "os": "Fedora"
+      "name": "Ubuntu",
+      "versions": ["26.04", "24.04"],
+      "defaultVersion": "26.04"
+    }
+  ],
+  "experimentalDistros": [
+    {
+      "name": "Arch Linux",
+      "versions": ["current"]
     },
     {
-      "shorthand": "fedora",
-      "image": "Fedora-44",
-      "os": "Fedora"
-    },
-    {
-      "shorthand": "rocky-10",
-      "image": "Rocky-10",
-      "os": "Rocky"
-    },
-    {
-      "shorthand": "rocky",
-      "image": "Rocky-10",
-      "os": "Rocky"
-    },
-    {
-      "shorthand": "ubuntu-24.04",
-      "image": "Ubuntu-24.04",
-      "os": "Ubuntu"
-    },
-    {
-      "shorthand": "ubuntu-26.04",
-      "image": "Ubuntu-26.04",
-      "os": "Ubuntu"
-    },
-    {
-      "shorthand": "ubuntu",
-      "image": "Ubuntu-26.04",
-      "os": "Ubuntu"
+      "name": "NixOS",
+      "versions": ["25.11"]
     }
   ]
 }
