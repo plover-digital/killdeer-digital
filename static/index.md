@@ -11,17 +11,29 @@ Killdeer.digital is the VM control panel. If you already have an account, go in 
 If you are looking around first, start with the help command below. The site is intentionally
 tiny and the commands are the product.
 
-## Access
+## Connect
 
-Preferred login command:
+Interactive menu:
 
 `ssh [username]@killdeer.digital`
 
-Discovery and onboarding:
+Omit the command to enter the interactive menu.
+
+Direct command line:
 
 `ssh killdeer.digital help`
 
+Start with `help` to see the available controls.
+
 Replace `[username]` with your Killdeer account username.
+
+## Manage Your VMs
+
+Killdeer gives you control over your VMs and account through the same SSH connection you use to access your VMs.
+
+- **Interactive:** Browse a menu for VM and account actions.
+- **Command line:** Run individual actions directly or script your workflow.
+- **Billing controls:** Set VM limits, runtime budgets, and what happens when a budget is reached.
 
 ## Access A VM
 
@@ -36,6 +48,13 @@ If your account was set up with SSH, your key is already installed for `plover`.
 If your account was not set up with SSH, the VM password will be emailed to you.
 If you connect through the Killdeer console, use the password from that email.
 
+## Storage That Stays Available
+
+VM disks are stored on replicated, fault-tolerant Ceph storage. If hardware fails, healthy replicas give us a way to recover your data.
+
+Replication protects against hardware failure. It is not a substitute for backups against accidental deletion,
+compromised credentials, or application-level mistakes.
+
 ## Help Command Output
 
 See:
@@ -45,7 +64,10 @@ See:
 The live helper still prints some examples with `killdeer.plover.digital`.
 This page normalizes them to the public hostname `killdeer.digital`.
 
-## Sizes And Pricing
+The help output covers command-line VM management and billing controls. This site also includes sizes,
+pricing, OS images, and signup credits.
+
+## Sizes, Pricing And Billing
 
 ```text
 SIZE      CPU     RAM   DISK    BASE    RUNTIME     EST. 24/7
@@ -56,6 +78,9 @@ Premium   2 vCPU  4 GB  50 GB   $6/mo   $0.0247/hr  ~$24/mo
 Ultra     4 vCPU  4 GB  100 GB  $11/mo  $0.0397/hr  ~$40/mo
 Mega      4 vCPU  8 GB  100 GB  $11/mo  $0.0507/hr  ~$48/mo
 ```
+
+Manage VM limits and monthly runtime budgets from the same SSH experience. Choose whether reaching a budget
+sends a notification, stops VMs, or locks further runtime.
 
 Base fee includes $1/mo for IPv4 + $1/mo per 10GB storage.
 IPv6-only VMs save $1/mo (no IPv4 charge).

@@ -6,7 +6,7 @@
   <title>killdeer.digital</title>
   <meta
     name="description"
-    content="Killdeer.digital is the VM hosting control panel for Plover.digital. Access your VMs over SSH and review the public docs for humans and AI agents."
+    content="Killdeer.digital is SSH-first VM hosting from Plover.digital, with VM disks stored on replicated Ceph storage."
   >
   <link rel="canonical" href="https://killdeer.digital/">
   <meta property="og:site_name" content="killdeer.digital">
@@ -15,7 +15,7 @@
   <meta property="og:title" content="killdeer.digital">
   <meta
     property="og:description"
-    content="Managed VM hosting over SSH from Plover.digital, with public docs for humans and AI agents."
+    content="Managed VM hosting over SSH from Plover.digital, backed by replicated Ceph storage."
   >
   <meta property="og:image" content="https://killdeer.digital/social-card.png">
   <meta property="og:image:secure_url" content="https://killdeer.digital/social-card.png">
@@ -27,7 +27,7 @@
   <meta name="twitter:title" content="killdeer.digital">
   <meta
     name="twitter:description"
-    content="Managed VM hosting over SSH from Plover.digital, with public docs for humans and AI agents."
+    content="Managed VM hosting over SSH from Plover.digital, backed by replicated Ceph storage."
   >
   <meta name="twitter:image" content="https://killdeer.digital/social-card.png">
   <meta name="twitter:image:alt" content="killdeer.digital managed VM hosting over SSH">
@@ -547,10 +547,9 @@
       </section>
 
       <section class="section">
-        <h1 class="section-title">-- Access --</h1>
-
+        <h2 class="section-title">-- Connect --</h2>
         <div class="command-block">
-          <p class="tiny">Interactive login command</p>
+          <p class="tiny">Interactive menu</p>
           <div class="command-row">
             <div class="command-line">
               <span class="prompt">$</span>
@@ -561,11 +560,11 @@
               copy
             </button>
           </div>
-          <p class="tiny">Replace <code>[username]</code> with your Killdeer account username.</p>
+          <p class="tiny">Omit the command to enter the interactive menu. Replace <code>[username]</code> with your Killdeer account username.</p>
         </div>
 
         <div class="command-block">
-          <p class="tiny">Available CLI Commands</p>
+          <p class="tiny">Command line</p>
           <div class="command-row">
             <div class="command-line">
               <span class="prompt">$</span>
@@ -575,6 +574,17 @@
               copy
             </button>
           </div>
+          <p class="tiny">Use the command line directly. Start with <code>help</code> to see the available controls.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h1 class="section-title">-- Manage Your VMs --</h1>
+        <p>Killdeer gives you control over your VMs and account through the same SSH connection you use to access your VMs.</p>
+        <div class="links">
+          <p><strong>Interactive:</strong> Browse a menu for VM and account actions.</p>
+          <p><strong>Command line:</strong> Run individual actions directly or script your workflow.</p>
+          <p><strong>Billing controls:</strong> Set VM limits, runtime budgets, and what happens when a budget is reached.</p>
         </div>
       </section>
 
@@ -618,6 +628,7 @@ Commands:
   stop &lt;name&gt;                   Graceful shutdown a VM
   restart &lt;name&gt;                Restart a VM (stop + start)
   resize &lt;name&gt; &lt;size&gt;          Increase a stopped VM to a larger size
+  rename &lt;old-name&gt; &lt;new-name&gt;  Rename a VM in Killdeer
   delete &lt;name&gt; [--confirm]     Delete a VM (requires --confirm)
   create &lt;name&gt; &lt;size&gt; &lt;os&gt; [ip-type]
                                 Create a new VM
@@ -625,6 +636,12 @@ Commands:
   console &lt;name&gt;                Attach to VM serial console (Ctrl+] exits)
   add-ipv4 &lt;name&gt;               Add IPv4 to VM (requires restart, +$1/mo)
   add-ipv6 &lt;name&gt;               Add IPv6 to VM (requires restart)
+  billing limits                 Show VM account limits
+  billing limits set &lt;n&gt;         Set your VM limit (up to self-service max)
+  billing budget                 Show runtime compute budget
+  billing budget set &lt;amount&gt;    Set monthly runtime compute budget (e.g., 10.00)
+  billing budget disable          Disable runtime compute budget
+  billing budget action &lt;mode&gt;   Set action: notify, stop, or lock
   timer &lt;name&gt;                  Show active shutdown timer for a VM
   timer &lt;name&gt; &lt;duration&gt;       Set shutdown timer (e.g., 30m, 2h, 1d)
   timer &lt;name&gt; +&lt;duration&gt;      Add time to existing timer
@@ -641,9 +658,12 @@ Aliases:
 Examples:
   ssh [username]@killdeer.digital list
   ssh [username]@killdeer.digital start myvm
+  ssh [username]@killdeer.digital rename myvm web
   ssh [username]@killdeer.digital create myvm micro alpine-3.23
   ssh [username]@killdeer.digital create myvm micro nixos
   ssh [username]@killdeer.digital resize myvm basic
+  ssh [username]@killdeer.digital billing limits
+  ssh [username]@killdeer.digital billing budget
   ssh [username]@killdeer.digital console myvm
   ssh [username]@killdeer.digital timer myvm 30m
   ssh [username]@killdeer.digital delete myvm --confirm
@@ -656,10 +676,18 @@ Timer Durations:
 
 Omit the command to enter the interactive menu.</pre>
         </details>
+        <p class="tiny">The help output covers command-line VM management and billing controls. The site also includes sizes, pricing, OS images, and signup credits below.</p>
       </section>
 
       <section class="section">
-        <h2 class="section-title">-- Sizes And Pricing --</h2>
+        <h2 class="section-title">-- Storage That Stays Available --</h2>
+        <p>VM disks are stored on replicated, fault-tolerant Ceph storage. If hardware fails, healthy replicas give us a way to recover your data.</p>
+        <p class="tiny">Replication protects against hardware failure. It is not a substitute for backups against accidental deletion, compromised credentials, or application-level mistakes.</p>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">-- Sizes, Pricing And Billing --</h2>
+        <p>Manage VM limits and monthly runtime budgets from the same SSH experience. Choose whether reaching a budget sends a notification, stops VMs, or locks further runtime.</p>
         <div class="table-scroll">
           <table class="data-table">
             <thead>

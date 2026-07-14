@@ -21,6 +21,11 @@
     "For Killdeer console access, tell users to use the VM password from their email.",
     "Do not invent HTTP VM-management API calls. The public control surface is the SSH command line.",
     "Use ssh killdeer.digital help for discovery and ssh [username]@killdeer.digital without a subcommand for the interactive menu.",
+    "VM creation supports --ipv4, --ipv6, and --dualstack networking; --ipv4 is the default.",
+    "Use rename to change a VM's name without recreating it.",
+    "Use add-ipv4 or add-ipv6 to attach an address to an existing VM; both require a restart.",
+    "Use billing limits and billing budget to control VM count and monthly runtime spending. Budget actions are notify, stop, or lock.",
+    "Use timer to view, set, adjust, cancel, or force a shutdown timer up to 7 days.",
     "Destructive delete commands require --confirm and should be presented carefully."
   ],
   "commands": [
@@ -57,6 +62,11 @@
       "description": "Increase a stopped VM to a larger size."
     },
     {
+      "name": "rename",
+      "syntax": "ssh [username]@killdeer.digital rename <old-name> <new-name>",
+      "description": "Rename a VM in Killdeer."
+    },
+    {
       "name": "create",
       "syntax": "ssh [username]@killdeer.digital create <name> <size> <os> [ip-type]",
       "description": "Create a new VM. ip-type may be --ipv4, --ipv6, or --dualstack. --ipv4 is the default."
@@ -71,6 +81,46 @@
       "name": "console",
       "syntax": "ssh [username]@killdeer.digital console <name>",
       "description": "Attach to the VM serial console. Ctrl+] exits."
+    },
+    {
+      "name": "add-ipv4",
+      "syntax": "ssh [username]@killdeer.digital add-ipv4 <name>",
+      "description": "Add IPv4 to a VM. A restart is required and IPv4 adds $1/mo."
+    },
+    {
+      "name": "add-ipv6",
+      "syntax": "ssh [username]@killdeer.digital add-ipv6 <name>",
+      "description": "Add IPv6 to a VM. A restart is required."
+    },
+    {
+      "name": "billing limits",
+      "syntax": "ssh [username]@killdeer.digital billing limits",
+      "description": "Show the user's VM account limit."
+    },
+    {
+      "name": "billing limits set",
+      "syntax": "ssh [username]@killdeer.digital billing limits set <n>",
+      "description": "Set the user's VM account limit, up to the self-service maximum."
+    },
+    {
+      "name": "billing budget",
+      "syntax": "ssh [username]@killdeer.digital billing budget",
+      "description": "Show the monthly runtime compute budget."
+    },
+    {
+      "name": "billing budget set",
+      "syntax": "ssh [username]@killdeer.digital billing budget set <amount>",
+      "description": "Set the monthly runtime compute budget."
+    },
+    {
+      "name": "billing budget disable",
+      "syntax": "ssh [username]@killdeer.digital billing budget disable",
+      "description": "Disable the monthly runtime compute budget."
+    },
+    {
+      "name": "billing budget action",
+      "syntax": "ssh [username]@killdeer.digital billing budget action <mode>",
+      "description": "Set the budget action to notify, stop, or lock."
     },
     {
       "name": "timer",
