@@ -74,6 +74,12 @@ Resize a stopped VM:
 ssh [username]@killdeer.digital resize <name> <size>
 ```
 
+Rename a VM:
+
+```sh
+ssh [username]@killdeer.digital rename <old-name> <new-name>
+```
+
 Create a VM:
 
 ```sh
@@ -81,6 +87,28 @@ ssh [username]@killdeer.digital create <name> <size> <os> [ip-type]
 ```
 
 Allowed `ip-type` values are `--ipv4`, `--ipv6`, and `--dualstack`. The default is `--ipv4`.
+
+Add networking to an existing VM:
+
+```sh
+ssh [username]@killdeer.digital add-ipv4 <name>
+ssh [username]@killdeer.digital add-ipv6 <name>
+```
+
+Both address commands require a restart. IPv4 adds $1/mo.
+
+Manage VM limits and runtime budgets:
+
+```sh
+ssh [username]@killdeer.digital billing limits
+ssh [username]@killdeer.digital billing limits set <n>
+ssh [username]@killdeer.digital billing budget
+ssh [username]@killdeer.digital billing budget set <amount>
+ssh [username]@killdeer.digital billing budget disable
+ssh [username]@killdeer.digital billing budget action <mode>
+```
+
+Budget actions are `notify`, `stop`, or `lock`.
 
 Delete a VM:
 

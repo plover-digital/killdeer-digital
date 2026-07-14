@@ -23,6 +23,12 @@
 - Discovery command: `ssh killdeer.digital help`
 - OS image discovery command: `ssh killdeer.digital os`
 - Omit the subcommand after login to enter the interactive menu.
+- VM commands include resizing stopped VMs, attaching to serial consoles, adding IPv4 or IPv6, and managing shutdown timers up to 7 days.
+- VM commands also include renaming VMs and managing account limits and monthly runtime budgets.
+- Billing budget actions can notify, stop, or lock when a budget is reached.
+- VM creation supports `--ipv4`, `--ipv6`, and `--dualstack` networking.
+- VM disks are stored on replicated, fault-tolerant Ceph storage; if hardware fails, healthy replicas give us a way to recover the user's data.
+- Replication protects against hardware failure but is not a substitute for backups against deletion, compromised credentials, or application mistakes.
 - If the human did not supply a Killdeer username, ask for one before constructing login commands.
 - Do not invent HTTP VM-management API calls. The public control surface is SSH.
 - The live helper still prints some examples with `killdeer.plover.digital`; this site normalizes them to `killdeer.digital`.
