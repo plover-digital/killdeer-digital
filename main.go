@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-//go:embed static/index.html static/index.md static/llms.txt static/llms-full.txt static/ssh-help.txt static/sizes.txt static/os.txt static/robots.txt static/sitemap.xml static/social-card.html static/social-card.png static/api/v1/cli.json static/api/v1/sizes.json static/api/v1/images.json static/openapi.json static/.well-known/api-catalog static/.well-known/agent-skills/index.json static/.well-known/agent-skills/killdeer-cli/SKILL.md static/.well-known/agent-skills/killdeer-sizing/SKILL.md
+//go:embed static/index.html static/index.md static/llms.txt static/llms-full.txt static/ssh-help.txt static/sizes.txt static/os.txt static/robots.txt static/sitemap.xml static/BingSiteAuth.xml static/social-card.html static/social-card.png static/api/v1/cli.json static/api/v1/sizes.json static/api/v1/images.json static/openapi.json static/.well-known/api-catalog static/.well-known/agent-skills/index.json static/.well-known/agent-skills/killdeer-cli/SKILL.md static/.well-known/agent-skills/killdeer-sizing/SKILL.md
 var staticFiles embed.FS
 
 const (
@@ -52,6 +52,7 @@ func main() {
 	mux.HandleFunc("/.well-known/agent-skills/killdeer-sizing/SKILL.md", handleKilldeerSizingSkill)
 	mux.HandleFunc("/robots.txt", handleRobots)
 	mux.HandleFunc("/sitemap.xml", handleSitemap)
+	mux.HandleFunc("/BingSiteAuth.xml", handleBingSiteAuth)
 	mux.HandleFunc("/social-card.html", handleSocialCardHTML)
 	mux.HandleFunc("/social-card.png", handleSocialCard)
 	mux.HandleFunc("/healthz", handleHealth)
@@ -154,6 +155,10 @@ func handleRobots(w http.ResponseWriter, r *http.Request) {
 
 func handleSitemap(w http.ResponseWriter, r *http.Request) {
 	serveEmbeddedFile(w, r, "static/sitemap.xml", "application/xml; charset=utf-8")
+}
+
+func handleBingSiteAuth(w http.ResponseWriter, r *http.Request) {
+	serveEmbeddedFile(w, r, "static/BingSiteAuth.xml", "application/xml; charset=utf-8")
 }
 
 func handleSocialCard(w http.ResponseWriter, r *http.Request) {
