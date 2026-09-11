@@ -74,9 +74,16 @@
     .mobile-label, .mobile-period { display: none; }
     .billing { margin-top: 1rem; }
     .docs { margin: 0; padding: 0; list-style: none; }
-    .docs li { display: grid; grid-template-columns: 12rem 1fr; align-items: baseline; gap: 0 1rem; }
-    .docs a { padding: .55rem 0; }
-    .docs span { color: var(--muted); font-size: .9375rem; }
+    .docs details { border-bottom: 1px dashed var(--line); }
+    .docs summary { display: grid; grid-template-columns: 2rem 12rem 1fr; align-items: baseline; gap: .25rem .5rem; min-height: 44px; padding: .65rem 0; cursor: pointer; list-style: none; }
+    .docs summary::-webkit-details-marker { display: none; }
+    .docs summary::before { content: "[+]"; font-family: var(--mono); font-size: .875rem; }
+    .docs details[open] summary::before { content: "[-]"; }
+    .doc-title { text-decoration: underline; text-underline-offset: .22em; }
+    .doc-description { color: var(--muted); font-size: .9375rem; }
+    .doc-content { padding-bottom: 1rem; }
+    .doc-content > a { display: inline-flex; align-items: center; min-height: 44px; font-size: .9375rem; }
+    .doc-text { max-height: 32rem; overflow: auto; margin: .5rem 0; padding: 1rem; border: 1px solid var(--line); background: var(--wash); font-family: var(--mono); font-size: .875rem; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
     .footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .8rem 2rem; border-top: 1px dashed var(--line); padding-top: 1.25rem; font-size: .875rem; }
     .footer p { margin: 0; }
     a[href^="mailto:"] { overflow-wrap: anywhere; }
@@ -101,8 +108,8 @@
       .pricing .price { grid-column: 4 / 7; grid-row: 1; text-align: right; }
       .mobile-label { display: inline; font-family: system-ui, sans-serif; font-size: .875rem; color: var(--muted); margin-left: .25em; }
       .mobile-period { display: inline; font-family: system-ui, sans-serif; font-size: .875rem; color: var(--muted); font-weight: 400; }
-      .docs li { grid-template-columns: 1fr; padding: .3rem 0; }
-      .docs a { justify-self: start; }
+      .docs summary { grid-template-columns: 2rem minmax(0, 1fr); }
+      .doc-description { grid-column: 2; }
     }
   </style>
 </head>
@@ -167,9 +174,18 @@
         <h2 id="docs-title">Documentation</h2>
         <p>For live command help, run <code>ssh killdeer.digital help</code>.</p>
         <ul class="docs">
-          <li><a href="/ssh-help.txt">Commands</a><span>Create, connect, resize, and manage your VMs.</span></li>
-          <li><a href="/os.txt">Operating systems</a><span>Available distributions and versions.</span></li>
-          <li><a href="/llms.txt">Agent guide</a><span>Plain-text instructions for AI tools.</span></li>
+          <li><details data-doc-src="/ssh-help.txt">
+            <summary><span class="doc-title">Commands</span><span class="doc-description">Create, connect, resize, and manage your VMs.</span></summary>
+            <div class="doc-content"><p class="note doc-status" role="status" hidden></p><pre class="doc-text" tabindex="0" aria-label="Command reference" hidden></pre><a href="/ssh-help.txt">Open plain-text commands</a></div>
+          </details></li>
+          <li><details data-doc-src="/os.txt">
+            <summary><span class="doc-title">Operating systems</span><span class="doc-description">Available distributions and versions.</span></summary>
+            <div class="doc-content"><p class="note doc-status" role="status" hidden></p><pre class="doc-text" tabindex="0" aria-label="Operating system reference" hidden></pre><a href="/os.txt">Open plain-text operating systems</a></div>
+          </details></li>
+          <li><details data-doc-src="/llms.txt">
+            <summary><span class="doc-title">Agent guide</span><span class="doc-description">Plain-text instructions for AI tools.</span></summary>
+            <div class="doc-content"><p class="note doc-status" role="status" hidden></p><pre class="doc-text" tabindex="0" aria-label="Agent guide" hidden></pre><a href="/llms.txt">Open plain-text agent guide</a></div>
+          </details></li>
         </ul>
       </section>
     </main>
@@ -178,6 +194,32 @@
       <a href="https://status.plover.digital/">Service status</a>
     </footer>
   </div>
+  <script>
+    document.querySelectorAll('[data-doc-src]').forEach((details) => {
+      let loaded = false;
+      let loading = false;
+      details.addEventListener('toggle', async () => {
+        if (!details.open || loaded || loading) return;
+        loading = true;
+        const status = details.querySelector('.doc-status');
+        const content = details.querySelector('.doc-text');
+        status.hidden = false;
+        status.textContent = 'Loading documentation…';
+        try {
+          const response = await fetch(details.dataset.docSrc);
+          if (!response.ok) throw new Error('Documentation unavailable');
+          content.textContent = await response.text();
+          content.hidden = false;
+          status.hidden = true;
+          loaded = true;
+        } catch {
+          status.textContent = 'Could not load this document. Close and reopen to retry, or use the plain-text link below.';
+        } finally {
+          loading = false;
+        }
+      });
+    });
+  </script>
   <script src="https://analytics.plover.digital/api/script.js" data-site-id="bf210ad5f698" defer></script>
 </body>
 </html>

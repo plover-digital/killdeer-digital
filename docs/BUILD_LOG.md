@@ -1,5 +1,12 @@
 # killdeer.digital build log
 
+## 2026-09-11 :: inline expandable documentation
+
+- The Documentation section expands commands, operating systems, and the agent guide inline with native `[+]`/`[-]` disclosures. The top Docs navigation remains a normal section link.
+- Lazy-load the existing plain-text resources, render them as text, and retain source links as fallbacks. Failed requests can retry by closing and reopening.
+- Playwright passed in Chromium, WebKit, and Firefox: keyboard expansion/collapse, exact source-content matching, desktop/mobile layout without navigation away, failed-request retry, and no-JavaScript fallback links.
+- Reviewed desktop screenshot; `git diff --check` and Go compilation passed.
+
 ## 2026-09-11 :: navigation and mobile pricing feedback
 
 - Reported section links doing nothing; reproduced actual scroll movement successfully in Chromium and WebKit, with Firefox checks pending.
