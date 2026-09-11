@@ -131,12 +131,12 @@
 
       <section id="access" aria-labelledby="access-title">
         <h2 id="access-title">Connect</h2>
-        <p>Sign up or access your account over SSH:</p>
+        <p>Sign up or open the terminal UI (TUI) over SSH to manage your VMs:</p>
         <div class="command"><span class="prompt" aria-hidden="true">$</span><code>ssh [username]@killdeer.digital</code></div>
         <p>Replace <code>[username]</code> with your username. Signing in for the first time with an available username creates your account. New accounts receive <strong>$20 credit</strong>.</p>
-        <p>Then create your first VM:</p>
-        <div class="command"><span class="prompt" aria-hidden="true">$</span><code>ssh robin@killdeer.digital create test-vm micro alpine-3.23 --ipv6</code></div>
-        <p class="note">Replace <code>robin</code> with your username. This example creates an IPv6-only Micro VM running Alpine Linux. <a href="/ssh-help.txt">All commands</a>.</p>
+        <p>You can also create a VM directly from the command line. For example:</p>
+        <div class="command"><span class="prompt" aria-hidden="true">$</span><code>ssh [username]@killdeer.digital create test-vm micro alpine-3.23 --ipv6</code></div>
+        <p class="note">This example creates an IPv6-only Micro VM named <code>test-vm</code> running Alpine Linux. <a href="/ssh-help.txt">All commands</a>.</p>
       </section>
 
       <section id="pricing" aria-labelledby="pricing-title">
