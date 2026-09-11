@@ -1,5 +1,23 @@
 # killdeer.digital build log
 
+## 2026-09-11 :: feedback-led redesign
+
+- Build on the uncommitted, simplified HTML and Markdown homepage.
+- Follow Plover's ASCII, sparse layout, and direct language.
+- Address mobile readability with 17px body text, stronger headings, wrapping commands, and pricing rows that reflow on narrow screens.
+- Self-host Martian Mono for commands and tabular data; preserve the Go server and existing public metadata routes.
+- Keep the current email access instructions and align the displayed six plans with `sizes.txt`.
+- Next: implement the page and font routes, then verify compilation and HTTP responses.
+
+Verification:
+- `GOCACHE=/private/tmp/killdeer-go-cache go test ./...` passes (compilation; no test files).
+- `git diff --check` passes.
+- Local HTTP checks pass for the homepage, font and license, every linked local resource, health, and pricing JSON.
+- Markdown content negotiation and in-page navigation targets pass.
+- The local preview is running at `http://localhost:8094`.
+- Visual browser checks could not run because no connected browser is available. Mobile reflow is implemented but needs visual review.
+- No production deployment was performed.
+
 ```
     __   _ ____    __                      ___       _ __        __
    / /__(_) / /___/ /__  ___  _____   ____/ (_)___ _(_) /_____ _/ /

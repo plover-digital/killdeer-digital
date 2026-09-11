@@ -4,1035 +4,173 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>killdeer.digital</title>
-  <meta
-    name="description"
-    content="Killdeer.digital is SSH-first VM hosting from Plover.digital, with VM disks stored on replicated Ceph storage."
-  >
+  <meta name="description" content="Linux VMs over SSH from an independent team in Minneapolis. Simple pricing, starting around $6/month. Operated by Plover Digital.">
   <link rel="canonical" href="https://killdeer.digital/">
-  <meta property="og:site_name" content="killdeer.digital">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://killdeer.digital/">
-  <meta property="og:title" content="killdeer.digital">
-  <meta
-    property="og:description"
-    content="Managed VM hosting over SSH from Plover.digital, backed by replicated Ceph storage."
-  >
-  <meta property="og:image" content="https://killdeer.digital/social-card.png">
-  <meta property="og:image:secure_url" content="https://killdeer.digital/social-card.png">
-  <meta property="og:image:type" content="image/png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="killdeer.digital managed VM hosting over SSH">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="killdeer.digital">
-  <meta
-    name="twitter:description"
-    content="Managed VM hosting over SSH from Plover.digital, backed by replicated Ceph storage."
-  >
-  <meta name="twitter:image" content="https://killdeer.digital/social-card.png">
-  <meta name="twitter:image:alt" content="killdeer.digital managed VM hosting over SSH">
-  <script
-    src="https://analytics.plover.digital/api/script.js"
-    data-site-id="bf210ad5f698"
-    defer
-  ></script>
   <link rel="alternate" type="text/markdown" href="/index.md">
   <link rel="alternate" type="text/plain" href="/llms.txt">
-  <link rel="alternate" type="text/plain" href="/llms-full.txt">
-  <link rel="alternate" type="application/xml" href="/sitemap.xml">
+  <link rel="preload" href="/martian-mono-regular.ttf" as="font" type="font/ttf" crossorigin>
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
-  <script>
-    try {
-      const theme = window.localStorage.getItem("killdeer-theme");
-      if (theme === "light" || theme === "dark") {
-        document.documentElement.dataset.theme = theme;
-      }
-    } catch (error) {
-    }
-  </script>
   <style>
+    @font-face {
+      font-family: "Martian Mono";
+      src: url("/martian-mono-regular.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
     :root {
-      --bg: #ffffff;
-      --ink: #111111;
-      --muted: #5a5a5a;
-      --line: #7d7d7d;
-      --control-bg: #ffffff;
-      --control-hover-bg: #111111;
-      --control-hover-ink: #ffffff;
-      --row-hover-bg: rgba(17, 17, 17, 0.035);
-      --overlay-bg:
-        linear-gradient(rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.96)),
-        repeating-linear-gradient(
-          0deg,
-          rgba(17, 17, 17, 0.03) 0,
-          rgba(17, 17, 17, 0.03) 1px,
-          transparent 1px,
-          transparent 3px
-        );
-      --mono: "Iosevka", "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
       color-scheme: light dark;
+      --paper: #fff;
+      --ink: #202020;
+      --muted: #595959;
+      --line: #b3b3b3;
+      --wash: #f5f5f5;
+      --mono: "Martian Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
     }
-
+    * { box-sizing: border-box; }
+    body { margin: 0; font-size: 1.0625rem; line-height: 1.65; }
+    .page { max-width: 54rem; margin: auto; padding: 2rem 1.5rem 3rem; }
+    a { color: inherit; text-underline-offset: .22em; text-decoration-thickness: 1px; }
+    a:hover { text-decoration-thickness: 2px; }
+    :focus-visible { outline: 2px solid var(--ink); outline-offset: 5px; }
+    .skip { position: absolute; top: .5rem; left: 1rem; background: var(--paper); padding: .5rem; transform: translateY(-200%); }
+    .skip:focus { transform: none; }
+    p { margin: 0 0 1rem; }
+    p:last-child { margin-bottom: 0; }
+    nav, .eyebrow, h2, code, .pricing, .footer { font-family: var(--mono); }
+    nav { display: flex; flex-wrap: wrap; gap: .3rem 1.4rem; font-size: .875rem; }
+    nav a { display: inline-flex; align-items: center; min-height: 44px; }
+    .masthead { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: .4rem 2rem; border-bottom: 1px dashed var(--line); padding-bottom: .7rem; }
+    .eyebrow { font-size: .875rem; margin: 0; }
+    .hero { padding: 2.5rem 0 2rem; }
+    .wordmark { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 1rem; line-height: 1.15; margin: 0 0 1.75rem; white-space: pre; }
+    h1 { font-size: 1.65rem; letter-spacing: -.04em; line-height: 1.2; margin: 0 0 1rem; font-weight: 800; }
+    .intro { max-width: 39rem; }
+    .intro .lead { font-size: 1.375rem; font-weight: 650; line-height: 1.4; }
+    section { padding: 1.75rem 0; border-top: 1px dashed var(--line); }
+    h2 { font-size: 1.0625rem; line-height: 1.5; margin: 0 0 1.25rem; font-weight: 700; }
+    h2::before { content: "-- "; color: var(--muted); }
+    h2::after { content: " --"; color: var(--muted); }
+    .muted, .note { color: var(--muted); }
+    .note { font-size: .9375rem; }
+    code { font-size: .875rem; overflow-wrap: anywhere; }
+    .command { display: flex; align-items: flex-start; gap: .8rem; background: var(--wash); border-left: 2px solid var(--ink); padding: 1rem; margin: 1.25rem 0 .75rem; }
+    .command code { white-space: pre-wrap; line-height: 1.9; min-width: 0; }
+    .prompt { font-family: var(--mono); user-select: none; line-height: 1.9; font-size: .875rem; color: var(--muted); }
+    .pricing { border-collapse: collapse; width: 100%; font-size: .875rem; line-height: 1.6; font-variant-numeric: tabular-nums; }
+    .pricing caption { text-align: left; font-family: system-ui, sans-serif; font-size: 1rem; margin-bottom: 1rem; color: var(--muted); }
+    .pricing th, .pricing td { text-align: right; padding: .85rem .6rem; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    .pricing th:first-child, .pricing td:first-child { text-align: left; padding-left: 0; }
+    .pricing th:last-child, .pricing td:last-child { padding-right: 0; }
+    .pricing thead th { font-family: system-ui, sans-serif; font-size: .9375rem; font-weight: 700; border-bottom: 1px solid var(--ink); }
+    .pricing tbody th { font-weight: 400; }
+    .pricing .price { font-weight: 700; }
+    .pricing tbody tr:hover { background: var(--wash); }
+    .mobile-label { display: none; }
+    .billing { margin-top: 1rem; }
+    .docs { margin: 0; padding: 0; list-style: none; }
+    .docs li { display: grid; grid-template-columns: 12rem 1fr; align-items: baseline; gap: 0 1rem; }
+    .docs a { padding: .55rem 0; }
+    .docs span { color: var(--muted); font-size: .9375rem; }
+    .footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .8rem 2rem; border-top: 1px dashed var(--line); padding-top: 1.25rem; font-size: .875rem; }
+    .footer p { margin: 0; }
+    a[href^="mailto:"] { overflow-wrap: anywhere; }
     @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0d1117;
-        --ink: #cfd7df;
-        --muted: #8d99a6;
-        --line: #58626e;
-        --control-bg: #151b23;
-        --control-hover-bg: #cfd7df;
-        --control-hover-ink: #0d1117;
-        --row-hover-bg: rgba(207, 215, 223, 0.06);
-        --overlay-bg:
-          linear-gradient(rgba(13, 17, 23, 0.96), rgba(13, 17, 23, 0.96)),
-          repeating-linear-gradient(
-            0deg,
-            rgba(230, 237, 243, 0.06) 0,
-            rgba(230, 237, 243, 0.06) 1px,
-            transparent 1px,
-            transparent 3px
-          );
-      }
+      :root { --paper: #171717; --ink: #ededed; --muted: #b4b4b4; --line: #616161; --wash: #232323; }
     }
-
-    :root[data-theme="light"] {
-      --bg: #ffffff;
-      --ink: #111111;
-      --muted: #5a5a5a;
-      --line: #7d7d7d;
-      --control-bg: #ffffff;
-      --control-hover-bg: #111111;
-      --control-hover-ink: #ffffff;
-      --row-hover-bg: rgba(17, 17, 17, 0.035);
-      --overlay-bg:
-        linear-gradient(rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.96)),
-        repeating-linear-gradient(
-          0deg,
-          rgba(17, 17, 17, 0.03) 0,
-          rgba(17, 17, 17, 0.03) 1px,
-          transparent 1px,
-          transparent 3px
-        );
-      color-scheme: light;
+    @media (max-width: 40rem) {
+      .page { padding: 1rem 1.25rem 2rem; }
+      .hero { padding: 2rem 0; }
+      .wordmark { display: none; }
+      h1 { font-size: clamp(1.6rem, 7vw, 2.25rem); }
+      .intro .lead { font-size: 1.25rem; }
+      .pricing thead { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+      .pricing, .pricing tbody { display: block; }
+      .pricing caption { display: block; }
+      .pricing tr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem .4rem; border-bottom: 1px solid var(--line); padding: 1rem 0; }
+      .pricing th, .pricing td { border: 0; padding: 0; text-align: left; white-space: normal; }
+      .pricing tbody th { grid-column: 1 / 3; grid-row: 1; font-weight: 700; }
+      .pricing .price { grid-column: 3; grid-row: 1; text-align: right; }
+      .mobile-label { display: block; font-family: system-ui, sans-serif; font-size: .875rem; color: var(--muted); margin-top: .15rem; }
+      .docs li { grid-template-columns: 1fr; padding: .3rem 0; }
+      .docs a { justify-self: start; }
     }
-
-    :root[data-theme="dark"] {
-      --bg: #0d1117;
-      --ink: #cfd7df;
-      --muted: #8d99a6;
-      --line: #58626e;
-      --control-bg: #151b23;
-      --control-hover-bg: #cfd7df;
-      --control-hover-ink: #0d1117;
-      --row-hover-bg: rgba(207, 215, 223, 0.06);
-      --overlay-bg:
-        linear-gradient(rgba(13, 17, 23, 0.96), rgba(13, 17, 23, 0.96)),
-        repeating-linear-gradient(
-          0deg,
-          rgba(230, 237, 243, 0.06) 0,
-          rgba(230, 237, 243, 0.06) 1px,
-          transparent 1px,
-          transparent 3px
-        );
-      color-scheme: dark;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: var(--mono);
-      line-height: 1.55;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-    }
-
-    a {
-      color: inherit;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 0.2em;
-    }
-
-    h1,
-    h2,
-    p,
-    pre,
-    table,
-    form,
-    details {
-      margin: 0;
-    }
-
-    code,
-    pre,
-    input,
-    button {
-      font-family: var(--mono);
-    }
-
-    .page {
-      width: min(100%, 64rem);
-      margin: 0 auto;
-      padding: 1.2rem 1rem 3rem;
-    }
-
-    .page-top {
-      display: flex;
-      justify-content: flex-end;
-      padding-bottom: 0.35rem;
-    }
-
-    .theme-toggle {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--muted);
-      font-size: 0.82rem;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .theme-toggle input {
-      position: absolute;
-      inline-size: 1px;
-      block-size: 1px;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-      white-space: nowrap;
-    }
-
-    .theme-toggle-track {
-      position: relative;
-      inline-size: 2.35rem;
-      block-size: 1.25rem;
-      border: 1px solid var(--line);
-      background: var(--control-bg);
-      transition:
-        background-color 120ms ease,
-        border-color 120ms ease;
-    }
-
-    .theme-toggle-track::after {
-      content: "";
-      position: absolute;
-      inset-block-start: 0.18rem;
-      inset-inline-start: 0.18rem;
-      inline-size: 0.76rem;
-      block-size: 0.76rem;
-      background: var(--ink);
-      transition: transform 120ms ease;
-    }
-
-    .theme-toggle input:checked + .theme-toggle-track::after {
-      transform: translateX(1.08rem);
-    }
-
-    .theme-toggle input:focus-visible + .theme-toggle-track {
-      outline: 2px solid var(--ink);
-      outline-offset: 2px;
-    }
-
-    .section {
-      display: grid;
-      gap: 0.85rem;
-      padding: 0.95rem 0 1rem;
-    }
-
-    .section-rule {
-      border-bottom: 1px solid var(--line);
-    }
-
-    .topline,
-    .subline,
-    .tiny {
-      color: var(--muted);
-    }
-
-    .topline,
-    .subline {
-      font-size: 0.94rem;
-    }
-    
-    .tiny {
-      font-size: 0.82rem;
-    }
-
-    .hero {
-      display: grid;
-      gap: 1rem;
-    }
-
-    .hero-composite {
-      max-width: 100%;
-      overflow: hidden;
-      white-space: pre;
-      line-height: 1.04;
-      font-size: clamp(0.31rem, 0.9vw, 0.86rem);
-    }
-
-    .hero-note {
-      display: grid;
-      gap: 0.2rem;
-      max-width: 44rem;
-    }
-
-    .section-title {
-      font-size: 1rem;
-      font-weight: 700;
-    }
-
-    .command-block {
-      display: grid;
-      gap: 0.8rem;
-    }
-
-    .command-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.7rem;
-    }
-
-    .command-line {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.38rem;
-      font-size: 0.98rem;
-      overflow-wrap: anywhere;
-    }
-
-    .prompt {
-      color: var(--muted);
-      user-select: none;
-    }
-
-    .cursor {
-      display: inline-block;
-      width: 0.56rem;
-      height: 1rem;
-      background: var(--ink);
-      transform: translateY(0.1rem);
-      animation: blink 1.05s steps(1) infinite;
-    }
-
-    .button {
-      appearance: none;
-      border: 1px solid var(--line);
-      background: var(--control-bg);
-      color: var(--ink);
-      padding: 0.48rem 0.72rem;
-      font: inherit;
-      cursor: pointer;
-      transition:
-        background-color 120ms ease,
-        color 120ms ease;
-    }
-
-    .button:hover,
-    .button:focus-visible {
-      background: var(--control-hover-bg);
-      color: var(--control-hover-ink);
-      outline: none;
-    }
-
-    .links,
-    .bullets {
-      display: grid;
-      gap: 0.45rem;
-    }
-
-    .panel {
-      overflow-x: auto;
-      white-space: pre;
-      font-size: 0.92rem;
-      line-height: 1.45;
-    }
-
-    .table-scroll {
-      overflow-x: auto;
-    }
-
-    .data-table {
-      width: 100%;
-      min-width: 44rem;
-      border-collapse: collapse;
-      font-size: 0.92rem;
-      line-height: 1.45;
-      text-align: left;
-    }
-
-    .data-table th,
-    .data-table td {
-      padding: 0.42rem 0.7rem 0.42rem 0;
-      border-bottom: 1px solid var(--line);
-      white-space: nowrap;
-    }
-
-    .data-table th {
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .data-table td:first-child,
-    .data-table th:first-child {
-      padding-left: 0.35rem;
-    }
-
-    .data-table tbody tr:hover {
-      background: var(--row-hover-bg);
-    }
-
-    .compact-table {
-      width: auto;
-      min-width: min(100%, 28rem);
-    }
-
-    .compact-table th,
-    .compact-table td {
-      padding-right: 2.4rem;
-    }
-
-    details summary {
-      cursor: pointer;
-      text-decoration: underline;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 0.2em;
-    }
-
-    details[open] summary {
-      margin-bottom: 0.8rem;
-    }
-
-    .mailjet-embed {
-      width: 100%;
-    }
-
-    .mailjet-embed iframe {
-      width: 100%;
-      border: 0;
-      background: transparent;
-    }
-
-    .modal-link {
-      appearance: none;
-      border: 0;
-      padding: 0;
-      background: transparent;
-      color: inherit;
-      font: inherit;
-      text-decoration: underline;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 0.2em;
-      cursor: pointer;
-    }
-
-    .modal-link:hover,
-    .modal-link:focus-visible {
-      outline: none;
-      color: var(--muted);
-    }
-
-    .modal-wrapper {
-      position: fixed;
-      inset: 0;
-      z-index: 20;
-      display: none;
-      padding: 1rem;
-      background: var(--overlay-bg);
-    }
-
-    .modal-wrapper[data-open="true"] {
-      display: grid;
-      place-items: center;
-    }
-
-    .modal-shell {
-      width: min(100%, 40rem);
-      max-height: min(90vh, 44rem);
-      overflow: auto;
-      border: 1px solid var(--ink);
-      background: var(--bg);
-      padding: 1rem 1rem 0.9rem;
-      display: grid;
-      gap: 0.85rem;
-      position: relative;
-    }
-
-    .modal-top {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding-right: 4.5rem;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 0;
-      right: 0;
-      appearance: none;
-      border: 0;
-      border-left: 1px solid var(--ink);
-      border-bottom: 1px solid var(--ink);
-      background: var(--control-bg);
-      color: var(--ink);
-      padding: 0.46rem 0.72rem;
-      font: inherit;
-      cursor: pointer;
-    }
-
-    .modal-close:hover,
-    .modal-close:focus-visible {
-      background: var(--control-hover-bg);
-      color: var(--control-hover-ink);
-      outline: none;
-    }
-
-    @keyframes blink {
-      50% {
-        opacity: 0;
-      }
-    }
-
-    @media (max-width: 44rem) {
-      .page {
-        padding: 0.9rem 0.8rem 2rem;
-      }
-
-      .command-row {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
+    @media (prefers-reduced-motion: no-preference) {
+      html { scroll-behavior: smooth; }
     }
   </style>
 </head>
 <body>
+  <a class="skip" href="#main">Skip to content</a>
   <div class="page">
-    <div class="page-top">
-      <label class="theme-toggle">
-        <input id="theme-toggle" type="checkbox">
-        <span class="theme-toggle-track" aria-hidden="true"></span>
-        <span>dark</span>
-      </label>
-    </div>
-    <main class="stack">
-      <section class="section section-rule hero">
+    <header class="masthead">
+      <p class="eyebrow">a <a href="https://plover.digital/">plover.digital</a> project</p>
+      <nav aria-label="Main navigation">
+        <a href="#access">Get started</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#docs">Docs</a>
+      </nav>
+    </header>
+    <main id="main">
+      <div class="hero">
+        <pre class="wordmark" aria-hidden="true">    __   _ ____    __
+   / /__(_) / /___/ /__  ___  _____
+  / //_/ / / / __  / _ \/ _ \/ ___/
+ / ,&lt; / / / / /_/ /  __/  __/ /
+/_/|_/_/_/_/\__,_/\___/\___/_/
+                 .digital</pre>
+        <h1>killdeer.digital</h1>
+        <div class="intro">
+          <p class="lead">Linux VMs. Managed over SSH.</p>
+          <p>We’re a small, independent team in Minneapolis building our own hosting stack. Create and manage your virtual machines from your terminal.</p>
+        </div>
+      </div>
 
+      <section id="access" aria-labelledby="access-title">
+        <h2 id="access-title">Get started</h2>
+        <p>Email your preferred username and SSH public key to <a href="mailto:machines@plover.digital">machines@plover.digital</a>. New accounts receive <strong>$20 credit</strong>.</p>
+        <p>Once your account is ready, create your first VM:</p>
+        <div class="command"><span class="prompt" aria-hidden="true">$</span><code>ssh robin@killdeer.digital create test-vm micro alpine-3.23 --ipv6</code></div>
+        <p class="note">Replace <code>robin</code> with your username. This example creates an IPv6-only Micro VM running Alpine Linux. <a href="/ssh-help.txt">All commands</a>.</p>
+      </section>
 
-        <pre class="hero-composite">                          __   _ ____    __
-    ⣀⣀⣀⣀⡀               / /__(_) / /___/ /__  ___  _____  
-   ⢸⣿⣿⣿⣿⣧⡀             / //_/ / / / __  / _ \/ _ \/ ___/ 
-   ⠈⣿⣿⣿⣿⣿⣇⡀           / ,< / / / / /_/ /  __/  __/ /    
-    ⢸⣿⡿⠛⠛⠛⠛⠻⣦⣀       /_/|_/_/_/_/\__,_/\___/\___/_/      
-    ⠈⣿⡇ ⣀⣀⣀⣸⣿⣆                    ___       _ __        __ 
-      ⢹⣷⣤⣤⣤⣤⣾⠏ ⠈⢳⣄           ____/ (_)___ _(_) /_____ _/ /
-       ⠈⠉⠉⠉⠉⠁    ⠈⠓⢤⣀       / __  / / __ `/ / __/ __ `/ /
-                      ⠈⠳⣄   / /_/ / / /_/ / / /_/ /_/ / /
-                            \__,_/_/\__, /_/\__/\__,_/_/
-                                   /____/
-</pre>
-        <div class="hero-note">
-          <p class="topline">killdeer.digital :: VM hosting by <a href="https://plover.digital/">plover.digital</a></p>
-          <p class="subline">Independent VM hosting for developers, managed through your terminal!</p>
-          <p class="tiny">SSH Driven. IPv6-Ready. Agent-Friendly. No Frills. Just VMs.</p>
+      <section id="pricing" aria-labelledby="pricing-title">
+        <h2 id="pricing-title">Sizes &amp; pricing</h2>
+        <table class="pricing" role="table">
+          <caption>Monthly estimates with the VM running 24/7, including IPv4.</caption>
+          <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Size</th><th scope="col" role="columnheader">vCPU</th><th scope="col" role="columnheader">RAM</th><th scope="col" role="columnheader">Disk</th><th scope="col" role="columnheader">Est. / month</th></tr></thead>
+          <tbody role="rowgroup">
+            <tr role="row"><th scope="row" role="rowheader">Micro</th><td role="cell">1<span class="mobile-label" aria-hidden="true">vCPU</span></td><td role="cell">1 GB<span class="mobile-label" aria-hidden="true">RAM</span></td><td role="cell">10 GB<span class="mobile-label" aria-hidden="true">Disk</span></td><td class="price" role="cell">~$6</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">Basic</th><td role="cell">1<span class="mobile-label" aria-hidden="true">vCPU</span></td><td role="cell">2 GB<span class="mobile-label" aria-hidden="true">RAM</span></td><td role="cell">25 GB<span class="mobile-label" aria-hidden="true">Disk</span></td><td class="price" role="cell">~$12</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">Standard</th><td role="cell">2<span class="mobile-label" aria-hidden="true">vCPU</span></td><td role="cell">2 GB<span class="mobile-label" aria-hidden="true">RAM</span></td><td role="cell">50 GB<span class="mobile-label" aria-hidden="true">Disk</span></td><td class="price" role="cell">~$18</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">Premium</th><td role="cell">2<span class="mobile-label" aria-hidden="true">vCPU</span></td><td role="cell">4 GB<span class="mobile-label" aria-hidden="true">RAM</span></td><td role="cell">50 GB<span class="mobile-label" aria-hidden="true">Disk</span></td><td class="price" role="cell">~$24</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">Ultra</th><td role="cell">4<span class="mobile-label" aria-hidden="true">vCPU</span></td><td role="cell">4 GB<span class="mobile-label" aria-hidden="true">RAM</span></td><td role="cell">100 GB<span class="mobile-label" aria-hidden="true">Disk</span></td><td class="price" role="cell">~$40</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">Mega</th><td role="cell">4<span class="mobile-label" aria-hidden="true">vCPU</span></td><td role="cell">8 GB<span class="mobile-label" aria-hidden="true">RAM</span></td><td role="cell">100 GB<span class="mobile-label" aria-hidden="true">Disk</span></td><td class="price" role="cell">~$48</td></tr>
+          </tbody>
+        </table>
+        <div class="billing">
+          <p>Pay a base fee for storage and IPv4, plus hourly runtime while your VM is powered on. IPv6-only VMs save $1/month.</p>
+          <p class="note">Base fees are prorated when you create or delete a VM. <a href="/sizes.txt">Full pricing &amp; hourly rates</a>.</p>
         </div>
       </section>
 
-      <section class="section">
-        <h2 class="section-title">-- Connect --</h2>
-        <div class="command-block">
-          <p class="tiny">Interactive menu</p>
-          <div class="command-row">
-            <div class="command-line">
-              <span class="prompt">$</span>
-              <code>ssh [username]@killdeer.digital</code>
-              <span class="cursor" aria-hidden="true"></span>
-            </div>
-            <button class="button" type="button" data-copy-target="ssh [username]@killdeer.digital">
-              copy
-            </button>
-          </div>
-          <p class="tiny">Omit the command to enter the interactive menu. Replace <code>[username]</code> with your Killdeer account username.</p>
-        </div>
-
-        <div class="command-block">
-          <p class="tiny">Command line</p>
-          <div class="command-row">
-            <div class="command-line">
-              <span class="prompt">$</span>
-              <code>ssh killdeer.digital help</code>
-            </div>
-            <button class="button" type="button" data-copy-target="ssh killdeer.digital help">
-              copy
-            </button>
-          </div>
-          <p class="tiny">Use the command line directly. Start with <code>help</code> to see the available controls.</p>
-        </div>
-      </section>
-
-      <section class="section">
-        <h1 class="section-title">-- Manage Your VMs --</h1>
-        <p>Killdeer gives you control over your VMs and account through the same SSH connection you use to access your VMs.</p>
-        <div class="links">
-          <p><strong>Interactive:</strong> Browse a menu for VM and account actions.</p>
-          <p><strong>Command line:</strong> Run individual actions directly or script your workflow.</p>
-          <p><strong>Billing controls:</strong> Set VM limits, runtime budgets, and what happens when a budget is reached.</p>
-        </div>
-      </section>
-
-      <section class="section">
-        <h2 class="section-title">-- Access A VM --</h2>
-
-        <div class="command-block">
-          <p class="tiny">VM login command</p>
-          <div class="command-row">
-            <div class="command-line">
-              <span class="prompt">$</span>
-              <code>ssh plover@[ip]</code>
-            </div>
-            <button class="button" type="button" data-copy-target="ssh plover@[ip]">
-              copy
-            </button>
-          </div>
-          <p class="tiny">Replace <code>[ip]</code> with the VM IP address from <code>list</code> or <code>status</code>.</p>
-        </div>
-
-        <div class="links">
-          <p>Default VM user: <code>plover</code></p>
-          <p>If your account was set up with SSH, your key is already installed for <code>plover</code>.</p>
-          <p>If your account was not set up with SSH, the VM password will be emailed to you.</p>
-          <p>If you connect through the Killdeer console, use the password from that email.</p>
-        </div>
-      </section>
-
-      <section class="section">
-        <h2 class="section-title">-- Help Command Output --</h2>
-        <details>
-          <summary>show the output of <code>ssh killdeer.digital help</code></summary>
-          <pre class="panel">Killdeer VM Management v0.1.0
-
-Usage: ssh [username]@killdeer.digital &lt;command&gt; [args...]
-
-Commands:
-  list                          List all your VMs (Running VMs shown first)
-  status &lt;name&gt;                 Show detailed info for a VM
-  start &lt;name&gt;                  Power on a VM
-  stop &lt;name&gt;                   Graceful shutdown a VM
-  restart &lt;name&gt;                Restart a VM (stop + start)
-  resize &lt;name&gt; &lt;size&gt;          Increase a stopped VM to a larger size
-  rename &lt;old-name&gt; &lt;new-name&gt;  Rename a VM in Killdeer
-  delete &lt;name&gt; [--confirm]     Delete a VM (requires --confirm)
-  create &lt;name&gt; &lt;size&gt; &lt;os&gt; [ip-type]
-                                Create a new VM
-                                ip-type: --ipv4 (default), --ipv6, --dualstack
-  console &lt;name&gt;                Attach to VM serial console (Ctrl+] exits)
-  add-ipv4 &lt;name&gt;               Add IPv4 to VM (requires restart, +$1/mo)
-  add-ipv6 &lt;name&gt;               Add IPv6 to VM (requires restart)
-  billing limits                 Show VM account limits
-  billing limits set &lt;n&gt;         Set your VM limit (up to self-service max)
-  billing budget                 Show runtime compute budget
-  billing budget set &lt;amount&gt;    Set monthly runtime compute budget (e.g., 10.00)
-  billing budget disable          Disable runtime compute budget
-  billing budget action &lt;mode&gt;   Set action: notify, stop, or lock
-  timer &lt;name&gt;                  Show active shutdown timer for a VM
-  timer &lt;name&gt; &lt;duration&gt;       Set shutdown timer (e.g., 30m, 2h, 1d)
-  timer &lt;name&gt; +&lt;duration&gt;      Add time to existing timer
-  timer &lt;name&gt; -&lt;duration&gt;      Remove time from timer
-  timer &lt;name&gt; cancel           Cancel active timer
-  timer &lt;name&gt; force            Change timer to force shutdown
-  sizes                         List available VM sizes and pricing
-  images                        List available OS images
-  help                          Show this help
-
-Aliases:
-  ls = list, st = status, info = status, rm = delete, os = images
-
-Examples:
-  ssh [username]@killdeer.digital list
-  ssh [username]@killdeer.digital start myvm
-  ssh [username]@killdeer.digital rename myvm web
-  ssh [username]@killdeer.digital create myvm micro alpine-3.23
-  ssh [username]@killdeer.digital create myvm micro nixos
-  ssh [username]@killdeer.digital resize myvm basic
-  ssh [username]@killdeer.digital billing limits
-  ssh [username]@killdeer.digital billing budget
-  ssh [username]@killdeer.digital console myvm
-  ssh [username]@killdeer.digital timer myvm 30m
-  ssh [username]@killdeer.digital delete myvm --confirm
-
-Timer Durations:
-  30m    = 30 minutes
-  2h     = 2 hours
-  1d     = 1 day
-  Max: 7 days
-
-Omit the command to enter the interactive menu.</pre>
-        </details>
-        <p class="tiny">The help output covers command-line VM management and billing controls. The site also includes sizes, pricing, OS images, and signup credits below.</p>
-      </section>
-
-      <section class="section">
-        <h2 class="section-title">-- Storage That Stays Available --</h2>
-        <p>VM disks are stored on replicated, fault-tolerant Ceph storage. If hardware fails, healthy replicas give us a way to recover your data.</p>
-        <p class="tiny">Replication protects against hardware failure. It is not a substitute for backups against accidental deletion, compromised credentials, or application-level mistakes.</p>
-      </section>
-
-      <section class="section">
-        <h2 class="section-title">-- Sizes, Pricing And Billing --</h2>
-        <p>Manage VM limits and monthly runtime budgets from the same SSH experience. Choose whether reaching a budget sends a notification, stops VMs, or locks further runtime.</p>
-        <div class="table-scroll">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th scope="col">Size</th>
-                <th scope="col">CPU</th>
-                <th scope="col">RAM</th>
-                <th scope="col">Disk</th>
-                <th scope="col">Base</th>
-                <th scope="col">Runtime</th>
-                <th scope="col">Est. 24/7</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Micro</td>
-                <td>1 vCPU</td>
-                <td>1 GB</td>
-                <td>10 GB</td>
-                <td>$2/mo</td>
-                <td>$0.0055/hr</td>
-                <td>~$6/mo</td>
-              </tr>
-              <tr>
-                <td>Basic</td>
-                <td>1 vCPU</td>
-                <td>2 GB</td>
-                <td>25 GB</td>
-                <td>$4/mo</td>
-                <td>$0.0110/hr</td>
-                <td>~$12/mo</td>
-              </tr>
-              <tr>
-                <td>Standard</td>
-                <td>2 vCPU</td>
-                <td>2 GB</td>
-                <td>50 GB</td>
-                <td>$6/mo</td>
-                <td>$0.0164/hr</td>
-                <td>~$18/mo</td>
-              </tr>
-              <tr>
-                <td>Premium</td>
-                <td>2 vCPU</td>
-                <td>4 GB</td>
-                <td>50 GB</td>
-                <td>$6/mo</td>
-                <td>$0.0247/hr</td>
-                <td>~$24/mo</td>
-              </tr>
-              <tr>
-                <td>Ultra</td>
-                <td>4 vCPU</td>
-                <td>4 GB</td>
-                <td>100 GB</td>
-                <td>$11/mo</td>
-                <td>$0.0397/hr</td>
-                <td>~$40/mo</td>
-              </tr>
-              <tr>
-                <td>Mega</td>
-                <td>4 vCPU</td>
-                <td>8 GB</td>
-                <td>100 GB</td>
-                <td>$11/mo</td>
-                <td>$0.0507/hr</td>
-                <td>~$48/mo</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="tiny">Billing notes</p>
-        <div class="links">
-          <p>Base fee includes <strong>$1/mo</strong> for IPv4 + <strong>$1/mo</strong> per 10GB storage.</p>
-          <p>IPv6-only VMs save <strong>$1/mo</strong> because there is no IPv4 charge.</p>
-          <p>Runtime is charged hourly only when the VM is powered on.</p>
-          <p>Base fee is prorated when VMs are created or deleted mid-cycle.</p>
-        </div>
-      </section>
-
-      <section class="section">
-        <h2 class="section-title">-- OS Images --</h2>
-        <p class="tiny">Supported VM images</p>
-        <div class="table-scroll">
-          <table class="data-table compact-table">
-            <thead>
-              <tr>
-                <th scope="col">Distro</th>
-                <th scope="col">Versions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Alpine</td>
-                <td>3.23</td>
-              </tr>
-              <tr>
-                <td>Debian</td>
-                <td>13</td>
-              </tr>
-              <tr>
-                <td>Fedora</td>
-                <td>44</td>
-              </tr>
-              <tr>
-                <td>Rocky</td>
-                <td>10</td>
-              </tr>
-              <tr>
-                <td>Ubuntu</td>
-                <td>26.04, 24.04</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="tiny">Experimental distros</p>
-        <div class="table-scroll">
-          <table class="data-table compact-table">
-            <thead>
-              <tr>
-                <th scope="col">Distro</th>
-                <th scope="col">Versions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Arch Linux</td>
-                <td>current</td>
-              </tr>
-              <tr>
-                <td>NixOS</td>
-                <td>25.11</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p>Ubuntu 26.04 is the default Ubuntu image.</p>
-        <p class="tiny">For exact image names, run <code>ssh killdeer.digital os</code>.</p>
-      </section>
-
-      <section class="section">
-        <h2 class="section-title">-- Promotions --</h2>
-        <div class="links">
-          <p>New users get <strong>$20</strong> credit.</p>
-          <p>Students get <strong>double credit</strong> with a valid <code>.edu</code> email.</p>
-          <p>Referrals: <strong>$5</strong> for you, <strong>$5</strong> for them.</p>
-        </div>
-      </section>
-
-      <section class="section">
-        <h2 class="section-title">-- Notes For Humans And Agents --</h2>
-        <div class="links">
-          <p>Public SSH endpoint: <code>killdeer.digital</code></p>
-          <p>Preferred login syntax: <code>ssh [username]@killdeer.digital</code></p>
-          <p>Homepage in Markdown: <a href="/index.md"><code>/index.md</code></a></p>
-          <p>Machine-readable guide: <a href="/llms.txt"><code>/llms.txt</code></a></p>
-          <p>Full agent bundle: <a href="/llms-full.txt"><code>/llms-full.txt</code></a></p>
-          <p>Normalized CLI help text: <a href="/ssh-help.txt"><code>/ssh-help.txt</code></a></p>
-          <p>Sizes and pricing: <a href="/sizes.txt"><code>/sizes.txt</code></a></p>
-          <p>OS images: <a href="/os.txt"><code>/os.txt</code></a></p>
-          <p>Structured CLI metadata: <a href="/api/v1/cli.json"><code>/api/v1/cli.json</code></a></p>
-          <p>Structured OS image metadata: <a href="/api/v1/images.json"><code>/api/v1/images.json</code></a></p>
-          <p>Agent skills index: <a href="/.well-known/agent-skills/index.json"><code>/.well-known/agent-skills/index.json</code></a></p>
-          <p>Killdeer CLI agent skill: <a href="/.well-known/agent-skills/killdeer-cli/SKILL.md"><code>/.well-known/agent-skills/killdeer-cli/SKILL.md</code></a></p>
-        </div>
-      </section>
-
-      <section class="section section-rule">
-        <h2 class="section-title">-- Get In Touch --</h2>
-        <div class="links">
-          <p>Email: <a href="mailto:machines@plover.digital">machines@plover.digital</a></p>
-          <p>Discord: <a href="https://discord.gg/AhD77Raqru">discord.gg/AhD77Raqru</a></p>
-        </div>
-        <p>
-          <button class="modal-link" id="mailing-list-open" type="button">Join the mailing list</button>
-        </p>
-        <p class="tiny">
-          If the signup modal it is blocked, email
-          <a href="mailto:machines@plover.digital">machines@plover.digital</a>
-          or join the <a href="https://discord.gg/AhD77Raqru">Killdeer Discord</a> and we can help.
-        </p>
-      </section>
-
-      <section class="section">
-        <p class="tiny">
-          killdeer.digital is a project by <a href="https://plover.digital/">plover.digital</a>, an independent service provider. We build tools and infrastructure for developers, and we're passionate about making powerful technology accessible to everyone.
-        </p>
+      <section id="docs" aria-labelledby="docs-title">
+        <h2 id="docs-title">Documentation</h2>
+        <ul class="docs">
+          <li><a href="/ssh-help.txt">Commands</a><span>Create, connect, resize, and manage your VMs.</span></li>
+          <li><a href="/os.txt">Operating systems</a><span>Available distributions and versions.</span></li>
+          <li><a href="/llms.txt">Agent guide</a><span>Plain-text instructions for AI tools.</span></li>
+        </ul>
       </section>
     </main>
+    <footer class="footer">
+      <p>Operated by <a href="https://plover.digital/">Plover Digital</a>.</p>
+      <a href="https://status.plover.digital/">Service status</a>
+    </footer>
   </div>
-
-  <div class="modal-wrapper" id="mailing-list-modal" aria-hidden="true">
-    <div class="modal-shell" role="dialog" aria-modal="true" aria-labelledby="mailing-list-title">
-      <div class="modal-top">
-        <p id="mailing-list-title"><strong>killdeer.digital mailing list</strong></p>
-        <button class="modal-close" id="mailing-list-close" type="button" aria-label="Close mailing list signup">
-          close
-        </button>
-      </div>
-      <p class="tiny">Hosted by Mailjet. Occasional updates. Low traffic.</p>
-      <div class="mailjet-embed">
-        <iframe
-          data-w-type="embedded"
-          frameborder="0"
-          scrolling="no"
-          marginheight="0"
-          marginwidth="0"
-          src="https://0607p.mjt.lu/wgt/0607p/0jgg/form?c=90736ead"
-          width="100%"
-          style="height: 0;"
-          title="Killdeer.digital mailing list signup"
-        ></iframe>
-      </div>
-    </div>
-  </div>
-
-  <script type="text/javascript" src="https://app.mailjet.com/pas-nc-embedded-v2.js"></script>
-
-  <script>
-    const html = document.documentElement;
-    const themeToggle = document.getElementById("theme-toggle");
-    const themeStorageKey = "killdeer-theme";
-    const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
-    const modal = document.getElementById("mailing-list-modal");
-    const modalOpen = document.getElementById("mailing-list-open");
-    const modalClose = document.getElementById("mailing-list-close");
-
-    function storedTheme() {
-      try {
-        return window.localStorage.getItem(themeStorageKey);
-      } catch (error) {
-        return null;
-      }
-    }
-
-    function storeTheme(theme) {
-      try {
-        window.localStorage.setItem(themeStorageKey, theme);
-      } catch (error) {
-        return;
-      }
-    }
-
-    function effectiveTheme() {
-      return storedTheme() || (systemDark.matches ? "dark" : "light");
-    }
-
-    function applyTheme(theme) {
-      html.dataset.theme = theme;
-      themeToggle.checked = theme === "dark";
-    }
-
-    applyTheme(effectiveTheme());
-
-    themeToggle.addEventListener("change", () => {
-      const theme = themeToggle.checked ? "dark" : "light";
-      storeTheme(theme);
-      applyTheme(theme);
-    });
-
-    systemDark.addEventListener("change", () => {
-      if (!storedTheme()) {
-        applyTheme(effectiveTheme());
-      }
-    });
-
-    function legacyCopy(value) {
-      const textArea = document.createElement("textarea");
-      textArea.value = value;
-      textArea.setAttribute("readonly", "");
-      textArea.style.position = "fixed";
-      textArea.style.top = "-9999px";
-      textArea.style.left = "-9999px";
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-
-      try {
-        return document.execCommand("copy");
-      } finally {
-        document.body.removeChild(textArea);
-      }
-    }
-
-    async function copyText(value) {
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(value);
-        return true;
-      }
-
-      return legacyCopy(value);
-    }
-
-    function openModal() {
-      modal.dataset.open = "true";
-      modal.setAttribute("aria-hidden", "false");
-      html.style.overflow = "hidden";
-      modalClose.focus();
-    }
-
-    function closeModal() {
-      modal.dataset.open = "false";
-      modal.setAttribute("aria-hidden", "true");
-      html.style.overflow = "";
-      modalOpen.focus();
-    }
-
-    modalOpen.addEventListener("click", openModal);
-    modalClose.addEventListener("click", closeModal);
-    modal.addEventListener("click", (event) => {
-      if (event.target === modal) {
-        closeModal();
-      }
-    });
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && modal.dataset.open === "true") {
-        closeModal();
-      }
-    });
-
-    document.querySelectorAll("[data-copy-target]").forEach((button) => {
-      button.dataset.defaultLabel = button.textContent.trim();
-
-      button.addEventListener("click", async () => {
-        const value = button.getAttribute("data-copy-target");
-
-        try {
-          const copied = await copyText(value);
-
-          if (!copied) {
-            throw new Error("copy failed");
-          }
-
-          button.textContent = "copied";
-          window.setTimeout(() => {
-            button.textContent = button.dataset.defaultLabel;
-          }, 1200);
-        } catch (error) {
-          button.textContent = "copy blocked";
-          window.setTimeout(() => {
-            button.textContent = button.dataset.defaultLabel;
-          }, 1400);
-        }
-      });
-    });
-  </script>
+  <script src="https://analytics.plover.digital/api/script.js" data-site-id="bf210ad5f698" defer></script>
 </body>
 </html>
