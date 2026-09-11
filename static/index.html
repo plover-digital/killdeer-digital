@@ -31,8 +31,8 @@
       background: var(--paper);
     }
     * { box-sizing: border-box; }
-    body { margin: 0; font-size: 1.0625rem; line-height: 1.65; }
-    .page { max-width: 54rem; margin: auto; padding: 2rem 1.5rem 3rem; }
+    body { margin: 0; font-size: 1rem; line-height: 1.6; }
+    .page { max-width: 54rem; margin: auto; padding: 2rem 1.5rem 3rem; container-type: inline-size; }
     a { color: inherit; text-underline-offset: .22em; text-decoration-thickness: 1px; }
     a:hover { text-decoration-thickness: 2px; }
     :focus-visible { outline: 2px solid var(--ink); outline-offset: 5px; }
@@ -43,22 +43,24 @@
     nav, .eyebrow, h2, code, .pricing, .footer { font-family: var(--mono); }
     nav { display: flex; flex-wrap: wrap; gap: .3rem 1.4rem; font-size: .875rem; }
     nav a { display: inline-flex; align-items: center; min-height: 44px; }
-    .masthead { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: .4rem 2rem; border-bottom: 1px dashed var(--line); padding-bottom: .7rem; }
-    .eyebrow { font-size: .875rem; margin: 0; }
-    .hero { padding: 2.5rem 0 2rem; }
-    .wordmark { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 1rem; line-height: 1.15; margin: 0 0 1.75rem; white-space: pre; }
-    h1 { font-size: 1.65rem; letter-spacing: -.04em; line-height: 1.2; margin: 0 0 1rem; font-weight: 800; }
+    .masthead { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: .75rem 2rem; padding-bottom: 1.25rem; }
+    .eyebrow { font-size: .8125rem; margin: .75rem 0 0; color: var(--muted); }
+    .hero { padding: 0 0 1.5rem; }
+    .wordmark { display: block; font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: min(1.25rem, 3.6vw); font-weight: 400; line-height: 1.12; letter-spacing: 0; white-space: pre; }
+    h1 { margin: 0; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
     .intro { max-width: 39rem; }
-    .intro .lead { font-size: 1.375rem; font-weight: 650; line-height: 1.4; }
-    section { padding: 1.75rem 0; border-top: 1px dashed var(--line); }
-    h2 { font-size: 1.0625rem; line-height: 1.5; margin: 0 0 1.25rem; font-weight: 700; }
+    .intro .lead { font-size: 1.25rem; font-weight: 650; line-height: 1.4; margin-bottom: .6rem; }
+    section { padding: 1.25rem 0; border-top: 1px dashed var(--line); }
+    h2 { font-size: 1rem; line-height: 1.5; margin: 0 0 .85rem; font-weight: 700; overflow-wrap: anywhere; }
     h2::before { content: "-- "; color: var(--muted); }
     h2::after { content: " --"; color: var(--muted); }
     .muted, .note { color: var(--muted); }
     .note { font-size: .9375rem; }
     code { font-size: .875rem; overflow-wrap: anywhere; }
-    .command { display: flex; align-items: flex-start; gap: .8rem; background: var(--wash); border-left: 2px solid var(--ink); padding: 1rem; margin: 1.25rem 0 .75rem; }
+    .command { display: flex; align-items: flex-start; gap: .5rem; background: var(--wash); border-left: 2px solid var(--ink); padding: .75rem; margin: .85rem 0 .75rem; }
     .command code { white-space: pre-wrap; line-height: 1.9; min-width: 0; }
+    .token { white-space: nowrap; }
     .prompt { font-family: var(--mono); user-select: none; line-height: 1.9; font-size: .875rem; color: var(--muted); }
     .pricing { border-collapse: collapse; width: 100%; font-size: .875rem; line-height: 1.6; font-variant-numeric: tabular-nums; }
     .pricing caption { text-align: left; font-family: system-ui, sans-serif; font-size: 1rem; margin-bottom: 1rem; color: var(--muted); }
@@ -82,11 +84,12 @@
       :root { --paper: #171717; --ink: #ededed; --muted: #b4b4b4; --line: #616161; --wash: #232323; }
     }
     @media (max-width: 40rem) {
-      .page { padding: 1rem 1.25rem 2rem; }
-      .hero { padding: 2rem 0; }
-      .wordmark { display: none; }
-      h1 { font-size: clamp(1.6rem, 7vw, 2.25rem); }
-      .intro .lead { font-size: 1.25rem; }
+      .page { padding: 1.25rem 1rem 2rem; }
+    }
+    @container (max-width: 40rem) {
+      .masthead { grid-template-columns: minmax(0, 1fr); gap: .4rem; padding-bottom: .8rem; }
+      nav { gap: .25rem 1.25rem; }
+      .hero { padding-bottom: 1.25rem; }
       .pricing thead { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
       .pricing, .pricing tbody { display: block; }
       .pricing caption { display: block; }
@@ -107,7 +110,15 @@
   <a class="skip" href="#main">Skip to content</a>
   <div class="page">
     <header class="masthead">
-      <p class="eyebrow">a <a href="https://plover.digital/">plover.digital</a> project</p>
+      <div class="brand">
+        <h1><span class="sr-only">killdeer.digital</span><span class="wordmark" aria-hidden="true">    __   _ ____    __
+   / /__(_) / /___/ /__  ___  _____
+  / //_/ / / / __  / _ \/ _ \/ ___/
+ / ,&lt; / / / / /_/ /  __/  __/ /
+/_/|_/_/_/_/\__,_/\___/\___/_/
+                  .digital</span></h1>
+        <p class="eyebrow">a <a href="https://plover.digital/">plover.digital</a> project</p>
+      </div>
       <nav aria-label="Main navigation">
         <a href="#access">Connect</a>
         <a href="#pricing">Pricing</a>
@@ -116,13 +127,6 @@
     </header>
     <main id="main">
       <div class="hero">
-        <pre class="wordmark" aria-hidden="true">    __   _ ____    __
-   / /__(_) / /___/ /__  ___  _____
-  / //_/ / / / __  / _ \/ _ \/ ___/
- / ,&lt; / / / / /_/ /  __/  __/ /
-/_/|_/_/_/_/\__,_/\___/\___/_/
-                 .digital</pre>
-        <h1>killdeer.digital</h1>
         <div class="intro">
           <p class="lead">Linux VMs. Managed over SSH.</p>
           <p>We’re a small, independent team in Minneapolis building our own hosting stack. Create and manage your virtual machines from your terminal.</p>
@@ -131,11 +135,11 @@
 
       <section id="access" aria-labelledby="access-title">
         <h2 id="access-title">Connect</h2>
-        <p>Sign up or open the terminal UI (TUI) over SSH to manage your VMs:</p>
+        <p>Open the terminal UI (TUI) to sign up or manage your VMs:</p>
         <div class="command"><span class="prompt" aria-hidden="true">$</span><code>ssh [username]@killdeer.digital</code></div>
-        <p>Replace <code>[username]</code> with your username. Signing in for the first time with an available username creates your account. New accounts receive <strong>$20 credit</strong>.</p>
+        <p>Use your username, or choose an available one to create an account on first sign-in. New accounts get <strong>$20 credit</strong>.</p>
         <p>You can also create a VM directly from the command line. For example:</p>
-        <div class="command"><span class="prompt" aria-hidden="true">$</span><code>ssh [username]@killdeer.digital create test-vm micro alpine-3.23 --ipv6</code></div>
+        <div class="command"><span class="prompt" aria-hidden="true">$</span><code>ssh [username]@killdeer.digital create <span class="token">test-vm</span> micro <span class="token">alpine-3.23</span> <span class="token">--ipv6</span></code></div>
         <p class="note">This example creates an IPv6-only Micro VM named <code>test-vm</code> running Alpine Linux. <a href="/ssh-help.txt">All commands</a>.</p>
       </section>
 
