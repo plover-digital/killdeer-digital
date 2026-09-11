@@ -104,16 +104,6 @@ The compose stack now looks like this:
 
 The app image is still pinned to `killdeer-digital:latest` so direct `podman build` and compose runs refer to the same local image tag.
 
-## Mailing list embed
-
-The homepage uses a Mailjet-hosted embed for the mailing list.
-
-This means:
-
-- the Go server does not need Mailjet API credentials
-- local development only needs `PORT`
-- if the signup form needs to change, update the Mailjet iframe and script snippet in `static/index.html`
-
 ## Note about the SSH help text
 
 The live helper currently emits examples that still mention `killdeer.plover.digital`. The site intentionally normalizes those examples to the public hostname `killdeer.digital`.

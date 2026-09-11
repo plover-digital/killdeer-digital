@@ -21,11 +21,12 @@
     "For Killdeer console access, tell users to use the VM password from their email.",
     "Do not invent HTTP VM-management API calls. The public control surface is the SSH command line.",
     "Use ssh killdeer.digital help for discovery and ssh [username]@killdeer.digital without a subcommand for the interactive menu.",
-    "VM creation supports --ipv4, --ipv6, and --dualstack networking; --ipv4 is the default.",
+    "VM creation supports --ipv4, --ipv6, and --dualstack networking; omitting ip-type uses the user's preference.",
+    "Routed networking requires explicit --routed-ipv4 and/or --ipv6-prefix-len flags and is subject to admission and inventory. IPv6 prefix lengths may be /128 or /56 through /64.",
     "Use rename to change a VM's name without recreating it.",
     "Use add-ipv4 or add-ipv6 to attach an address to an existing VM; both require a restart.",
     "Use billing limits and billing budget to control VM count and monthly runtime spending. Budget actions are notify, stop, or lock.",
-    "Use timer to view, set, adjust, cancel, or force a shutdown timer up to 7 days.",
+    "Use timer to view, set, adjust, or cancel a shutdown timer up to 7 days. timer <name> force toggles shutdown mode between graceful and force.",
     "Destructive delete commands require --confirm and should be presented carefully."
   ],
   "commands": [
@@ -68,8 +69,8 @@
     },
     {
       "name": "create",
-      "syntax": "ssh [username]@killdeer.digital create <name> <size> <os> [ip-type]",
-      "description": "Create a new VM. ip-type may be --ipv4, --ipv6, or --dualstack. --ipv4 is the default."
+      "syntax": "ssh [username]@killdeer.digital create <name> <size> <os> [ip-type] [--routed-ipv4] [--ipv6-prefix-len /128|/56-/64]",
+      "description": "Create a new VM. ip-type may be --ipv4, --ipv6, or --dualstack; omitting it uses the user's preference. Routed networking requires explicit flags and is subject to admission and inventory. --ipv6-prefix-len accepts /128 or /56 through /64."
     },
     {
       "name": "delete",
@@ -125,7 +126,7 @@
     {
       "name": "timer",
       "syntax": "ssh [username]@killdeer.digital timer <name> [duration|+duration|-duration|cancel|force]",
-      "description": "Show, set, adjust, cancel, or force an active shutdown timer. Durations include 30m, 2h, and 1d, with a maximum of 7 days."
+      "description": "Show, set, adjust, or cancel an active shutdown timer. The force option toggles shutdown mode between graceful and force. Durations include 30m, 2h, and 1d, with a maximum of 7 days."
     },
     {
       "name": "sizes",
