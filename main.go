@@ -13,6 +13,9 @@ import (
 //go:embed static/index.html static/index.md static/llms.txt static/llms-full.txt static/ssh-help.txt static/sizes.txt static/os.txt static/robots.txt static/sitemap.xml static/BingSiteAuth.xml static/social-card.html static/social-card.png static/api/v1/cli.json static/api/v1/sizes.json static/api/v1/images.json static/openapi.json static/.well-known/api-catalog static/.well-known/agent-skills/index.json static/.well-known/agent-skills/killdeer-cli/SKILL.md static/.well-known/agent-skills/killdeer-sizing/SKILL.md
 var staticFiles embed.FS
 
+//go:embed static/martian-mono-regular.ttf static/martian-mono-OFL.txt
+var fontFiles embed.FS
+
 const (
 	defaultPort   = "8080"
 	contentSignal = "search=yes, ai-input=yes, ai-train=no"
@@ -33,6 +36,13 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
+	mux.HandleFunc("/martian-mono-regular.ttf", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "font/ttf")
+		http.ServeFileFS(w, r, fontFiles, "static/martian-mono-regular.ttf")
+	})
+	mux.HandleFunc("/martian-mono-OFL.txt", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFileFS(w, r, fontFiles, "static/martian-mono-OFL.txt")
+	})
 	mux.HandleFunc("/", handleIndex)
 	mux.HandleFunc("/index.html", handleIndex)
 	mux.HandleFunc("/index.md", handleIndexMarkdown)
