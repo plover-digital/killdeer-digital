@@ -6,13 +6,13 @@ We're a small, independent team in Minneapolis building our own hosting stack. C
 
 ## Connect
 
-Sign up or open the terminal UI (TUI) over SSH to manage your VMs:
+Open the terminal UI (TUI) to sign up or manage your VMs:
 
 ```sh
 ssh [username]@killdeer.digital
 ```
 
-Replace `[username]` with your username. Signing in for the first time with an available username creates your account. New accounts receive **$20 credit**.
+Use your username, or choose an available one to create an account on first sign-in. New accounts get **$20 credit**.
 
 You can also create a VM directly from the command line. For example:
 

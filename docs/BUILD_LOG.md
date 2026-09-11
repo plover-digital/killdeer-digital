@@ -1,5 +1,15 @@
 # killdeer.digital build log
 
+## 2026-09-11 :: mobile ASCII and brand hierarchy
+
+- User screenshots showed the mobile layout hiding the ASCII wordmark and giving the Plover credit too much prominence.
+- Move the Killdeer ASCII wordmark first at all sizes, with a smaller Plover attribution beneath it and a screen-reader heading.
+- Tighten spacing, retain readable 16px body text and 44px navigation targets, shorten signup copy, and keep example arguments from breaking mid-token.
+- Playwright checks passed in Chromium and WebKit at 320, 390, 430, 768, and 1440px, with normal and 200% root text size: no horizontal overflow, visible ASCII, loaded font, working pricing anchors, and all six pricing rows.
+- Used a container query so enlarged text also triggers the compact navigation and pricing layout when needed.
+- Reviewed mobile and desktop screenshots plus WebKit dark mode. Playwright dependencies and screenshots remain outside the repository.
+- `git diff --check` and Go compilation (`go test ./...`; no test files) passed.
+
 ## 2026-09-11 :: sync public docs with live SSH help
 
 - Refreshed normalized public help from `ssh killdeer.digital help`, preserving public hostname and username placeholders and omitting administrator-only commands.
