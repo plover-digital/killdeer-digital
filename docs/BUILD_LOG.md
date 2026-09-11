@@ -1,5 +1,12 @@
 # killdeer.digital build log
 
+## 2026-09-11 :: correct account signup
+
+- Corrected the HTML and Markdown signup instructions: `ssh [username]@killdeer.digital` creates an account on first sign-in with an available username.
+- Removed the incorrect email-based signup step and kept the VM creation example as the next step.
+- Made this command the primary access path for both new and returning users, under “Connect.”
+- Verification: whitespace check and Go compilation pass (no test files).
+
 ## 2026-09-11 :: feedback-led redesign
 
 - Build on the uncommitted, simplified HTML and Markdown homepage.

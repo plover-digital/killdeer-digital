@@ -4,11 +4,17 @@ Linux VMs. Managed over SSH.
 
 We're a small, independent team in Minneapolis building our own hosting stack. Create and manage your virtual machines from your terminal.
 
-## Get started
+## Connect
 
-Email your preferred username and SSH public key to [machines@plover.digital](mailto:machines@plover.digital). New accounts receive **$20 credit**.
+Sign up or access your account over SSH:
 
-Once your account is ready, create your first VM:
+```sh
+ssh [username]@killdeer.digital
+```
+
+Replace `[username]` with your username. Signing in for the first time with an available username creates your account. New accounts receive **$20 credit**.
+
+Then create your first VM:
 
 ```sh
 ssh robin@killdeer.digital create test-vm micro alpine-3.23 --ipv6
