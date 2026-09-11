@@ -1,10 +1,10 @@
 # killdeer.digital build log
 
-## 2026-09-11 :: desktop documentation dropdown
+## 2026-09-11 :: inline expandable documentation
 
-- Desktop Docs now opens a native disclosure containing the overview, commands, operating systems, and agent guide.
-- Keep the direct Docs section link on compact layouts. Support keyboard activation, Escape, and outside-click dismissal.
-- Playwright passed in Chromium, WebKit, and Firefox: keyboard activation/link focus, Escape with focus restoration, outside-click dismissal, overview navigation, documentation route responses, and mobile fallback. WebKit uses Option-Tab for macOS link focus.
+- The Documentation section expands commands, operating systems, and the agent guide inline with native `[+]`/`[-]` disclosures. The top Docs navigation remains a normal section link.
+- Lazy-load the existing plain-text resources, render them as text, and retain source links as fallbacks. Failed requests can retry by closing and reopening.
+- Playwright passed in Chromium, WebKit, and Firefox: keyboard expansion/collapse, exact source-content matching, desktop/mobile layout without navigation away, failed-request retry, and no-JavaScript fallback links.
 - Reviewed desktop screenshot; `git diff --check` and Go compilation passed.
 
 ## 2026-09-11 :: navigation and mobile pricing feedback
