@@ -1,5 +1,14 @@
 # killdeer.digital build log
 
+## 2026-09-11 :: navigation and mobile pricing feedback
+
+- Reported section links doing nothing; reproduced actual scroll movement successfully in Chromium and WebKit, with Firefox checks pending.
+- Remove smooth scrolling for immediate native anchor navigation and add space above destination sections.
+- Group mobile plans with borders, put resource labels beside their values, and show `/mo` on each mobile price. Preserve desktop table presentation.
+- The original navigation also worked in Firefox; the reported device-specific failure was not reproduced. Removing smooth scrolling is a simplification, not a confirmed root-cause fix.
+- Playwright checks passed in Chromium, WebKit, and Firefox at 320/390/430/768/1440px and normal/200% root text size, with no horizontal overflow. Verified destination visibility and actual scroll position for all navigation links, repeated clicks, and browser back; six pricing rows remain present.
+- Reviewed the updated mobile screenshot. Compilation and whitespace checks passed.
+
 ## 2026-09-11 :: mobile ASCII and brand hierarchy
 
 - User screenshots showed the mobile layout hiding the ASCII wordmark and giving the Plover credit too much prominence.
