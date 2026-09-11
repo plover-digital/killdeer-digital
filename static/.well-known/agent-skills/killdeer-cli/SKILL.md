@@ -83,10 +83,21 @@ ssh [username]@killdeer.digital rename <old-name> <new-name>
 Create a VM:
 
 ```sh
-ssh [username]@killdeer.digital create <name> <size> <os> [ip-type]
+ssh [username]@killdeer.digital create <name> <size> <os> [ip-type] [--routed-ipv4] [--ipv6-prefix-len /128|/56-/64]
 ```
 
-Allowed `ip-type` values are `--ipv4`, `--ipv6`, and `--dualstack`. The default is `--ipv4`.
+Allowed `ip-type` values are `--ipv4`, `--ipv6`, and `--dualstack`. Omitting the flag uses the user's preference.
+
+Routed networking requires explicit flags and is subject to admission and inventory.
+Use `--routed-ipv4` to request routed IPv4. `--ipv6-prefix-len` accepts `/128` or any prefix length from `/56` through `/64`.
+
+Examples from the public command help:
+
+```sh
+ssh [username]@killdeer.digital create myvm micro alpine --ipv4 --routed-ipv4
+ssh [username]@killdeer.digital create myrouter micro alpine --ipv6 --ipv6-prefix-len /64
+ssh [username]@killdeer.digital create myvm micro alpine --dualstack --routed-ipv4 --ipv6-prefix-len /128
+```
 
 Add networking to an existing VM:
 
@@ -138,6 +149,7 @@ ssh [username]@killdeer.digital timer <name> force
 ```
 
 Timer durations include `30m`, `2h`, and `1d`. The maximum is 7 days.
+`timer <name> force` toggles the shutdown mode between graceful and force.
 
 List sizes and OS images:
 

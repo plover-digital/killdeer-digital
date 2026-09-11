@@ -41,6 +41,8 @@ Base fees are prorated when you create or delete a VM. [Full pricing & hourly ra
 
 ## Documentation
 
+For live command help, run `ssh killdeer.digital help`.
+
 - [Commands](https://killdeer.digital/ssh-help.txt)
 - [Operating systems](https://killdeer.digital/os.txt)
 - [Agent guide](https://killdeer.digital/llms.txt)

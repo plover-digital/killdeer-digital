@@ -27,6 +27,9 @@
 - VM commands also include renaming VMs and managing account limits and monthly runtime budgets.
 - Billing budget actions can notify, stop, or lock when a budget is reached.
 - VM creation supports `--ipv4`, `--ipv6`, and `--dualstack` networking.
+- Omitting the IP-type flag uses the user's preference.
+- Routed networking requires explicit `--routed-ipv4` and/or `--ipv6-prefix-len` flags and is subject to admission and inventory. IPv6 prefix lengths may be `/128` or `/56` through `/64`.
+- `timer <name> force` toggles shutdown mode between graceful and force.
 - VM disks are stored on replicated, fault-tolerant Ceph storage; if hardware fails, healthy replicas give us a way to recover the user's data.
 - Replication protects against hardware failure but is not a substitute for backups against deletion, compromised credentials, or application mistakes.
 - If the human did not supply a Killdeer username, ask for one before constructing login commands.
@@ -34,4 +37,3 @@
 - The live helper still prints some examples with `killdeer.plover.digital`; this site normalizes them to `killdeer.digital`.
 - The public web docs intentionally omit administrator-only commands.
 - Contact: `machines@plover.digital` and https://discord.gg/AhD77Raqru
-- Mailing list signup is opened from the homepage contact section as a Mailjet-hosted modal.

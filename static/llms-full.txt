@@ -63,8 +63,10 @@ the control plane and public docs.
 - The public web docs intentionally omit administrator-only commands.
 - Standard user actions include listing, inspecting, creating, starting, stopping, restarting, deleting, and opening the serial console for VMs.
 - Users can increase a stopped VM with `resize`, add IPv4 or IPv6 with `add-ipv4` and `add-ipv6`, and choose `--ipv4`, `--ipv6`, or `--dualstack` when creating a VM.
+- Omitting the IP-type flag uses the user's preference. Routed networking requires explicit `--routed-ipv4` and/or `--ipv6-prefix-len` flags and is subject to admission and inventory. IPv6 prefix lengths may be `/128` or `/56` through `/64`.
 - Users can rename VMs and manage VM account limits and monthly runtime compute budgets. Budget actions can notify, stop, or lock when a budget is reached.
 - Timers accept values like `30m`, `2h`, and `1d`, with a maximum of 7 days.
+- `timer <name> force` toggles shutdown mode between graceful and force.
 - Delete requires the `--confirm` flag.
 
 ## Storage And Durability
@@ -126,12 +128,6 @@ The SSH CLI also accepts full active image names.
 - Students get double credit with a valid `.edu` email.
 - Referrals: $5 for you, $5 for them.
 
-## Mailing List
-
-The homepage places `Join the mailing list` inside the contact section.
-That action opens a Mailjet-hosted signup modal for occasional Killdeer.digital updates.
-If the modal is blocked, users can fall back to the listed email or Discord contact paths.
-
 ## Footer Note
 
 killdeer.digital is a project by plover.digital, an independent service provider building tools and infrastructure for developers.
@@ -143,34 +139,35 @@ Killdeer VM Management v0.1.0
 Usage: ssh [username]@killdeer.digital <command> [args...]
 
 Commands:
-  list                          List all your VMs (Running VMs shown first)
-  status <name>                 Show detailed info for a VM
-  start <name>                  Power on a VM
-  stop <name>                   Graceful shutdown a VM
-  restart <name>                Restart a VM (stop + start)
-  resize <name> <size>          Increase a stopped VM to a larger size
-  rename <old-name> <new-name>  Rename a VM in Killdeer
-  delete <name> [--confirm]     Delete a VM (requires --confirm)
-  create <name> <size> <os> [ip-type]  Create a new VM
-                                ip-type: --ipv4 (default), --ipv6, --dualstack
-  console <name>                Attach to VM serial console (Ctrl+] exits)
-  add-ipv4 <name>               Add IPv4 to VM (requires restart, +$1/mo)
-  add-ipv6 <name>               Add IPv6 to VM (requires restart)
-  billing limits                Show VM account limits
-  billing limits set <n>        Set your VM limit (up to self-service max)
-  billing budget                Show runtime compute budget
-  billing budget set <amount>   Set monthly runtime compute budget (e.g., 10.00)
-  billing budget disable        Disable runtime compute budget
-  billing budget action <mode>  Set action: notify, stop, or lock
-  timer <name>                  Show active shutdown timer for a VM
-  timer <name> <duration>       Set shutdown timer (e.g., 30m, 2h, 1d)
-  timer <name> +<duration>      Add time to existing timer
-  timer <name> -<duration>      Remove time from timer
-  timer <name> cancel           Cancel active timer
-  timer <name> force            Change timer to force shutdown
-  sizes                         List available VM sizes and pricing
-  images                        List available OS images
-  help                          Show this help
+  list                            List all your VMs (Running VMs shown first)
+  status <name>                   Show detailed info for a VM
+  start <name>                    Power on a VM
+  stop <name>                     Graceful shutdown a VM
+  restart <name>                  Restart a VM (stop + start)
+  resize <name> <size>            Increase a stopped VM to a larger size
+  rename <old-name> <new-name>    Rename a VM in Killdeer
+  delete <name> [--confirm]       Delete a VM (requires --confirm)
+  create <name> <size> <os> [ip-type] [--routed-ipv4] [--ipv6-prefix-len /128|/56-/64]
+                                 ip-type: --ipv4, --ipv6, --dualstack (uses your preference by default)
+                                 routed networking: explicit flags only; subject to admission and inventory
+  console <name>                  Attach to VM serial console (Ctrl+] exits)
+  add-ipv4 <name>                 Add IPv4 to VM (requires restart, +$1/mo)
+  add-ipv6 <name>                 Add IPv6 to VM (requires restart)
+  billing limits                  Show VM account limits
+  billing limits set <n>          Set your VM limit (up to self-service max)
+  billing budget                  Show runtime compute budget
+  billing budget set <amount> Set monthly runtime compute budget (e.g., 10.00)
+  billing budget disable          Disable runtime compute budget
+  billing budget action <mode> Set action: notify, stop, or lock
+  timer <name>                    Show active shutdown timer for a VM
+  timer <name> <duration>         Set shutdown timer (e.g., 30m, 2h, 1d)
+  timer <name> +<duration>        Add time to existing timer
+  timer <name> -<duration>        Remove time from timer
+  timer <name> cancel             Cancel active timer
+  timer <name> force              Toggle timer shutdown mode between graceful and force
+  sizes                           List available VM sizes and pricing
+  images                          List available OS images
+  help                            Show this help
 
 Aliases:
   ls = list, st = status, info = status, rm = delete, os = images
@@ -181,6 +178,9 @@ Examples:
   ssh [username]@killdeer.digital rename myvm web
   ssh [username]@killdeer.digital create myvm micro alpine-3.23
   ssh [username]@killdeer.digital create myvm micro nixos
+  ssh [username]@killdeer.digital create myvm micro alpine --ipv4 --routed-ipv4
+  ssh [username]@killdeer.digital create myrouter micro alpine --ipv6 --ipv6-prefix-len /64
+  ssh [username]@killdeer.digital create myvm micro alpine --dualstack --routed-ipv4 --ipv6-prefix-len /128
   ssh [username]@killdeer.digital resize myvm basic
   ssh [username]@killdeer.digital billing limits
   ssh [username]@killdeer.digital billing budget
@@ -189,9 +189,9 @@ Examples:
   ssh [username]@killdeer.digital delete myvm --confirm
 
 Timer Durations:
-  30m    = 30 minutes
-  2h     = 2 hours
-  1d     = 1 day
+  30m                             = 30 minutes
+  2h                              = 2 hours
+  1d                              = 1 day
   Max: 7 days
 
 Omit the command to enter the interactive menu.

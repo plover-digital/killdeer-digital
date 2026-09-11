@@ -1,5 +1,13 @@
 # killdeer.digital build log
 
+## 2026-09-11 :: sync public docs with live SSH help
+
+- Refreshed normalized public help from `ssh killdeer.digital help`, preserving public hostname and username placeholders and omitting administrator-only commands.
+- Synced the full guide's help block, CLI JSON, CLI skill, and agent summaries for preference-based IP defaults, explicit routed networking flags and admission/inventory restrictions, routed examples, and the graceful/force timer toggle.
+- Added live-help discovery to both homepage formats and removed stale mailing-list modal references from current docs.
+- Refreshed the CLI skill digest and corrected an existing stale sizing-skill digest.
+- Verification passed: exact match to normalized live SSH help, identical help in the full guide, CLI command coverage, JSON parsing, both skill digests, public-help redaction, Go compilation (`go test ./...`; no test files), and `git diff --check`.
+
 ## 2026-09-11 :: correct account signup
 
 - Corrected the HTML and Markdown signup instructions: `ssh [username]@killdeer.digital` creates an account on first sign-in with an available username.
