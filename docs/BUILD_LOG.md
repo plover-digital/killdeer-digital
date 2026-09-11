@@ -1,5 +1,12 @@
 # killdeer.digital build log
 
+## 2026-09-11 :: desktop documentation dropdown
+
+- Desktop Docs now opens a native disclosure containing the overview, commands, operating systems, and agent guide.
+- Keep the direct Docs section link on compact layouts. Support keyboard activation, Escape, and outside-click dismissal.
+- Playwright passed in Chromium, WebKit, and Firefox: keyboard activation/link focus, Escape with focus restoration, outside-click dismissal, overview navigation, documentation route responses, and mobile fallback. WebKit uses Option-Tab for macOS link focus.
+- Reviewed desktop screenshot; `git diff --check` and Go compilation passed.
+
 ## 2026-09-11 :: navigation and mobile pricing feedback
 
 - Reported section links doing nothing; reproduced actual scroll movement successfully in Chromium and WebKit, with Firefox checks pending.
