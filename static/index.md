@@ -4,6 +4,8 @@ Linux VMs. Managed over SSH.
 
 We're a small, independent team in Minneapolis building our own hosting stack. Create and manage your virtual machines from your terminal.
 
+Questions? [Join our Discord](https://discord.gg/AhD77Raqru) or email [machines@plover.digital](mailto:machines@plover.digital).
+
 ## Connect
 
 Open the terminal UI (TUI) to sign up or manage your VMs:
