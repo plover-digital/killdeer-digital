@@ -135,8 +135,16 @@ function layout() {
   } else if (screenEl.style.height) {
     screenEl.style.height = '';
   }
-  const rows = Math.max(MIN_ROWS, Math.floor(height / cellHeight));
+  let rows = Math.max(MIN_ROWS, Math.floor(height / cellHeight));
   if (rows !== term.rows) term.resize(COLS, rows);
+  // The real cell height can round up past our estimate; drop rows until the
+  // screen fits rather than leave a sliver that scrolls.
+  const rendered = termEl.querySelector('.xterm-screen')?.offsetHeight ?? 0;
+  if (rendered > height && term.rows > MIN_ROWS) {
+    const realCell = rendered / term.rows;
+    rows = Math.max(MIN_ROWS, Math.floor(height / realCell));
+    if (rows !== term.rows) term.resize(COLS, rows);
+  }
   session?.resize(COLS, term.rows);
   followCursor();
 }
@@ -185,6 +193,21 @@ async function type(text, cps = 140) {
     term.write(ch);
     if (!skipTyping && ch !== ' ') await sleep(1000 / cps);
   }
+}
+
+function wrap(text, width) {
+  const lines = [];
+  let line = '';
+  for (const word of text.split(/\s+/).filter(Boolean)) {
+    if (line && line.length + 1 + word.length > width) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = line ? line + ' ' + word : word;
+    }
+  }
+  if (line) lines.push(line);
+  return lines;
 }
 
 function leader(label, width = 46) {
@@ -434,9 +457,15 @@ async function login(core) {
     } else {
       resetLeds();
     }
-    const reason = message ? ': ' + message.replace(/^ssh: handshake failed: /, '') : '';
-    term.write(`\r\n\r\n  ${ESC}7m connection closed${reason} ${ESC}27m\r\n  ${dim('press enter to sign in again')}\r\n`);
-    announce('Connection closed' + reason);
+    const reason = message ? message.replace(/^ssh: handshake failed: /, '') : '';
+    term.write(`\r\n\r\n  ${ESC}7m connection closed ${ESC}27m\r\n`);
+    // Wrap the reason ourselves so it stays indented inside 80 columns.
+    for (const para of reason.split('\n')) {
+      const indent = para.match(/^ */)[0];
+      for (const line of wrap(para, COLS - 4 - indent.length)) term.write(`  ${indent}${line}\r\n`);
+    }
+    term.write(`  ${dim('press enter to sign in again')}\r\n`);
+    announce('Connection closed' + (reason ? ': ' + reason : ''));
     onEnter = () => { term.write('\r\n'); login(core); };
   }
 }

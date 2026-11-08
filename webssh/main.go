@@ -53,6 +53,8 @@ type session struct {
 	input  *queue
 	cancel context.CancelFunc
 
+	prompted bool // the gateway asked at least one sign-in question
+
 	mu      sync.Mutex
 	sshSess *ssh.Session
 	cols    int
@@ -153,7 +155,7 @@ func (s *session) run(ctx context.Context, pinned ssh.PublicKey) error {
 		if ctx.Err() != nil {
 			return ctx.Err()
 		}
-		return friendlyError(err)
+		return s.friendlyError(err)
 	}
 	client := ssh.NewClient(c, chans, reqs)
 	defer client.Close()
@@ -219,6 +221,9 @@ func (s *session) run(ctx context.Context, pinned ssh.PublicKey) error {
 // challenge relays each keyboard-interactive question (the password, or the
 // signup and verification dialogue) to the page and waits for the answer.
 func (s *session) challenge(name, instruction string, questions []string, echos []bool) ([]string, error) {
+	if len(questions) > 0 {
+		s.prompted = true
+	}
 	if name != "" {
 		s.output([]byte("  " + name + "\r\n"))
 	}
@@ -286,10 +291,17 @@ func (s *session) output(b []byte) {
 	s.opts.Call("onOutput", arr)
 }
 
-func friendlyError(err error) error {
+func (s *session) friendlyError(err error) error {
 	msg := err.Error()
+	// The gateway refuses keyboard-interactive without asking anything when
+	// the account has no password (it signs in with an SSH key only).
+	// x/crypto reports that as "unexpected message type 51 (expected 60)".
+	refused := strings.Contains(msg, "unexpected message type 51") || strings.Contains(msg, "unable to authenticate")
 	switch {
-	case strings.Contains(msg, "unable to authenticate"):
+	case refused && !s.prompted:
+		user := s.opts.Get("username").String()
+		return fmt.Errorf("%s signs in with an SSH key, not a password. From a computer that has the key, run:\n  ssh %s@killdeer.digital", user, user)
+	case refused:
 		return errors.New("sign-in failed")
 	case strings.Contains(msg, "host key mismatch"):
 		return fmt.Errorf("refusing to connect: %v", err)

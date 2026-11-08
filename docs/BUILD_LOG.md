@@ -2577,3 +2577,21 @@ Verification:
   - Rechecked on the full local stack: same-origin wss upgrade 101, cross-origin 403. The browser reached the gateway's password prompt, and stopping the site mid-prompt cancelled the prompt and offered to reconnect.
 - Review fix: if the relay dropped while a prompt was still queued behind typing output, the prompt could open after the close and block it. Prompts now refuse to open once the connection has closed.
 
+
+### 2026-11-08 :: terminal: explain key-only accounts
+
+Report: a user with a key-only account (`technyx`) entered their username and got `connection closed: ssh: unexpected message type 51 (expected 60)`.
+
+Cause:
+- For a verified account with no password, the core's keyboard-interactive handler returns false without asking anything (`cmd/server/ssh.go`).
+- The gateway therefore sends USERAUTH_FAILURE without any INFO_REQUEST, which x/crypto reports as that protocol error.
+
+Changes made:
+- webssh remembers whether the gateway asked any sign-in question.
+- A refusal before any question now reads "`<user>` signs in with an SSH key, not a password. From a computer that has the key, run: `ssh <user>@killdeer.digital`".
+- terminal.js wraps the close reason inside 80 columns instead of putting it all in the highlighted bar.
+- Layout: if the real cell height rounds past the estimate, rows are dropped until the screen fits. `#terminal` hides its native scrollbar. The report's screenshot showed a full-height scrollbar.
+
+Verification:
+- A Node harness ran the new wasm against the live relay. `technyx` got the new message with no password sent. `wokuno` still reached the password prompt.
+- A local site binary (page and relay) in headless Chromium showed the message wrapped correctly, and the terminal's scroll height equals its client height.
