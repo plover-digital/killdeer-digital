@@ -13,11 +13,13 @@ import (
 	"time"
 )
 
-// terminalCSP is stricter than the homepage's: no third-party scripts, and
-// 'wasm-unsafe-eval' so the SSH core can be compiled. connect-src covers the
-// wasm fetch and the WebSocket relay on this origin.
-const terminalCSP = "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; " +
-	"font-src 'self'; img-src 'self' data:; connect-src 'self' wss://killdeer.digital; " +
+// terminalCSP is stricter than the homepage's: the only outside origin is our
+// own Rybbit analytics, and 'wasm-unsafe-eval' lets the SSH core compile.
+// connect-src covers the wasm fetch, the WebSocket relay and analytics.
+const analyticsOrigin = "https://analytics.plover.digital"
+
+const terminalCSP = "default-src 'none'; script-src 'self' 'wasm-unsafe-eval' " + analyticsOrigin + "; style-src 'self' 'unsafe-inline'; " +
+	"font-src 'self'; img-src 'self' data:; connect-src 'self' wss://killdeer.digital " + analyticsOrigin + "; " +
 	"base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
 
 type terminalFile struct {

@@ -151,12 +151,12 @@
           <h2 id="terminal-title">Terminal</h2>
           <button type="button" id="crt-toggle" aria-pressed="false" title="Amber phosphor with scanlines">[crt]</button>
         </div>
-        <div class="screen" id="screen">
+        <div class="screen rr-block" id="screen">
           <div id="terminal" aria-label="Killdeer terminal"></div>
           <div class="scanlines"></div>
           <noscript><p style="padding:1rem">This terminal needs JavaScript and WebAssembly. You can always use <code>ssh [username]@killdeer.digital</code>.</p></noscript>
         </div>
-        <div class="keys" id="keys" aria-label="Terminal keys">
+        <div class="keys rr-block" id="keys" aria-label="Terminal keys">
           <button type="button" data-key="&#27;">esc</button>
           <button type="button" data-key="&#9;">tab</button>
           <button type="button" data-key="&#3;">ctrl-c</button>
@@ -188,5 +188,8 @@
   <p class="sr-only" id="announcer" role="status" aria-live="polite"></p>
   <script src="wasm_exec.js"></script>
   <script type="module" src="terminal.js"></script>
+  <!-- Rybbit, as on the homepage. The terminal (.screen) and its keys are
+       rr-block, so session replay, if enabled, never records them. -->
+  <script src="https://analytics.plover.digital/api/script.js" data-site-id="bf210ad5f698" data-replay-block-selector="#screen, #keys, #terminal" defer></script>
 </body>
 </html>

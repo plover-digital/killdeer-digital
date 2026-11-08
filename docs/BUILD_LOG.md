@@ -2596,3 +2596,14 @@ Changes made:
 Verification:
 - A Node harness ran the new wasm against the live relay. `technyx` got the new message with no password sent. `wokuno` still reached the password prompt.
 - A local site binary (page and relay) in headless Chromium showed the message wrapped correctly, and the terminal's scroll height equals its client height.
+
+Follow-up direction: use Rybbit analytics everywhere possible to track user behaviour.
+- The homepage already loads Rybbit. The other routes are plain text and JSON, so `/ssh/` was the only page missing it.
+- `/ssh/` now loads the same script, and its CSP allows only `https://analytics.plover.digital` beyond the site itself.
+- Funnel events: `terminal_ready`, `terminal_core_failed`, `terminal_connect`, `terminal_prompted`, `terminal_signed_in`, `terminal_closed` (reason category, stage, signed_in, prompts, seconds) and `terminal_crt`. No username, password or screen text is ever sent.
+- The terminal and its touch keys are `rr-block`, plus `data-replay-block-selector`, so session replay never records them.
+- Verified in headless Chromium against the local binary, with event uploads intercepted rather than sent:
+  - The script and its tracking config loaded with no CSP errors.
+  - The pageview and funnel events fired, including `terminal_closed` with `reason: no_password`.
+  - No upload contained the username.
+

@@ -101,6 +101,7 @@ function applySettings() {
 
 document.getElementById('crt-toggle').addEventListener('click', () => {
   crt = !crt;
+  track('terminal_crt', { on: crt });
   prefs.set('crt', crt ? 'on' : 'off');
   applySettings();
   term.focus();
@@ -179,6 +180,25 @@ function resetLeds(keepCore = true) {
   if (!keepCore) led('core');
 }
 function announce(text) { announcer.textContent = text; }
+
+// ---------------------------------------------------------------- analytics
+
+// Funnel events for Rybbit (analytics.plover.digital), like the homepage.
+// They carry only stages, categories and durations: never the username, the
+// password or anything shown in the terminal.
+function track(name, props) {
+  try { globalThis.rybbit?.event(name, props); } catch { /* analytics is optional */ }
+}
+
+function closeCategory(message, signedIn) {
+  if (!message) return signedIn ? 'ended' : 'closed';
+  if (message.includes("didn't ask")) return 'no_password';
+  if (message.includes('sign-in failed')) return 'auth_failed';
+  if (message.includes('cancelled')) return 'cancelled';
+  if (message.includes('host key')) return 'host_key';
+  if (message.includes('relay') || message.includes('connection lost')) return 'relay';
+  return 'other';
+}
 
 // ---------------------------------------------------------------- output helpers
 
@@ -359,11 +379,13 @@ async function boot() {
   } catch (err) {
     stepFailed();
     led('core', 'bad');
+    track('terminal_core_failed');
     term.write(`\r\n  ${err.message}.\r\n  Use your own client instead: ${bold('ssh [username]@killdeer.digital')}\r\n`);
     return;
   }
   stepDone();
   led('core', 'ok');
+  track('terminal_ready');
   document.getElementById('fingerprint').textContent = core.hostKeyFingerprint;
   term.write('\r\n');
   login(core);
@@ -388,6 +410,10 @@ async function login(core) {
 
   let signedIn = false;
   let connectionClosed = false;
+  let prompts = 0;
+  let stage = 'relay';
+  const started = Date.now();
+  track('terminal_connect');
   session = core.connect({
     url: relayURL(),
     username,
@@ -399,6 +425,8 @@ async function login(core) {
     onPrompt(question, echo) {
       // A prompt queued behind typing output must not open after the
       // connection has already gone, or it would block closed() forever.
+      prompts++;
+      if (prompts === 1) track('terminal_prompted');
       return inOrder(() => (connectionClosed
         ? Promise.reject(new Error('connection closed'))
         : readLine('  ' + question, echo)));
@@ -420,8 +448,9 @@ async function login(core) {
   });
   session.live = false;
 
-  async function status(stage, detail) {
-    switch (stage) {
+  async function status(next, detail) {
+    stage = next;
+    switch (next) {
       case 'relay':
         led('relay', 'busy');
         await step('relay');
@@ -438,6 +467,7 @@ async function login(core) {
       case 'auth-ok':
         signedIn = true;
         led('auth', 'ok');
+        track('terminal_signed_in', { prompts, seconds: Math.round((Date.now() - started) / 1000) });
         announce('Signed in to Killdeer');
         break;
       case 'shell':
@@ -458,6 +488,13 @@ async function login(core) {
       resetLeds();
     }
     const reason = message ? message.replace(/^ssh: handshake failed: /, '') : '';
+    track('terminal_closed', {
+      reason: closeCategory(reason, wasSignedIn),
+      stage,
+      signed_in: wasSignedIn,
+      prompts,
+      seconds: Math.round((Date.now() - started) / 1000),
+    });
     term.write(`\r\n\r\n  ${ESC}7m connection closed ${ESC}27m\r\n`);
     // Wrap the reason ourselves so it stays indented inside 80 columns.
     for (const para of reason.split('\n')) {
