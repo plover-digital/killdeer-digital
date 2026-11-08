@@ -2588,7 +2588,8 @@ Cause:
 
 Changes made:
 - webssh remembers whether the gateway asked any sign-in question.
-- A refusal before any question now reads "`<user>` signs in with an SSH key, not a password. From a computer that has the key, run: `ssh <user>@killdeer.digital`".
+- A refusal before any question now says killdeer didn't ask for a password, that this usually means the account signs in with an SSH key, gives `ssh <user>@killdeer.digital`, and suggests trying again if the account has a password.
+  - The wording is tentative because review pointed out that a core database error refuses the same way.
 - terminal.js wraps the close reason inside 80 columns instead of putting it all in the highlighted bar.
 - Layout: if the real cell height rounds past the estimate, rows are dropped until the screen fits. `#terminal` hides its native scrollbar. The report's screenshot showed a full-height scrollbar.
 

@@ -300,7 +300,9 @@ func (s *session) friendlyError(err error) error {
 	switch {
 	case refused && !s.prompted:
 		user := s.opts.Get("username").String()
-		return fmt.Errorf("%s signs in with an SSH key, not a password. From a computer that has the key, run:\n  ssh %s@killdeer.digital", user, user)
+		// A core-side error refuses the same way, so this is a likely
+		// explanation, not a certain one.
+		return fmt.Errorf("killdeer didn't ask %s for a password. That usually means the account signs in with an SSH key. From a computer that has the key, run:\n  ssh %s@killdeer.digital\nIf this account does have a password, try again in a moment.", user, user)
 	case refused:
 		return errors.New("sign-in failed")
 	case strings.Contains(msg, "host key mismatch"):
