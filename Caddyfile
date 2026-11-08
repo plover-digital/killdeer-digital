@@ -4,5 +4,14 @@ http://billing.killdeer.digital, https://billing.killdeer.digital {
 
 killdeer.digital, http://killdeer.digital {
   encode zstd gzip
-  reverse_proxy killdeer-site:8080
+
+  # Browser SSH client (sshterm). The WebSocket proxy lives at /ssh/_ws/.
+  redir /ssh /ssh/ 308
+  handle_path /ssh/* {
+    reverse_proxy sshterm:8080
+  }
+
+  handle {
+    reverse_proxy killdeer-site:8080
+  }
 }

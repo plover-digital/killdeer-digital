@@ -2,7 +2,8 @@
   "currency": "USD",
   "billingNotes": [
     "Base fee includes $1/mo for IPv4 plus $1/mo per 10GB storage.",
-    "IPv6-only VMs save $1/mo because there is no IPv4 charge.",
+    "Legacy and routed-/128 IPv6-only VMs avoid the $1/mo IPv4 charge.",
+    "Delegated /64-/56 IPv6 prefixes add $1.00/$1.25/$1.50/$1.75/$2.00/$2.25/$2.50/$2.75/$3.00 per month.",
     "Runtime is charged hourly only when the VM is powered on.",
     "Base fee is prorated when VMs are created or deleted mid-cycle."
   ],

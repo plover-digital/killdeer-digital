@@ -74,6 +74,17 @@ Resize a stopped VM:
 ssh [username]@killdeer.digital resize <name> <size>
 ```
 
+Manage storage volumes (sizes are whole GB):
+
+```sh
+ssh [username]@killdeer.digital volume list
+ssh [username]@killdeer.digital volume status <name-or-uuid>
+ssh [username]@killdeer.digital volume create <name> <whole-gb> [--vm <vm-name-or-uuid>]
+ssh [username]@killdeer.digital volume attach <volume> <vm>
+ssh [username]@killdeer.digital volume detach <volume>
+ssh [username]@killdeer.digital volume delete <volume> --confirm
+```
+
 Rename a VM:
 
 ```sh
@@ -171,13 +182,14 @@ Alpine    3.23
 Debian    13
 Fedora    44
 Rocky     10
-Ubuntu    26.04, 24.04
+Ubuntu    26.04
 
 Experimental distros:
 
 DISTRO      VERSIONS
 Arch Linux  current
-NixOS       25.11
+NixOS       26.05
+Void Linux  current
 ```
 
 Ubuntu 26.04 is the default Ubuntu image. Run `ssh [username]@killdeer.digital os` when exact image names are needed.

@@ -16,6 +16,8 @@ ssh [username]@killdeer.digital
 
 Use your username, or choose an available one to create an account on first sign-in. New accounts get **$20 credit**.
 
+No SSH client handy? [Open the terminal in your browser](https://killdeer.digital/ssh/) and sign in with your username and password.
+
 You can also create a VM directly from the command line. For example:
 
 ```sh

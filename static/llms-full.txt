@@ -11,6 +11,7 @@ the control plane and public docs.
 
 - Homepage (Markdown): https://killdeer.digital/index.md
 - Homepage (HTML): https://killdeer.digital/
+- Browser terminal: https://killdeer.digital/ssh/
 - Agent index: https://killdeer.digital/llms.txt
 - Normalized SSH help: https://killdeer.digital/ssh-help.txt
 - Sizes and pricing: https://killdeer.digital/sizes.txt
@@ -34,6 +35,7 @@ the control plane and public docs.
 ## Access
 
 - Preferred login command: `ssh [username]@killdeer.digital`
+- Browser terminal: https://killdeer.digital/ssh/ runs the same TUI in a web browser with username and password sign-in, for users without a local SSH client.
 - Discovery command: `ssh killdeer.digital help`
 - OS image discovery command: `ssh killdeer.digital os`
 - Replace `[username]` with the user's Killdeer account username.
@@ -86,7 +88,8 @@ Ultra     4 vCPU  4 GB  100 GB  $11/mo  $0.0397/hr  ~$40/mo
 Mega      4 vCPU  8 GB  100 GB  $11/mo  $0.0507/hr  ~$48/mo
 
 Base fee includes $1/mo for IPv4 + $1/mo per 10GB storage.
-IPv6-only VMs save $1/mo (no IPv4 charge).
+Legacy and routed-/128 IPv6-only VMs avoid the $1/mo IPv4 charge.
+Delegated /64-/56 prefixes add $1.00/$1.25/$1.50/$1.75/$2.00/$2.25/$2.50/$2.75/$3.00 per month.
 Runtime is charged hourly only when the VM is powered on.
 Base fee is prorated when VMs are created or deleted mid-cycle.
 
@@ -101,13 +104,14 @@ Alpine    3.23
 Debian    13
 Fedora    44
 Rocky     10
-Ubuntu    26.04, 24.04
+Ubuntu    26.04
 
 Experimental distros:
 
 DISTRO      VERSIONS
 Arch Linux  current
-NixOS       25.11
+NixOS       26.05
+Void Linux  current
 
 Ubuntu 26.04 is the default Ubuntu image.
 The SSH CLI also accepts full active image names.
@@ -142,6 +146,7 @@ Commands:
   list                            List all your VMs (Running VMs shown first)
   status <name>                   Show detailed info for a VM
   start <name>                    Power on a VM
+  volume <action>                 Create, list, inspect, attach, detach or delete storage volumes
   stop <name>                     Graceful shutdown a VM
   restart <name>                  Restart a VM (stop + start)
   resize <name> <size>            Increase a stopped VM to a larger size

@@ -21,7 +21,8 @@ Use this skill when a user asks what Killdeer VM size to choose or how Killdeer 
 ## Billing Notes
 
 Base fee includes `$1/mo` for IPv4 plus `$1/mo` per 10GB storage.
-IPv6-only VMs save `$1/mo` because there is no IPv4 charge.
+Legacy and routed-/128 IPv6-only VMs avoid the `$1/mo` IPv4 charge.
+Delegated IPv6 prefixes from /64 to /56 add `$1.00` (/64) up to `$3.00` (/56) per month, in `$0.25` steps per prefix length.
 Runtime is charged hourly only when the VM is powered on.
 Base fee is prorated when VMs are created or deleted mid-cycle.
 
