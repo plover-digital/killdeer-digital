@@ -2532,3 +2532,48 @@ Verification:
   - Retested against a local Caddy with `tls internal`. Plain-HTTP `/ssh`, `/ssh/`, `/ssh/_ws/...` and `/ssh/?x=1` all redirect to HTTPS.
   - Over HTTPS, `/ssh/` and `config.json` return 200. A same-origin wss upgrade returns 101 and a cross-origin one returns 403.
 
+### 2026-11-08 :: custom browser terminal
+
+New user direction:
+- Replace sshterm's UI (its banner and command shell) with our own client, and have fun with the styling.
+- Then: "go for something fun, but don't overdo it; keep it in line with the main site." A first full-CRT pass (bezel, power-on animation, rolling bar, flicker, vignette, three phosphors) was pulled back to the homepage's look plus an optional `[crt]` toggle.
+
+Changes made:
+- `webssh/`: our own Go to WASM SSH core (x/crypto/ssh v0.58.0).
+  - It provides a WebSocket `net.Conn`, a pinned host key and keyboard-interactive prompts relayed to the page.
+  - It requests an xterm-256color PTY and exposes the JS API `killdeerSSH.connect`.
+  - It is 6.3 MB raw and 1.75 MB compressed, against sshterm's 21.5 MB.
+- `static/ssh/`: the terminal page.
+  - It uses the homepage's masthead, nav, `-- headings --`, dashed rules and footer, with its paper, ink and wash tokens in light or dark to match the system.
+  - The terminal sits in a wash box with the homepage's ink left rule.
+  - Fun, kept small: a typed boot sequence, `[✓] / [·] / [x]` status ticks, and the optional `[crt]` toggle (amber phosphor, faint scanlines, a little bloom).
+  - Touch keys on coarse pointers. On phones the box is sized to exactly 24 rows.
+  - xterm.js 6.0.0 and addon-webgl 0.19.0 vendored from npm with verified integrity.
+- The Go site serves `/ssh/` from the embedded files with a dedicated CSP and ETags. The Containerfile (now `golang:1.26-alpine`) builds the wasm and copies the matching `wasm_exec.js`.
+- Caddy now sends only `/ssh/_ws/*` to the sshterm-server relay. `sshterm/config.json` is gone.
+
+Rendering notes:
+- WebGL is kept so that box-drawing and block characters line up (Martian Mono has none), which guest consoles reached through `console` need.
+- A CSS drop-shadow on an opaque canvas outlines the whole rectangle, and a transparent WebGL canvas draws dim text on black boxes.
+- So the `[crt]` glow is an SVG bloom on the opaque canvas: a blur, thresholded so the background doesn't lift, then screen-blended back on.
+
+Verification:
+- `go test ./...` (new `TerminalHandler` test: CSP, ETag 304, 404s, 405) and `go vet` for the site and for webssh under js/wasm.
+- A Node harness ran the wasm against the live relay. It reported the relay ok and the pinned host key ok, then reached the gateway's `Enter your password:` prompt.
+- Ran the full container stack locally (site image built from the Containerfile, sshterm relay, Caddy with `tls internal`):
+  - `/ssh/` assets are served with the right types. The wasm is 1.75 MB compressed, and a revalidation returns 304.
+  - Headless Chromium screenshots of light, dark, `[crt]` and a phone viewport all look right.
+  - Username then password prompt works against the real gateway.
+  - Ctrl-C at the password prompt cancels the sign-in, and Enter starts a new one.
+- Review fixes:
+  - The font now fits 24 rows into the height as well as 80 columns across. Very short screens scroll and follow the cursor.
+  - A relay drop during a password prompt now cancels the prompt and offers to reconnect.
+  - Prompt callbacks release themselves only once the JS promise settles, because a released js.Func would crash the runtime.
+  - Tested by stopping the relay mid-prompt.
+- Keep it a Go project: the relay moved into the site server (`relay.go`, coder/websocket v1.8.15, which has no dependencies), and the third-party `sshterm` compose service is gone. Caddy proxies `/ssh/_ws/` to killdeer-site like every other path.
+  - The relay keeps same-origin upgrades only, a 1 MiB message limit (set after `NetConn`, which lifts the limit), a cap of 256 connections in total, and connect and disconnect logging.
+  - A per-client cap was removed in review: rootless Podman port forwarding gives every visitor the same address, so it would have been one shared cap of 8.
+  - Tests: bytes echo through it, a cross-origin upgrade gets 403, other paths get 404, an oversized message closes the connection (1009), the total cap holds, and the client address comes from Caddy's header.
+  - Rechecked on the full local stack: same-origin wss upgrade 101, cross-origin 403. The browser reached the gateway's password prompt, and stopping the site mid-prompt cancelled the prompt and offered to reconnect.
+- Review fix: if the relay dropped while a prompt was still queued behind typing output, the prompt could open after the close and block it. Prompts now refuse to open once the connection has closed.
+
