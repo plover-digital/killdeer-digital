@@ -15,15 +15,6 @@ const LINE_HEIGHT = 1.12;
 const FONT = '"Martian Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace';
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const WORDMARK = [
-  '    __   _ ____    __',
-  '   / /__(_) / /___/ /__  ___  _____',
-  '  / //_/ / / / __  / _ \\/ _ \\/ ___/',
-  ' / ,< / / / / /_/ /  __/  __/ /',
-  '/_/|_/_/_/_/\\__,_/\\___/\\___/_/',
-  '                  .digital',
-];
-
 // ---------------------------------------------------------------- settings
 
 const prefs = {
@@ -56,17 +47,26 @@ function phosphorTheme(fg, bg) {
   };
 }
 
+// The default themes are the homepage's ink-on-wash palette, light or dark
+// to match the system. [crt] swaps in the amber phosphor.
 const THEMES = {
-  amber: phosphorTheme('#ffb000', '#120b02'),
-  green: phosphorTheme('#4dff88', '#021208'),
-  plain: {
-    foreground: '#ededed', background: '#171717', cursor: '#ededed', cursorAccent: '#171717',
+  light: {
+    foreground: '#202020', background: '#f5f5f5', cursor: '#202020', cursorAccent: '#f5f5f5',
+    selectionBackground: '#cfcfcf',
+    black: '#202020', red: '#b3261e', green: '#2e7d32', yellow: '#8a6100',
+    blue: '#1f5fbf', magenta: '#8e3fa8', cyan: '#00737a', white: '#595959',
+    brightBlack: '#6b6b6b', brightRed: '#c9372c', brightGreen: '#388e3c', brightYellow: '#9c6f00',
+    brightBlue: '#2a6fd6', brightMagenta: '#9c4dbb', brightCyan: '#00838a', brightWhite: '#000000',
+  },
+  dark: {
+    foreground: '#ededed', background: '#232323', cursor: '#ededed', cursorAccent: '#232323',
     selectionBackground: '#4a4a4a',
-    black: '#232323', red: '#ff6b5e', green: '#7bd88f', yellow: '#f2c66d',
+    black: '#171717', red: '#ff6b5e', green: '#7bd88f', yellow: '#f2c66d',
     blue: '#78a9ff', magenta: '#d79cff', cyan: '#6fd6d6', white: '#d4d4d4',
-    brightBlack: '#6b6b6b', brightRed: '#ff8f85', brightGreen: '#a2e9b0', brightYellow: '#ffd98e',
+    brightBlack: '#8a8a8a', brightRed: '#ff8f85', brightGreen: '#a2e9b0', brightYellow: '#ffd98e',
     brightBlue: '#a1c4ff', brightMagenta: '#e6bfff', brightCyan: '#9ee8e8', brightWhite: '#ffffff',
   },
+  crt: phosphorTheme('#ffb000', '#120b02'),
 };
 
 // ---------------------------------------------------------------- terminal
@@ -75,8 +75,9 @@ const screenEl = document.getElementById('screen');
 const termEl = document.getElementById('terminal');
 const announcer = document.getElementById('announcer');
 
-let theme = THEMES[prefs.get('theme', 'amber')] ? prefs.get('theme', 'amber') : 'amber';
-let fx = prefs.get('fx', reducedMotion ? 'off' : 'on') === 'on';
+const darkScheme = matchMedia('(prefers-color-scheme: dark)');
+let crt = prefs.get('crt', 'off') === 'on';
+const currentTheme = () => THEMES[crt ? 'crt' : darkScheme.matches ? 'dark' : 'light'];
 
 const term = new Terminal({
   cols: COLS,
@@ -89,39 +90,27 @@ const term = new Terminal({
   cursorStyle: 'block',
   scrollback: 2000,
   drawBoldTextInBrightColors: true,
-  theme: THEMES[theme],
+  theme: currentTheme(),
 });
 
 function applySettings() {
-  document.documentElement.dataset.theme = theme;
-  document.body.classList.toggle('fx', fx);
-  term.options.theme = THEMES[theme];
-  document.querySelectorAll('[data-theme-choice]').forEach((b) => {
-    b.setAttribute('aria-pressed', String(b.dataset.themeChoice === theme));
-  });
-  const fxButton = document.getElementById('fx-toggle');
-  fxButton.setAttribute('aria-pressed', String(fx));
-  fxButton.textContent = fx ? 'fx on' : 'fx off';
+  document.body.classList.toggle('crt', crt);
+  term.options.theme = currentTheme();
+  document.getElementById('crt-toggle').setAttribute('aria-pressed', String(crt));
 }
 
-document.querySelectorAll('[data-theme-choice]').forEach((b) => {
-  b.addEventListener('click', () => {
-    theme = b.dataset.themeChoice;
-    prefs.set('theme', theme);
-    applySettings();
-    term.focus();
-  });
-});
-document.getElementById('fx-toggle').addEventListener('click', () => {
-  fx = !fx;
-  prefs.set('fx', fx ? 'on' : 'off');
+document.getElementById('crt-toggle').addEventListener('click', () => {
+  crt = !crt;
+  prefs.set('crt', crt ? 'on' : 'off');
   applySettings();
   term.focus();
 });
+darkScheme.addEventListener('change', applySettings);
 
 // Fit exactly 80 columns across the screen and as many rows as fit (at
-// least 24). Narrow screens scroll sideways rather than break the TUI.
+// least 24).
 let session = null;
+const narrow = matchMedia('(max-width: 40rem)');
 function layout() {
   const width = termEl.clientWidth;
   const height = termEl.clientHeight;
@@ -129,13 +118,42 @@ function layout() {
   const probe = document.createElement('canvas').getContext('2d');
   probe.font = `100px ${FONT}`;
   const advance = probe.measureText('M'.repeat(10)).width / 1000; // per px of font size
-  const fontSize = Math.max(8, Math.min(22, Math.floor((width - 2) / (COLS * advance) * 4) / 4));
+  // Fit 80 columns across and at least 24 rows down; whichever is tighter
+  // wins. Below 8px the screen scrolls instead (tiny landscape phones).
+  const byWidth = (width - 2) / (COLS * advance);
+  const byHeight = height / (MIN_ROWS * LINE_HEIGHT) - 0.5;
+  // (Phones size the box to the font below, so only the width counts there.)
+  const fit = narrow.matches ? byWidth : Math.min(byWidth, byHeight);
+  const fontSize = Math.max(8, Math.min(22, Math.floor(fit * 4) / 4));
   term.options.fontSize = fontSize;
   const cellHeight = Math.ceil(fontSize * LINE_HEIGHT) || 1;
+  // On phones the width decides the font size, so shrink the box to 24 rows
+  // instead of leaving it mostly empty.
+  if (narrow.matches) {
+    const fitted = `${MIN_ROWS * cellHeight + (screenEl.clientHeight - height) + 2}px`;
+    if (screenEl.style.height !== fitted) screenEl.style.height = fitted;
+  } else if (screenEl.style.height) {
+    screenEl.style.height = '';
+  }
   const rows = Math.max(MIN_ROWS, Math.floor(height / cellHeight));
   if (rows !== term.rows) term.resize(COLS, rows);
   session?.resize(COLS, term.rows);
+  followCursor();
 }
+// On screens too short for 24 rows the terminal scrolls; keep the cursor
+// (and so the active prompt) in view.
+function followCursor() {
+  if (termEl.scrollHeight <= termEl.clientHeight) return;
+  const screen = termEl.querySelector('.xterm-screen');
+  if (!screen) return;
+  const cell = screen.offsetHeight / term.rows;
+  const top = term.buffer.active.cursorY * cell;
+  if (top < termEl.scrollTop) termEl.scrollTop = top;
+  else if (top + cell > termEl.scrollTop + termEl.clientHeight) termEl.scrollTop = top + cell - termEl.clientHeight;
+}
+term.onWriteParsed(followCursor);
+narrow.addEventListener('change', layout);
+
 let layoutTimer = 0;
 new ResizeObserver(() => {
   clearTimeout(layoutTimer);
@@ -304,16 +322,11 @@ async function boot() {
     term.loadAddon(webgl);
   } catch { /* fall back to the DOM renderer */ }
   layout();
-  if (!reducedMotion) screenEl.classList.add('on');
   term.focus();
-  await sleep(reducedMotion ? 0 : 650);
 
-  for (const line of WORDMARK) {
-    await type('  ' + line, 900);
-    term.write('\r\n');
-  }
   term.write('\r\n');
-  await type(dim('  killdeer terminal · your ssh client runs in this tab') + '\r\n\r\n', 220);
+  await type(`  ${bold('killdeer.digital')} ${dim('~v~')}\r\n`, 60);
+  await type(dim('  your ssh client runs in this tab') + '\r\n\r\n', 220);
 
   led('core', 'busy');
   await step('ssh core');
@@ -328,7 +341,7 @@ async function boot() {
   }
   stepDone();
   led('core', 'ok');
-  document.getElementById('fingerprint').textContent = 'host key ' + core.hostKeyFingerprint;
+  document.getElementById('fingerprint').textContent = core.hostKeyFingerprint;
   term.write('\r\n');
   login(core);
 }
@@ -366,6 +379,13 @@ async function login(core) {
       inOrder(() => term.write(bytes));
     },
     onClose(message) {
+      // A prompt still waiting for input would hold up the queue forever.
+      if (lineReader) {
+        const pending = lineReader;
+        lineReader = null;
+        term.write('\r\n');
+        pending.reject(new Error('connection closed'));
+      }
       inOrder(() => closed(message));
     },
   });

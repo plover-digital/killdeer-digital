@@ -47,6 +47,8 @@ func main() {
 // session is one browser SSH connection.
 type session struct {
 	opts js.Value
+	ctx  context.Context
+	conn *wsConn // set once the relay is open
 
 	input  *queue
 	cancel context.CancelFunc
@@ -67,6 +69,7 @@ func connect(pinned ssh.PublicKey, opts js.Value) js.Value {
 	ctx, cancel := context.WithCancel(context.Background())
 	s := &session{
 		opts:   opts,
+		ctx:    ctx,
 		input:  newQueue(),
 		cancel: cancel,
 		cols:   opts.Get("cols").Int(),
@@ -123,6 +126,7 @@ func (s *session) run(ctx context.Context, pinned ssh.PublicKey) error {
 		return err
 	}
 	context.AfterFunc(ctx, func() { conn.Close() })
+	s.conn = conn
 	s.status("relay-ok", "")
 
 	config := &ssh.ClientConfig{
@@ -238,20 +242,32 @@ func (s *session) prompt(question string, echo bool) (string, error) {
 		err    error
 	}
 	ch := make(chan result, 1)
+	// The promise may settle after we stop waiting (the connection dropped),
+	// so the callbacks release themselves rather than being released here:
+	// calling a released js.Func would crash the whole runtime.
 	var then, catch js.Func
+	settle := func(r result) {
+		ch <- r
+		then.Release()
+		catch.Release()
+	}
 	then = js.FuncOf(func(this js.Value, args []js.Value) any {
-		ch <- result{answer: args[0].String()}
+		settle(result{answer: args[0].String()})
 		return nil
 	})
 	catch = js.FuncOf(func(this js.Value, args []js.Value) any {
-		ch <- result{err: errors.New("sign-in cancelled")}
+		settle(result{err: errors.New("sign-in cancelled")})
 		return nil
 	})
-	defer then.Release()
-	defer catch.Release()
 	s.opts.Call("onPrompt", question, echo).Call("then", then, catch)
-	r := <-ch
-	return r.answer, r.err
+	select {
+	case r := <-ch:
+		return r.answer, r.err
+	case <-s.conn.dead:
+		return "", errors.New("connection lost")
+	case <-s.ctx.Done():
+		return "", s.ctx.Err()
+	}
 }
 
 func (s *session) resize(cols, rows int) {

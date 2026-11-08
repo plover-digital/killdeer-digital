@@ -18,7 +18,7 @@ Ongoing design + architecture notes live in [docs/BUILD_LOG.md](docs/BUILD_LOG.m
 - A markdown version of the homepage at `static/index.md`
 - Agent discovery files at `static/robots.txt` and `static/sitemap.xml`
 - A tiny Go server that serves the page and discovery files
-- A browser terminal at `/ssh/`: our own SSH client in Go compiled to WASM (`webssh/`), xterm.js and a CRT-styled page (`static/ssh/`)
+- A browser terminal at `/ssh/`: our own SSH client in Go compiled to WASM (`webssh/`) plus xterm.js, on a page styled like the homepage (`static/ssh/`)
 - A tiny Caddy front end for the containerized setup
 - A `Containerfile` and `compose.yaml` for Podman
 
@@ -51,7 +51,7 @@ If a client requests `/` with `Accept: text/markdown`, the server now serves the
 
 ## Browser terminal (`/ssh/`)
 
-`/ssh/` is a retro CRT terminal (amber, green or plain phosphor, with switchable effects) that signs in to Killdeer from the browser.
+`/ssh/` is a browser terminal that signs in to Killdeer. It uses the homepage's layout and its paper and ink tokens, light or dark to match the system, with a typed boot sequence, `[✓]` status ticks and an optional `[crt]` toggle (amber phosphor, faint scanlines and a little bloom).
 
 - `webssh/` is the SSH client, a separate Go module built with `GOOS=js GOARCH=wasm` and using `golang.org/x/crypto/ssh`.
   It does the whole SSH handshake in the browser.
@@ -59,8 +59,8 @@ If a client requests `/` with `Accept: text/markdown`, the server now serves the
   - It signs in only with keyboard-interactive auth: the gateway's password, signup and verification prompts.
   - It requests an `xterm-256color` PTY.
 - `static/ssh/` holds the page:
-  - `index.html` with the CRT styles and the SVG bloom filter.
-  - `terminal.js`, which handles the boot sequence, local username and password prompts, status LEDs and touch keys.
+  - `index.html`, which holds the page and the `[crt]` styles, including the SVG bloom filter.
+  - `terminal.js`, which handles the boot sequence, local username and password prompts, status ticks, touch keys and the layout. The layout is fixed at 80 columns, and phones get a box exactly 24 rows tall.
   - `vendor/`, holding xterm.js 6.0.0 and addon-webgl 0.19.0 copied from npm. Their integrity hashes were verified, and the MIT licences sit alongside.
 - The Go site embeds `static/ssh/` and serves it with its own strict CSP, which allows no third-party scripts and permits `'wasm-unsafe-eval'`. Files carry content-hash ETags.
 - `killdeer-ssh.wasm` and `wasm_exec.js` are build outputs, so they are not in git.

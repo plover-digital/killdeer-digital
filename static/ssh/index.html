@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>killdeer terminal</title>
-  <meta name="description" content="Sign in to Killdeer from your browser. The SSH client runs on your device; your password never leaves the encrypted SSH session.">
-  <meta name="color-scheme" content="dark">
-  <meta name="theme-color" content="#0b0a08">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>terminal · killdeer.digital</title>
+  <meta name="description" content="Sign in to Killdeer from your browser. The SSH client runs on your device; your password only travels inside the encrypted SSH session.">
+  <meta name="color-scheme" content="light dark">
   <link rel="canonical" href="https://killdeer.digital/ssh/">
   <link rel="preload" href="/martian-mono-regular.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="vendor/xterm.css">
@@ -15,235 +14,175 @@
       font-family: "Martian Mono";
       src: url("/martian-mono-regular.ttf") format("truetype");
       font-weight: 400;
+      font-style: normal;
       font-display: block;
     }
+    /* Same tokens as the homepage. */
     :root {
-      --room: #0b0a08;
-      --bezel-hi: #2b2823;
-      --bezel-lo: #14120f;
-      --label: #8a8378;
-      --label-hi: #d9d2c5;
-      --phosphor: #ffb000;
-      --phosphor-dim: #7a5400;
-      --screen: #120b02;
-      --glow: rgba(255, 176, 0, .55);
+      color-scheme: light dark;
+      --paper: #fff;
+      --ink: #202020;
+      --muted: #595959;
+      --line: #b3b3b3;
+      --wash: #f5f5f5;
+      --amber: #ffb000;
       --mono: "Martian Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
-      color-scheme: dark;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
     }
-    :root[data-theme="green"] {
-      --phosphor: #4dff88;
-      --phosphor-dim: #1d7a3f;
-      --screen: #021208;
-      --glow: rgba(77, 255, 136, .5);
-    }
-    :root[data-theme="plain"] {
-      --phosphor: #ededed;
-      --phosphor-dim: #8f8f8f;
-      --screen: #171717;
-      --glow: rgba(237, 237, 237, 0);
+    @media (prefers-color-scheme: dark) {
+      :root { --paper: #171717; --ink: #ededed; --muted: #b4b4b4; --line: #616161; --wash: #232323; }
     }
     * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; }
-    body {
-      background:
-        radial-gradient(ellipse at 50% 30%, #1a1814 0%, var(--room) 70%) fixed,
-        var(--room);
-      color: var(--label);
-      font-family: var(--mono);
-      font-size: .75rem;
-      overflow: hidden;
-    }
-    .room {
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr) auto auto;
-      gap: .75rem;
-      height: 100%;
-      max-width: 82rem;
-      margin: 0 auto;
-      padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
-    }
-    a { color: inherit; text-underline-offset: .22em; }
-    a:hover, a:focus-visible { color: var(--label-hi); }
-    :focus-visible { outline: 1px dashed var(--phosphor); outline-offset: 3px; }
+    body { margin: 0; font-size: 1rem; line-height: 1.6; background: var(--paper); }
+    .page { max-width: 54rem; margin: auto; padding: 2rem 1.5rem 3rem; }
+    a { color: inherit; text-underline-offset: .22em; text-decoration-thickness: 1px; }
+    a:hover { text-decoration-thickness: 2px; }
+    :focus-visible { outline: 2px solid var(--ink); outline-offset: 5px; }
+    p { margin: 0 0 1rem; }
+    nav, .eyebrow, h2, code, .status, .footer, button { font-family: var(--mono); }
 
-    /* -- top rail ------------------------------------------------------ */
-    .rail { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1.5rem; }
-    .brand { letter-spacing: .08em; text-transform: lowercase; }
-    .brand b { color: var(--label-hi); font-weight: 400; }
-    .controls { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem 1rem; }
-    .switch { display: inline-flex; gap: .25rem; align-items: center; }
-    .switch span { margin-right: .25rem; }
+    .masthead { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: .75rem 2rem; padding-bottom: 1.25rem; }
+    .wordmark { display: block; font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: min(1.25rem, 3.6vw); line-height: 1.12; white-space: pre; text-decoration: none; }
+    .eyebrow { font-size: .8125rem; margin: .75rem 0 0; color: var(--muted); }
+    nav { display: flex; flex-wrap: wrap; gap: .3rem 1.4rem; font-size: .875rem; }
+    nav a { display: inline-flex; align-items: center; min-height: 44px; }
+
+    section { padding: 1.25rem 0; border-top: 1px dashed var(--line); }
+    h2 { font-size: 1rem; line-height: 1.5; margin: 0 0 .85rem; font-weight: 700; }
+    h2::before { content: "-- "; color: var(--muted); }
+    h2::after { content: " --"; color: var(--muted); }
+    .note { color: var(--muted); font-size: .9375rem; }
+    code { font-size: .875rem; overflow-wrap: anywhere; }
+
+    /* -- the terminal -------------------------------------------------- */
+    .term-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: .25rem 1rem; }
+    .term-head h2 { margin-bottom: .6rem; }
     button {
-      font: inherit; color: var(--label); background: none; border: 0;
-      padding: .35rem .25rem; min-height: 32px; cursor: pointer;
+      font-size: .8125rem; color: var(--muted); background: none; border: 0;
+      padding: .35rem 0; min-height: 36px; cursor: pointer;
     }
-    button:hover { color: var(--label-hi); }
-    button[aria-pressed="true"] { color: var(--phosphor); text-shadow: 0 0 6px var(--glow); }
-    button[aria-pressed="true"]::before { content: "["; }
-    button[aria-pressed="true"]::after { content: "]"; }
-
-    /* -- monitor ------------------------------------------------------- */
-    .monitor {
-      position: relative;
-      min-height: 0;
-      padding: clamp(.6rem, 2.2vw, 1.6rem);
-      border-radius: clamp(14px, 2.4vw, 28px);
-      background: linear-gradient(160deg, var(--bezel-hi), var(--bezel-lo) 60%);
-      box-shadow:
-        0 1px 0 rgba(255,255,255,.06) inset,
-        0 -2px 0 rgba(0,0,0,.5) inset,
-        0 30px 80px rgba(0,0,0,.6);
-    }
+    button:hover { color: var(--ink); }
+    button[aria-pressed="true"] { color: var(--ink); }
     .screen {
+      --term-bg: var(--wash);
       position: relative;
-      height: 100%;
+      height: clamp(20rem, 68vh, 44rem);
+      background: var(--term-bg);
+      border-left: 2px solid var(--ink);
       overflow: hidden;
-      border-radius: clamp(10px, 2vw, 22px) / clamp(12px, 2.4vw, 26px);
-      background: var(--screen);
-      box-shadow: 0 0 0 2px #050403, 0 0 40px rgba(0,0,0,.9) inset;
-      transition: background .4s;
     }
-    .screen.on { animation: power-on .9s cubic-bezier(.2,.7,.2,1) both; }
-    @keyframes power-on {
-      0%   { transform: scale(1, .004); filter: brightness(6); }
-      35%  { transform: scale(1, .004); filter: brightness(6); }
-      60%  { transform: scale(1, 1);    filter: brightness(2.2); }
-      100% { transform: scale(1, 1);    filter: brightness(1); }
-    }
-    #terminal {
-      position: absolute;
-      inset: clamp(.6rem, 2vw, 1.4rem);
-      overflow-x: auto;
-      overflow-y: hidden;
-    }
+    #terminal { position: absolute; inset: .75rem; overflow: auto; }
     .xterm .xterm-viewport { background: transparent !important; scrollbar-width: none; }
     .xterm .xterm-viewport::-webkit-scrollbar { display: none; }
     .xterm .xterm-scrollable-element > .scrollbar { display: none !important; }
-    /* Phosphor bloom: blur the bright glyphs and screen-blend the halo back on. */
-    .fx #terminal .xterm-screen { filter: url(#bloom); }
-    :root[data-theme="plain"] .fx #terminal .xterm-screen { filter: none; }
 
-    /* Scanlines, aperture shimmer and vignette sit above the text. */
-    .glass { position: absolute; inset: 0; pointer-events: none; border-radius: inherit; }
-    .fx .glass.scan {
-      background: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px, rgba(0,0,0,.28) 3px, rgba(0,0,0,0) 4px);
-      mix-blend-mode: multiply;
+    /* [crt]: amber phosphor, faint scanlines and a little bloom. Optional. */
+    .scanlines { display: none; position: absolute; inset: 0; pointer-events: none; }
+    .crt .screen { --term-bg: #120b02; border-left-color: var(--amber); }
+    .crt .scanlines {
+      display: block;
+      background: repeating-linear-gradient(to bottom, transparent 0 2px, rgba(0,0,0,.22) 2px 3px);
     }
-    .fx .glass.roll {
-      background: linear-gradient(to bottom, transparent 0%, rgba(255,255,255,.045) 48%, transparent 52%);
-      background-size: 100% 300%;
-      animation: roll 7s linear infinite;
-    }
-    @keyframes roll { from { background-position: 0 -100%; } to { background-position: 0 200%; } }
-    .fx .glass.flicker { animation: flicker 4s steps(1) infinite; background: rgba(255,255,255,.012); }
-    @keyframes flicker { 0%, 100% { opacity: 0; } 47% { opacity: 1; } 48% { opacity: 0; } 82% { opacity: .6; } 83% { opacity: 0; } }
-    .glass.vignette {
-      background: radial-gradient(ellipse at center, transparent 58%, rgba(0,0,0,.55) 100%);
-    }
-    .glass.sheen {
-      background: linear-gradient(155deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,0) 28%);
-    }
+    .crt #terminal .xterm-screen { filter: url(#bloom); }
 
-    /* -- indicator strip ---------------------------------------------- */
-    .strip { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1.5rem; }
-    .leds { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; margin: 0; padding: 0; list-style: none; }
-    .leds li { display: inline-flex; align-items: center; gap: .5rem; }
-    .leds li::before {
-      content: ""; width: .5rem; height: .5rem; border-radius: 50%;
-      background: #2a2622; box-shadow: 0 0 0 1px #000 inset;
-      transition: background .2s, box-shadow .2s;
-    }
-    .leds li[data-state="busy"]::before { background: var(--phosphor-dim); animation: blink .6s steps(1) infinite; }
-    .leds li[data-state="ok"]::before { background: var(--phosphor); box-shadow: 0 0 8px var(--glow), 0 0 0 1px rgba(0,0,0,.4) inset; }
-    .leds li[data-state="ok"] { color: var(--label-hi); }
-    .leds li[data-state="bad"]::before { background: #ff4b3e; box-shadow: 0 0 8px rgba(255,75,62,.6); }
-    @keyframes blink { 50% { opacity: .25; } }
-    .fingerprint { color: var(--label); overflow-wrap: anywhere; }
+    .status { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; margin: .75rem 0 0; padding: 0; list-style: none; font-size: .8125rem; color: var(--muted); }
+    .status li::before { content: "[ ] "; white-space: pre; }
+    .status li[data-state="busy"]::before { content: "[·] "; animation: blink .8s steps(1) infinite; }
+    .status li[data-state="ok"] { color: var(--ink); }
+    .status li[data-state="ok"]::before { content: "[✓] "; }
+    .status li[data-state="bad"] { color: var(--ink); }
+    .status li[data-state="bad"]::before { content: "[x] "; }
+    @keyframes blink { 50% { opacity: .3; } }
 
-    /* -- touch keys --------------------------------------------------- */
-    .keys { display: none; gap: .35rem; overflow-x: auto; scrollbar-width: none; }
+    .keys { display: none; flex-wrap: wrap; gap: .4rem; margin-top: .75rem; }
     .keys button {
-      flex: 0 0 auto; min-width: 2.75rem; min-height: 40px; padding: .4rem .6rem;
-      border: 1px solid #36322c; border-radius: 6px; background: #1a1815; color: var(--label-hi);
+      min-width: 2.75rem; min-height: 40px; padding: .35rem .6rem;
+      border: 1px solid var(--line); background: var(--wash); color: var(--ink);
     }
-    .keys button:active { background: var(--phosphor-dim); }
     @media (pointer: coarse) { .keys { display: flex; } }
 
+    .footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .8rem 2rem; border-top: 1px dashed var(--line); padding-top: 1.25rem; font-size: .875rem; }
+    .footer p { margin: 0; }
     .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-    noscript { display: block; padding: 2rem; color: var(--phosphor); }
 
     @media (prefers-reduced-motion: reduce) {
-      .screen.on, .fx .glass.roll, .fx .glass.flicker, .leds li[data-state="busy"]::before { animation: none; }
+      .status li[data-state="busy"]::before { animation: none; }
     }
-    .rotate { display: none; }
     @media (max-width: 40rem) {
-      .room { gap: .5rem; }
-      .fingerprint { display: none; }
-    }
-    @media (pointer: coarse) and (orientation: portrait) and (max-width: 40rem) {
-      .rotate { display: block; }
+      .page { padding: 1.25rem 1rem 2rem; }
+      .masthead { grid-template-columns: minmax(0, 1fr); gap: .4rem; }
+      .screen { height: clamp(16rem, 60vh, 32rem); }
     }
   </style>
 </head>
-<body class="fx">
+<body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
     <filter id="bloom" x="-2%" y="-2%" width="104%" height="104%" color-interpolation-filters="sRGB">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="near"/>
-      <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="far"/>
-      <feMerge result="halo"><feMergeNode in="near"/><feMergeNode in="far"/></feMerge>
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="halo"/>
       <feComponentTransfer in="halo" result="soft">
-        <feFuncR type="linear" slope=".7" intercept="-.07"/><feFuncG type="linear" slope=".7" intercept="-.07"/><feFuncB type="linear" slope=".7" intercept="-.07"/>
+        <feFuncR type="linear" slope=".6" intercept="-.07"/><feFuncG type="linear" slope=".6" intercept="-.07"/><feFuncB type="linear" slope=".6" intercept="-.07"/>
       </feComponentTransfer>
       <feBlend in="SourceGraphic" in2="soft" mode="screen"/>
     </filter>
   </svg>
-  <div class="room">
-    <header class="rail">
-      <div class="brand"><a href="/">killdeer<b>.digital</b></a> / terminal</div>
-      <div class="controls" role="group" aria-label="Display settings">
-        <div class="switch" role="group" aria-label="Phosphor">
-          <span aria-hidden="true">phosphor</span>
-          <button type="button" data-theme-choice="amber">amber</button>
-          <button type="button" data-theme-choice="green">green</button>
-          <button type="button" data-theme-choice="plain">plain</button>
-        </div>
-        <button type="button" id="fx-toggle" aria-pressed="true">fx</button>
+  <div class="page">
+    <header class="masthead">
+      <div class="brand">
+        <h1 style="margin:0"><span class="sr-only">killdeer.digital</span><a class="wordmark" href="/" aria-hidden="true" tabindex="-1">    __   _ ____    __
+   / /__(_) / /___/ /__  ___  _____
+  / //_/ / / / __  / _ \/ _ \/ ___/
+ / ,&lt; / / / / /_/ /  __/  __/ /
+/_/|_/_/_/_/\__,_/\___/\___/_/
+                  .digital</a></h1>
+        <p class="eyebrow">a <a href="https://plover.digital/">plover.digital</a> project</p>
       </div>
+      <nav aria-label="Main navigation">
+        <a href="/">Home</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/#docs">Docs</a>
+      </nav>
     </header>
 
-    <main class="monitor">
-      <h1 class="sr-only">Killdeer browser terminal</h1>
-      <div class="screen" id="screen">
-        <div id="terminal" aria-label="Killdeer terminal"></div>
-        <div class="glass scan"></div>
-        <div class="glass roll"></div>
-        <div class="glass flicker"></div>
-        <div class="glass vignette"></div>
-        <div class="glass sheen"></div>
-        <noscript>This terminal needs JavaScript and WebAssembly. You can always use <code>ssh [username]@killdeer.digital</code> instead.</noscript>
-      </div>
+    <main>
+      <section aria-labelledby="terminal-title">
+        <div class="term-head">
+          <h2 id="terminal-title">Terminal</h2>
+          <button type="button" id="crt-toggle" aria-pressed="false" title="Amber phosphor with scanlines">[crt]</button>
+        </div>
+        <div class="screen" id="screen">
+          <div id="terminal" aria-label="Killdeer terminal"></div>
+          <div class="scanlines"></div>
+          <noscript><p style="padding:1rem">This terminal needs JavaScript and WebAssembly. You can always use <code>ssh [username]@killdeer.digital</code>.</p></noscript>
+        </div>
+        <div class="keys" id="keys" aria-label="Terminal keys">
+          <button type="button" data-key="&#27;">esc</button>
+          <button type="button" data-key="&#9;">tab</button>
+          <button type="button" data-key="&#3;">ctrl-c</button>
+          <button type="button" data-key="&#27;[D" aria-label="left">&larr;</button>
+          <button type="button" data-key="&#27;[A" aria-label="up">&uarr;</button>
+          <button type="button" data-key="&#27;[B" aria-label="down">&darr;</button>
+          <button type="button" data-key="&#27;[C" aria-label="right">&rarr;</button>
+          <button type="button" data-key="&#13;">enter</button>
+        </div>
+        <ul class="status" aria-label="Connection status">
+          <li id="led-core">ssh core</li>
+          <li id="led-relay">relay</li>
+          <li id="led-key">host key</li>
+          <li id="led-auth">signed in</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="about-title">
+        <h2 id="about-title">How it works</h2>
+        <p class="note">The SSH client runs in this tab. It checks killdeer's host key (<code id="fingerprint">SHA256:…</code>) and your password only travels inside the encrypted SSH session. Prefer your own client? <code>ssh [username]@killdeer.digital</code>.</p>
+      </section>
     </main>
 
-    <div class="keys" id="keys" aria-label="Terminal keys">
-      <button type="button" data-key="&#27;">esc</button>
-      <button type="button" data-key="&#9;">tab</button>
-      <button type="button" data-key="&#3;">ctrl-c</button>
-      <button type="button" data-key="&#27;[D" aria-label="left">&larr;</button>
-      <button type="button" data-key="&#27;[A" aria-label="up">&uarr;</button>
-      <button type="button" data-key="&#27;[B" aria-label="down">&darr;</button>
-      <button type="button" data-key="&#27;[C" aria-label="right">&rarr;</button>
-      <button type="button" data-key="&#13;">enter</button>
-    </div>
-
-    <footer class="strip">
-      <ul class="leds" aria-label="Connection status">
-        <li id="led-core">ssh core</li>
-        <li id="led-relay">relay</li>
-        <li id="led-key">host key</li>
-        <li id="led-auth">signed in</li>
-      </ul>
-      <div class="rotate">turn your phone sideways for a bigger screen</div>
-      <div class="fingerprint" id="fingerprint">prefer your own client? <code>ssh [username]@killdeer.digital</code></div>
+    <footer class="footer">
+      <p>Operated by <a href="https://plover.digital/">Plover Digital</a>.</p>
+      <a href="https://status.plover.digital/">Service status</a>
     </footer>
   </div>
   <p class="sr-only" id="announcer" role="status" aria-live="polite"></p>

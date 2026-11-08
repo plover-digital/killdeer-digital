@@ -24,11 +24,12 @@ type wsConn struct {
 	buf    []byte
 	err    error // set once the socket closes or fails
 	closed bool
+	dead   chan struct{} // closed when err is first set
 }
 
 // dialWebSocket opens url and blocks until the socket is open or fails.
 func dialWebSocket(url string) (*wsConn, error) {
-	c := &wsConn{}
+	c := &wsConn{dead: make(chan struct{})}
 	c.cond = sync.NewCond(&c.mu)
 
 	ws := js.Global().Get("WebSocket").New(url)
@@ -81,6 +82,7 @@ func (c *wsConn) fail(err error) {
 	c.mu.Lock()
 	if c.err == nil {
 		c.err = err
+		close(c.dead)
 	}
 	c.cond.Broadcast()
 	c.mu.Unlock()
@@ -122,6 +124,7 @@ func (c *wsConn) Close() error {
 	c.closed = true
 	if c.err == nil {
 		c.err = net.ErrClosed
+		close(c.dead)
 	}
 	c.cond.Broadcast()
 	c.mu.Unlock()
