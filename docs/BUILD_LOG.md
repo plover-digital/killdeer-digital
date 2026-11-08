@@ -2502,3 +2502,33 @@ Observed result:
 - The homepage renders the OS section as compact distro/version tables without CLI shorthand columns.
 - `/os.txt` and `/api/v1/images.json` serve grouped distro data without raw SSH image flags.
 - `/ssh-help.txt` includes the live public `resize` command and current examples while keeping admin-only commands redacted.
+
+### 2026-11-08 :: browser SSH client and listing refresh
+
+New user direction:
+- Add a WASM SSH client (sshterm) to the site, with password sign-in by default.
+- Refresh public listings from current `ssh killdeer.digital os`, `help` and `sizes` output.
+
+Changes made:
+- Added the `sshterm` compose service (`c2fmzq/sshterm-server:v0.11.7`, pinned by digest) with `sshterm/config.json`. The config pins the gateway host key, sets `persist: false` and auto-connects to `killdeer.digital` after asking for a username.
+- Caddy routes `/ssh/*` (prefix stripped) to sshterm. Everything else still goes to `killdeer-site`.
+- Linked the browser terminal from the homepage, `index.md`, `llms.txt`, `llms-full.txt` and the sitemap.
+- OS: dropped Ubuntu 24.04, NixOS 25.11 -> 26.05, added Void Linux (experimental).
+- Help: added `volume <action>`. Added volume usage to `cli.json` and the CLI skill.
+- Sizes: replaced the IPv6-only line with the live legacy/routed-/128 and delegated-prefix pricing lines.
+- Recomputed both agent skill digests.
+
+Verification:
+- `go vet ./...` and `go test ./...`.
+- `jq` parses every JSON file. `git diff --check` is clean.
+- Sedna (podman 4.9.4, rootless, netavark): a container on `killdeer-digital_default` reads the `SSH-2.0-Go` banner from `216.66.77.166:22`.
+- Locally, the pinned sshterm image ran behind the real Caddy routing.
+  - `/ssh` redirects with 308 to `/ssh/`.
+  - `/ssh/config.json` returns the merged endpoint config.
+  - `ssh.wasm` is served compressed (21.5 MB raw, 5.1 MB compressed).
+  - A Go SSH client over `ws://.../ssh/_ws/killdeer.digital` matched the pinned host key and got the gateway's `Enter your password:` keyboard-interactive prompt.
+  - A cross-origin WebSocket upgrade was refused with 403.
+- Review fix: the explicit `http://killdeer.digital` site served `/ssh/` over plain HTTP, so a network attacker could swap the client code and steal passwords. Plain-HTTP `/ssh` and `/ssh/*` now get a 308 to HTTPS.
+  - Retested against a local Caddy with `tls internal`. Plain-HTTP `/ssh`, `/ssh/`, `/ssh/_ws/...` and `/ssh/?x=1` all redirect to HTTPS.
+  - Over HTTPS, `/ssh/` and `config.json` return 200. A same-origin wss upgrade returns 101 and a cross-origin one returns 403.
+

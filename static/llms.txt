@@ -16,6 +16,7 @@
 ## Notes
 - Public SSH endpoint: `killdeer.digital`
 - Preferred login syntax: `ssh [username]@killdeer.digital`
+- Browser terminal: https://killdeer.digital/ssh/ opens the same TUI in a web browser with username and password sign-in (no local SSH client needed).
 - VM login syntax: `ssh plover@[ip]`
 - Default VM user: `plover`
 - If the user's Killdeer account was set up with SSH, their key is already installed for `plover`; otherwise, the VM password is emailed to them.
@@ -25,6 +26,7 @@
 - Omit the subcommand after login to enter the interactive menu.
 - VM commands include resizing stopped VMs, attaching to serial consoles, adding IPv4 or IPv6, and managing shutdown timers up to 7 days.
 - VM commands also include renaming VMs and managing account limits and monthly runtime budgets.
+- `volume` creates, lists, inspects, attaches, detaches and deletes storage volumes (whole-GB sizes).
 - Billing budget actions can notify, stop, or lock when a budget is reached.
 - VM creation supports `--ipv4`, `--ipv6`, and `--dualstack` networking.
 - Omitting the IP-type flag uses the user's preference.

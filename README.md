@@ -18,6 +18,7 @@ Ongoing design + architecture notes live in [docs/BUILD_LOG.md](docs/BUILD_LOG.m
 - A markdown version of the homepage at `static/index.md`
 - Agent discovery files at `static/robots.txt` and `static/sitemap.xml`
 - A tiny Go server that serves the page and discovery files
+- A browser SSH client at `/ssh/` ([sshterm](https://github.com/c2FmZQ/sshterm), Go compiled to WASM) configured in `sshterm/config.json`
 - A tiny Caddy front end for the containerized setup
 - A `Containerfile` and `compose.yaml` for Podman
 
@@ -47,6 +48,26 @@ Useful local routes:
 - `/robots.txt` and `/sitemap.xml` for crawler discovery
 
 If a client requests `/` with `Accept: text/markdown`, the server now serves the markdown homepage instead of HTML.
+
+## Browser SSH client (`/ssh/`)
+
+`/ssh/` serves [sshterm](https://github.com/c2FmZQ/sshterm), an SSH client written in Go and compiled to WebAssembly.
+It runs as the `sshterm` compose service from the pinned `c2fmzq/sshterm-server` image, and Caddy routes `/ssh/*` to it.
+
+- The browser speaks SSH over a WebSocket at `/ssh/_ws/killdeer.digital`.
+  `sshterm-server` relays that WebSocket only to `SSH_TARGET` (default `killdeer.digital:22`, the customer SSH gateway). It is not an open proxy.
+- SSH runs end to end in the browser. The relay only carries encrypted SSH bytes and never sees passwords.
+- `sshterm/config.json` turns the page into a Killdeer sign-in.
+  It pins the gateway's host key, asks for a username and then connects straight away.
+  No keys are configured, so the gateway's keyboard-interactive dialogue (the password, signup and verification prompts) is the default sign-in.
+  `persist: false` keeps nothing in browser storage.
+- `/ssh` is HTTPS-only: plain-HTTP requests are redirected to HTTPS before anything is served, because it is a login page.
+- WebSocket upgrades from other origins are refused.
+- The gateway sees the site host as the client address for browser sessions.
+- If the gateway host key ever changes, update `hosts[0].key` in `sshterm/config.json` (`ssh-keyscan -t ed25519 killdeer.digital`).
+- To upgrade sshterm, bump the image tag and digest in `compose.yaml` together.
+
+`go run .` does not serve `/ssh/`. Use the compose stack to try it locally.
 
 ## Podman
 

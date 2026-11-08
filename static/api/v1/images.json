@@ -25,7 +25,7 @@
     },
     {
       "name": "Ubuntu",
-      "versions": ["26.04", "24.04"],
+      "versions": ["26.04"],
       "defaultVersion": "26.04"
     }
   ],
@@ -36,7 +36,11 @@
     },
     {
       "name": "NixOS",
-      "versions": ["25.11"]
+      "versions": ["26.05"]
+    },
+    {
+      "name": "Void Linux",
+      "versions": ["current"]
     }
   ]
 }

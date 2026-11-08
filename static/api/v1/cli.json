@@ -63,6 +63,12 @@
       "description": "Increase a stopped VM to a larger size."
     },
     {
+      "name": "volume",
+      "aliases": ["volumes"],
+      "syntax": "ssh [username]@killdeer.digital volume create|list|status|attach|detach|delete [args...]",
+      "description": "Manage storage volumes: create <name> <whole-gb> [--vm <vm>], list, status <volume>, attach <volume> <vm>, detach <volume>, delete <volume> --confirm."
+    },
+    {
       "name": "rename",
       "syntax": "ssh [username]@killdeer.digital rename <old-name> <new-name>",
       "description": "Rename a VM in Killdeer."

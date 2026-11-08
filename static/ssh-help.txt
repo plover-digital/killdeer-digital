@@ -6,6 +6,7 @@ Commands:
   list                            List all your VMs (Running VMs shown first)
   status <name>                   Show detailed info for a VM
   start <name>                    Power on a VM
+  volume <action>                 Create, list, inspect, attach, detach or delete storage volumes
   stop <name>                     Graceful shutdown a VM
   restart <name>                  Restart a VM (stop + start)
   resize <name> <size>            Increase a stopped VM to a larger size

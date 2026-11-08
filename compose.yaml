@@ -3,6 +3,7 @@ services:
     image: docker.io/library/caddy:2-alpine
     depends_on:
       - killdeer-site
+      - sshterm
     ports:
       - "${BIND_IP:-0.0.0.0}:${HTTP_PORT:-80}:80"
       - "${BIND_IP:-0.0.0.0}:${HTTPS_PORT:-443}:443"
@@ -20,6 +21,18 @@ services:
       - "8080"
     environment:
       PORT: "8080"
+
+  # Browser SSH client served at /ssh/. sshterm-server only proxies its one
+  # configured endpoint, so it is not an open WebSocket-to-TCP relay.
+  sshterm:
+    image: docker.io/c2fmzq/sshterm-server:v0.11.7@sha256:0ba3bf66cd84afaec437a5f8ccd5206b95472744890a4f507f3e958fc13a011c
+    command:
+      - "--config=/config/config.json"
+      - "--ep=killdeer.digital=${SSH_TARGET:-killdeer.digital:22}"
+    expose:
+      - "8080"
+    volumes:
+      - ./sshterm/config.json:/config/config.json:ro,Z
 
 volumes:
   caddy-data:
