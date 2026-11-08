@@ -2528,4 +2528,7 @@ Verification:
   - `ssh.wasm` is served compressed (21.5 MB raw, 5.1 MB compressed).
   - A Go SSH client over `ws://.../ssh/_ws/killdeer.digital` matched the pinned host key and got the gateway's `Enter your password:` keyboard-interactive prompt.
   - A cross-origin WebSocket upgrade was refused with 403.
+- Review fix: the explicit `http://killdeer.digital` site served `/ssh/` over plain HTTP, so a network attacker could swap the client code and steal passwords. Plain-HTTP `/ssh` and `/ssh/*` now get a 308 to HTTPS.
+  - Retested against a local Caddy with `tls internal`. Plain-HTTP `/ssh`, `/ssh/`, `/ssh/_ws/...` and `/ssh/?x=1` all redirect to HTTPS.
+  - Over HTTPS, `/ssh/` and `config.json` return 200. A same-origin wss upgrade returns 101 and a cross-origin one returns 403.
 

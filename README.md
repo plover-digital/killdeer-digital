@@ -61,6 +61,7 @@ It runs as the `sshterm` compose service from the pinned `c2fmzq/sshterm-server`
   It pins the gateway's host key, asks for a username and then connects straight away.
   No keys are configured, so the gateway's keyboard-interactive dialogue (the password, signup and verification prompts) is the default sign-in.
   `persist: false` keeps nothing in browser storage.
+- `/ssh` is HTTPS-only: plain-HTTP requests are redirected to HTTPS before anything is served, because it is a login page.
 - WebSocket upgrades from other origins are refused.
 - The gateway sees the site host as the client address for browser sessions.
 - If the gateway host key ever changes, update `hosts[0].key` in `sshterm/config.json` (`ssh-keyscan -t ed25519 killdeer.digital`).
