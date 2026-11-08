@@ -16,6 +16,12 @@ var staticFiles embed.FS
 //go:embed static/martian-mono-regular.ttf static/martian-mono-OFL.txt
 var fontFiles embed.FS
 
+// The browser terminal. killdeer-ssh.wasm and wasm_exec.js are build outputs
+// (see Containerfile and scripts/build-ssh-wasm.sh), so they are not in git.
+//
+//go:embed all:static/ssh
+var sshFiles embed.FS
+
 const (
 	defaultPort   = "8080"
 	contentSignal = "search=yes, ai-input=yes, ai-train=no"
@@ -43,6 +49,8 @@ func main() {
 	mux.HandleFunc("/martian-mono-OFL.txt", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFileFS(w, r, fontFiles, "static/martian-mono-OFL.txt")
 	})
+	mux.Handle("/ssh/", newTerminalHandler())
+	mux.Handle("/ssh", http.RedirectHandler("/ssh/", http.StatusPermanentRedirect))
 	mux.HandleFunc("/", handleIndex)
 	mux.HandleFunc("/index.html", handleIndex)
 	mux.HandleFunc("/index.md", handleIndexMarkdown)

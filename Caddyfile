@@ -5,15 +5,17 @@ http://billing.killdeer.digital, https://billing.killdeer.digital {
 killdeer.digital, http://killdeer.digital {
   encode zstd gzip
 
-  # Browser SSH client (sshterm). The WebSocket proxy lives at /ssh/_ws/.
-  # It is a login page, so it is only ever served over HTTPS.
+  # Browser terminal. The page and its WASM SSH core come from killdeer-site;
+  # only the WebSocket relay at /ssh/_ws/ goes to the sshterm-server
+  # container. It is a login page, so it is only ever served over HTTPS.
   @insecure_ssh {
     protocol http
     path /ssh /ssh/*
   }
   redir @insecure_ssh https://{host}{uri} 308
   redir /ssh /ssh/ 308
-  handle_path /ssh/* {
+  handle /ssh/_ws/* {
+    uri strip_prefix /ssh
     reverse_proxy sshterm:8080
   }
 

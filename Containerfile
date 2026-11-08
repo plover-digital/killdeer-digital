@@ -1,13 +1,20 @@
-FROM docker.io/library/golang:1.23-alpine AS build
+FROM docker.io/library/golang:1.26-alpine AS build
 
 WORKDIR /src
 
 COPY go.mod ./
-RUN go mod download
+COPY webssh/go.mod webssh/go.sum ./webssh/
+RUN go mod download && cd webssh && go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/killdeer-site .
+# The browser terminal's SSH core, plus the wasm_exec.js shim from the same
+# Go toolchain (they must match). Both are embedded into the site binary.
+RUN cd webssh \
+ && GOOS=js GOARCH=wasm CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags="-s -w" -o ../static/ssh/killdeer-ssh.wasm . \
+ && cp "$(go env GOROOT)/lib/wasm/wasm_exec.js" ../static/ssh/wasm_exec.js
+
+RUN CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags="-s -w" -o /out/killdeer-site .
 
 FROM docker.io/library/alpine:3.20
 

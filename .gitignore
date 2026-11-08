@@ -1,2 +1,4 @@
 .env
 killdeer-site
+static/ssh/killdeer-ssh.wasm
+static/ssh/wasm_exec.js

@@ -22,17 +22,16 @@ services:
     environment:
       PORT: "8080"
 
-  # Browser SSH client served at /ssh/. sshterm-server only proxies its one
-  # configured endpoint, so it is not an open WebSocket-to-TCP relay.
+  # WebSocket-to-SSH relay for the browser terminal at /ssh/ (Caddy sends it
+  # only /ssh/_ws/*). Browsers cannot open raw TCP, so the WASM SSH client
+  # tunnels through this. It relays only its one configured endpoint and
+  # carries encrypted SSH bytes; it never sees passwords.
   sshterm:
     image: docker.io/c2fmzq/sshterm-server:v0.11.7@sha256:0ba3bf66cd84afaec437a5f8ccd5206b95472744890a4f507f3e958fc13a011c
     command:
-      - "--config=/config/config.json"
       - "--ep=killdeer.digital=${SSH_TARGET:-killdeer.digital:22}"
     expose:
       - "8080"
-    volumes:
-      - ./sshterm/config.json:/config/config.json:ro,Z
 
 volumes:
   caddy-data:
