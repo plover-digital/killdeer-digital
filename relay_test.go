@@ -16,6 +16,15 @@ import (
 
 // echoUpstream stands in for the SSH gateway.
 func echoUpstream(t *testing.T) string {
+	return fakeUpstream(t, func(c net.Conn) { _, _ = io.Copy(c, c) })
+}
+
+// sinkUpstream swallows everything, so a client only ever reads closes.
+func sinkUpstream(t *testing.T) string {
+	return fakeUpstream(t, func(c net.Conn) { _, _ = io.Copy(io.Discard, c) })
+}
+
+func fakeUpstream(t *testing.T, serve func(net.Conn)) string {
 	t.Helper()
 	ln, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
@@ -28,7 +37,7 @@ func echoUpstream(t *testing.T) string {
 			if err != nil {
 				return
 			}
-			go func() { defer c.Close(); _, _ = io.Copy(c, c) }()
+			go func() { defer c.Close(); serve(c) }()
 		}
 	}()
 	return ln.Addr().String()
@@ -104,7 +113,7 @@ func TestRelayCapsTotalConnections(t *testing.T) {
 }
 
 func TestRelayRejectsOversizedMessages(t *testing.T) {
-	_, url := relayServer(t, echoUpstream(t))
+	_, url := relayServer(t, sinkUpstream(t))
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	c, _, err := websocket.Dial(ctx, url, nil)
