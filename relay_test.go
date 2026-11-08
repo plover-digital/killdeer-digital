@@ -87,22 +87,37 @@ func TestRelayOnlyServesItsPath(t *testing.T) {
 	}
 }
 
-func TestRelayLimitsConnectionsPerClient(t *testing.T) {
+func TestRelayCapsTotalConnections(t *testing.T) {
 	rl := newRelay()
-	for i := 0; i < relayMaxPerClient; i++ {
-		if !rl.acquire("203.0.113.9") {
-			t.Fatalf("connection %d refused below the limit", i+1)
+	for i := 0; i < relayMaxTotal; i++ {
+		if !rl.acquire() {
+			t.Fatalf("connection %d refused below the cap", i+1)
 		}
 	}
-	if rl.acquire("203.0.113.9") {
-		t.Fatal("connection above the per-client limit was allowed")
+	if rl.acquire() {
+		t.Fatal("connection above the cap was allowed")
 	}
-	if !rl.acquire("198.51.100.4") {
-		t.Fatal("another client was refused")
-	}
-	rl.release("203.0.113.9")
-	if !rl.acquire("203.0.113.9") {
+	rl.release()
+	if !rl.acquire() {
 		t.Fatal("slot was not released")
+	}
+}
+
+func TestRelayRejectsOversizedMessages(t *testing.T) {
+	_, url := relayServer(t, echoUpstream(t))
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	c, _, err := websocket.Dial(ctx, url, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer c.CloseNow()
+	if err := c.Write(ctx, websocket.MessageBinary, make([]byte, 2*relayMaxMessage)); err != nil {
+		t.Fatal(err)
+	}
+	// The relay must close the connection instead of forwarding it.
+	if _, _, err := c.Read(ctx); websocket.CloseStatus(err) != websocket.StatusMessageTooBig {
+		t.Fatalf("oversized message: got %v, want close status %d", err, websocket.StatusMessageTooBig)
 	}
 }
 

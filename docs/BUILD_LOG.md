@@ -2571,8 +2571,9 @@ Verification:
   - Prompt callbacks release themselves only once the JS promise settles, because a released js.Func would crash the runtime.
   - Tested by stopping the relay mid-prompt.
 - Keep it a Go project: the relay moved into the site server (`relay.go`, coder/websocket v1.8.15, which has no dependencies), and the third-party `sshterm` compose service is gone. Caddy proxies `/ssh/_ws/` to killdeer-site like every other path.
-  - The relay keeps same-origin upgrades only, a 1 MiB message limit, 8 connections per client and 256 in total, and connect and disconnect logging.
-  - Tests: bytes echo through it, a cross-origin upgrade gets 403, other paths get 404, the per-client limit holds, and the client address comes from Caddy's header.
+  - The relay keeps same-origin upgrades only, a 1 MiB message limit (set after `NetConn`, which lifts the limit), a cap of 256 connections in total, and connect and disconnect logging.
+  - A per-client cap was removed in review: rootless Podman port forwarding gives every visitor the same address, so it would have been one shared cap of 8.
+  - Tests: bytes echo through it, a cross-origin upgrade gets 403, other paths get 404, an oversized message closes the connection (1009), the total cap holds, and the client address comes from Caddy's header.
   - Rechecked on the full local stack: same-origin wss upgrade 101, cross-origin 403. The browser reached the gateway's password prompt, and stopping the site mid-prompt cancelled the prompt and offered to reconnect.
 - Review fix: if the relay dropped while a prompt was still queued behind typing output, the prompt could open after the close and block it. Prompts now refuse to open once the connection has closed.
 

@@ -71,7 +71,8 @@ If a client requests `/` with `Accept: text/markdown`, the server now serves the
   - The relay forwards only to `SSH_TARGET` (default `killdeer.digital:22`).
   - It carries encrypted SSH bytes and never sees passwords.
   - WebSocket upgrades from other origins are refused.
-  - It allows 8 connections per client and 256 in total, and logs each connect and disconnect with the client address Caddy reports.
+  - It caps open connections at 256 in total and messages at 1 MiB, and logs each connect and disconnect.
+  - Under rootless Podman, port forwarding hides visitors' addresses, so there is no per-visitor cap (it would be one shared cap). The logged address is usually the forwarder's.
 - `/ssh` is HTTPS-only. Plain-HTTP requests are redirected before anything is served, because it is a login page.
 - The gateway sees the site host as the client address for browser sessions.
 - If the gateway host key ever changes, update `hostKey` in `webssh/main.go` (`ssh-keyscan -t ed25519 killdeer.digital`).

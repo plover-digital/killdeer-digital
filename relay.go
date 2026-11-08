@@ -21,21 +21,22 @@ import (
 // session contents, and it only ever dials the configured gateway.
 
 const (
-	relayPath         = "/ssh/_ws/killdeer.digital"
-	defaultSSHTarget  = "killdeer.digital:22"
-	relayDialTimeout  = 10 * time.Second
-	relayMaxMessage   = 1 << 20 // SSH packets are far smaller
-	relayMaxTotal     = 256
-	relayMaxPerClient = 8
+	relayPath        = "/ssh/_ws/killdeer.digital"
+	defaultSSHTarget = "killdeer.digital:22"
+	relayDialTimeout = 10 * time.Second
+	relayMaxMessage  = 1 << 20 // SSH packets are far smaller
+	// The site runs under rootless Podman, whose port forwarding replaces
+	// visitors' source addresses, so there is no per-visitor cap: it would
+	// be one shared cap. A total cap bounds what the relay can hold open.
+	relayMaxTotal = 256
 )
 
 type relay struct {
 	target string
 	dial   func(ctx context.Context, network, addr string) (net.Conn, error)
 
-	mu        sync.Mutex
-	total     int
-	perClient map[string]int
+	mu    sync.Mutex
+	total int
 }
 
 func newRelay() *relay {
@@ -44,11 +45,11 @@ func newRelay() *relay {
 		target = defaultSSHTarget
 	}
 	d := &net.Dialer{Timeout: relayDialTimeout, KeepAlive: 30 * time.Second}
-	return &relay{target: target, dial: d.DialContext, perClient: map[string]int{}}
+	return &relay{target: target, dial: d.DialContext}
 }
 
-// clientAddress is the visitor's address as Caddy reports it. Caddy is the
-// only thing that can reach this server, and it sets X-Forwarded-For itself.
+// clientAddress is the visitor's address as Caddy reports it, for logs only.
+// Behind rootless Podman this is usually the forwarder's address.
 func clientAddress(r *http.Request) string {
 	if fwd := r.Header.Get("X-Forwarded-For"); fwd != "" {
 		if i := strings.LastIndexByte(fwd, ','); i >= 0 {
@@ -63,24 +64,20 @@ func clientAddress(r *http.Request) string {
 	return host
 }
 
-func (rl *relay) acquire(client string) bool {
+func (rl *relay) acquire() bool {
 	rl.mu.Lock()
 	defer rl.mu.Unlock()
-	if rl.total >= relayMaxTotal || rl.perClient[client] >= relayMaxPerClient {
+	if rl.total >= relayMaxTotal {
 		return false
 	}
 	rl.total++
-	rl.perClient[client]++
 	return true
 }
 
-func (rl *relay) release(client string) {
+func (rl *relay) release() {
 	rl.mu.Lock()
 	defer rl.mu.Unlock()
 	rl.total--
-	if rl.perClient[client]--; rl.perClient[client] <= 0 {
-		delete(rl.perClient, client)
-	}
 }
 
 func (rl *relay) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -89,11 +86,11 @@ func (rl *relay) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	client := clientAddress(r)
-	if !rl.acquire(client) {
+	if !rl.acquire() {
 		http.Error(w, "too many terminal connections", http.StatusTooManyRequests)
 		return
 	}
-	defer rl.release(client)
+	defer rl.release()
 
 	// Accept refuses cross-origin upgrades: with no OriginPatterns, the
 	// Origin header must match the Host the page was served from.
@@ -102,7 +99,6 @@ func (rl *relay) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer ws.CloseNow()
-	ws.SetReadLimit(relayMaxMessage)
 
 	ctx, cancel := context.WithCancel(r.Context())
 	defer cancel()
@@ -120,6 +116,8 @@ func (rl *relay) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	started := time.Now()
 	log.Printf("terminal relay: client %s connected", client)
 	stream := websocket.NetConn(ctx, ws, websocket.MessageBinary)
+	// NetConn lifts the read limit, so set ours afterwards.
+	ws.SetReadLimit(relayMaxMessage)
 
 	var once sync.Once
 	stop := func() {
