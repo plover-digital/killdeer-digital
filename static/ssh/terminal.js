@@ -364,6 +364,7 @@ async function login(core) {
   term.write(dim('  new here? type the username you want and follow the prompts.') + '\r\n\r\n');
 
   let signedIn = false;
+  let connectionClosed = false;
   session = core.connect({
     url: relayURL(),
     username,
@@ -373,12 +374,17 @@ async function login(core) {
       inOrder(() => status(stage, detail));
     },
     onPrompt(question, echo) {
-      return inOrder(() => readLine('  ' + question, echo));
+      // A prompt queued behind typing output must not open after the
+      // connection has already gone, or it would block closed() forever.
+      return inOrder(() => (connectionClosed
+        ? Promise.reject(new Error('connection closed'))
+        : readLine('  ' + question, echo)));
     },
     onOutput(bytes) {
       inOrder(() => term.write(bytes));
     },
     onClose(message) {
+      connectionClosed = true;
       // A prompt still waiting for input would hold up the queue forever.
       if (lineReader) {
         const pending = lineReader;

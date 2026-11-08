@@ -67,10 +67,11 @@ If a client requests `/` with `Accept: text/markdown`, the server now serves the
   The Containerfile builds them, and `scripts/build-ssh-wasm.sh` does the same for `go run .`.
   `wasm_exec.js` must come from the same Go toolchain as the wasm.
 - Browsers cannot open raw TCP, so the client reaches the gateway through a WebSocket at `/ssh/_ws/killdeer.digital`.
-  - Caddy sends only that path to the `sshterm` compose service (the pinned `c2fmzq/sshterm-server` image, used purely as a relay).
+  - The relay is part of the Go site (`relay.go`, using `github.com/coder/websocket`), so the whole project is Go plus a little browser JavaScript.
   - The relay forwards only to `SSH_TARGET` (default `killdeer.digital:22`).
   - It carries encrypted SSH bytes and never sees passwords.
   - WebSocket upgrades from other origins are refused.
+  - It allows 8 connections per client and 256 in total, and logs each connect and disconnect with the client address Caddy reports.
 - `/ssh` is HTTPS-only. Plain-HTTP requests are redirected before anything is served, because it is a login page.
 - The gateway sees the site host as the client address for browser sessions.
 - If the gateway host key ever changes, update `hostKey` in `webssh/main.go` (`ssh-keyscan -t ed25519 killdeer.digital`).
@@ -82,7 +83,7 @@ Local development:
 go run .
 ```
 
-That serves the page at `http://localhost:8080/ssh/`. Signing in also needs the relay, so use the compose stack for a full run.
+That serves the page and the relay at `http://localhost:8080/ssh/`. With no `SSH_TARGET` set, sign-in goes to the real gateway.
 
 ## Podman
 

@@ -3,7 +3,6 @@ services:
     image: docker.io/library/caddy:2-alpine
     depends_on:
       - killdeer-site
-      - sshterm
     ports:
       - "${BIND_IP:-0.0.0.0}:${HTTP_PORT:-80}:80"
       - "${BIND_IP:-0.0.0.0}:${HTTPS_PORT:-443}:443"
@@ -21,17 +20,8 @@ services:
       - "8080"
     environment:
       PORT: "8080"
-
-  # WebSocket-to-SSH relay for the browser terminal at /ssh/ (Caddy sends it
-  # only /ssh/_ws/*). Browsers cannot open raw TCP, so the WASM SSH client
-  # tunnels through this. It relays only its one configured endpoint and
-  # carries encrypted SSH bytes; it never sees passwords.
-  sshterm:
-    image: docker.io/c2fmzq/sshterm-server:v0.11.7@sha256:0ba3bf66cd84afaec437a5f8ccd5206b95472744890a4f507f3e958fc13a011c
-    command:
-      - "--ep=killdeer.digital=${SSH_TARGET:-killdeer.digital:22}"
-    expose:
-      - "8080"
+      # Where the browser terminal's relay (/ssh/_ws/) sends SSH traffic.
+      SSH_TARGET: "${SSH_TARGET:-killdeer.digital:22}"
 
 volumes:
   caddy-data:

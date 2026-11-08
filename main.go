@@ -49,6 +49,7 @@ func main() {
 	mux.HandleFunc("/martian-mono-OFL.txt", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFileFS(w, r, fontFiles, "static/martian-mono-OFL.txt")
 	})
+	mux.Handle("/ssh/_ws/", newRelay())
 	mux.Handle("/ssh/", newTerminalHandler())
 	mux.Handle("/ssh", http.RedirectHandler("/ssh/", http.StatusPermanentRedirect))
 	mux.HandleFunc("/", handleIndex)
