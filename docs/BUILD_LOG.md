@@ -2607,3 +2607,8 @@ Follow-up direction: use Rybbit analytics everywhere possible to track user beha
   - The pageview and funnel events fired, including `terminal_closed` with `reason: no_password`.
   - No upload contained the username.
 - Review fix: the screen-reader announcer (`#announcer`) repeats close reasons, which can include the username, so it is now `rr-block` and in the replay block selector too. The test checks all three elements.
+- Review fix: Rybbit's copy tracking ignores replay blocks. It is off in the site's tracking config today (replay, copy, button and form tracking are all off), but the page no longer relies on that.
+  - A capture-phase `copy` guard stops copies whose selection touches the terminal, keys or announcer before Rybbit's document listener sees them.
+  - The browser's own copy still works, and copies from xterm's focused textarea are left alone.
+  - `input_change` tracking never sends values, so it needed no change.
+

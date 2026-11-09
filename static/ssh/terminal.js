@@ -190,6 +190,19 @@ function track(name, props) {
   try { globalThis.rybbit?.event(name, props); } catch { /* analytics is optional */ }
 }
 
+// Rybbit's copy tracking (off in site settings today) would send copied text.
+// Copies that touch the terminal, its keys or the announcer stop at the
+// document in the capture phase, before Rybbit's bubble-phase listener. The
+// browser's own copy still happens, and xterm copies from its focused
+// textarea, which is the event target, so it is left alone.
+const privateAreas = ['screen', 'keys', 'announcer'].map((id) => document.getElementById(id));
+document.addEventListener('copy', (event) => {
+  const selection = getSelection();
+  if (!selection || selection.isCollapsed) return;
+  if (termEl.contains(event.target)) return;
+  if (privateAreas.some((el) => el && selection.containsNode(el, true))) event.stopImmediatePropagation();
+}, true);
+
 function closeCategory(message, signedIn) {
   if (!message) return signedIn ? 'ended' : 'closed';
   if (message.includes("didn't ask")) return 'no_password';
