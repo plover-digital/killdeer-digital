@@ -24,14 +24,31 @@ func TestTerminalHandler(t *testing.T) {
 	if page.Code != http.StatusOK || !strings.Contains(page.Body.String(), "terminal.js") {
 		t.Fatalf("GET /ssh/ = %d, want the terminal page", page.Code)
 	}
+	body := page.Body.String()
+	if !strings.Contains(body, analyticsOrigin+"/api/script.js") {
+		t.Error("terminal page should load Rybbit")
+	}
+	// Everything that can show the username or terminal text stays out of
+	// session replay.
+	for _, el := range []string{`class="screen rr-block" id="screen"`, `class="keys rr-block" id="keys"`, `class="sr-only rr-block" id="announcer"`} {
+		if !strings.Contains(body, el) {
+			t.Errorf("terminal page is missing %s", el)
+		}
+	}
 	csp := page.Header().Get("Content-Security-Policy")
 	for _, want := range []string{"'wasm-unsafe-eval'", "frame-ancestors 'none'", "default-src 'none'"} {
 		if !strings.Contains(csp, want) {
 			t.Errorf("CSP %q is missing %s", csp, want)
 		}
 	}
-	if strings.Contains(csp, "unsafe-inline' https") || strings.Contains(csp, "analytics") {
-		t.Errorf("terminal CSP allows third-party scripts: %q", csp)
+	// The only outside origin allowed is our own analytics.
+	for _, field := range strings.Fields(csp) {
+		if strings.HasPrefix(field, "https://") && field != analyticsOrigin && !strings.HasPrefix(field, analyticsOrigin+";") {
+			t.Errorf("terminal CSP allows %s", field)
+		}
+	}
+	if strings.Contains(csp, "script-src 'self' 'unsafe-inline'") {
+		t.Errorf("terminal CSP allows inline scripts: %q", csp)
 	}
 
 	js := get("/ssh/terminal.js")

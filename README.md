@@ -62,7 +62,12 @@ If a client requests `/` with `Accept: text/markdown`, the server now serves the
   - `index.html`, which holds the page and the `[crt]` styles, including the SVG bloom filter.
   - `terminal.js`, which handles the boot sequence, local username and password prompts, status ticks, touch keys and the layout. The layout is fixed at 80 columns, and phones get a box exactly 24 rows tall.
   - `vendor/`, holding xterm.js 6.0.0 and addon-webgl 0.19.0 copied from npm. Their integrity hashes were verified, and the MIT licences sit alongside.
-- The Go site embeds `static/ssh/` and serves it with its own strict CSP, which allows no third-party scripts and permits `'wasm-unsafe-eval'`. Files carry content-hash ETags.
+- The Go site embeds `static/ssh/` and serves it with its own strict CSP. The only outside origin it allows is our Rybbit analytics, and it permits `'wasm-unsafe-eval'`. Files carry content-hash ETags.
+- Analytics: the page loads Rybbit (`analytics.plover.digital`, the same site ID as the homepage).
+  - It sends funnel events: `terminal_ready`, `terminal_core_failed`, `terminal_connect`, `terminal_prompted`, `terminal_signed_in`, `terminal_closed` (with reason category, stage, prompt count and seconds) and `terminal_crt`.
+  - Events never include the username, the password or anything on screen.
+  - The terminal, its keys and the screen-reader announcer, which repeats close reasons including the username, are `rr-block`. Session replay, if enabled in Rybbit, leaves them out.
+  - A copy guard keeps copies that touch those areas from reaching Rybbit's copy tracking, in case that is ever switched on.
 - `killdeer-ssh.wasm` and `wasm_exec.js` are build outputs, so they are not in git.
   The Containerfile builds them, and `scripts/build-ssh-wasm.sh` does the same for `go run .`.
   `wasm_exec.js` must come from the same Go toolchain as the wasm.

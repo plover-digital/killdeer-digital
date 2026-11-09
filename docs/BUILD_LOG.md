@@ -2577,3 +2577,38 @@ Verification:
   - Rechecked on the full local stack: same-origin wss upgrade 101, cross-origin 403. The browser reached the gateway's password prompt, and stopping the site mid-prompt cancelled the prompt and offered to reconnect.
 - Review fix: if the relay dropped while a prompt was still queued behind typing output, the prompt could open after the close and block it. Prompts now refuse to open once the connection has closed.
 
+
+### 2026-11-08 :: terminal: explain key-only accounts
+
+Report: a user with a key-only account (`technyx`) entered their username and got `connection closed: ssh: unexpected message type 51 (expected 60)`.
+
+Cause:
+- For a verified account with no password, the core's keyboard-interactive handler returns false without asking anything (`cmd/server/ssh.go`).
+- The gateway therefore sends USERAUTH_FAILURE without any INFO_REQUEST, which x/crypto reports as that protocol error.
+
+Changes made:
+- webssh remembers whether the gateway asked any sign-in question.
+- A refusal before any question now says killdeer didn't ask for a password, that this usually means the account signs in with an SSH key, gives `ssh <user>@killdeer.digital`, and suggests trying again if the account has a password.
+  - The wording is tentative because review pointed out that a core database error refuses the same way.
+- terminal.js wraps the close reason inside 80 columns instead of putting it all in the highlighted bar.
+- Layout: if the real cell height rounds past the estimate, rows are dropped until the screen fits. `#terminal` hides its native scrollbar. The report's screenshot showed a full-height scrollbar.
+
+Verification:
+- A Node harness ran the new wasm against the live relay. `technyx` got the new message with no password sent. `wokuno` still reached the password prompt.
+- A local site binary (page and relay) in headless Chromium showed the message wrapped correctly, and the terminal's scroll height equals its client height.
+
+Follow-up direction: use Rybbit analytics everywhere possible to track user behaviour.
+- The homepage already loads Rybbit. The other routes are plain text and JSON, so `/ssh/` was the only page missing it.
+- `/ssh/` now loads the same script, and its CSP allows only `https://analytics.plover.digital` beyond the site itself.
+- Funnel events: `terminal_ready`, `terminal_core_failed`, `terminal_connect`, `terminal_prompted`, `terminal_signed_in`, `terminal_closed` (reason category, stage, signed_in, prompts, seconds) and `terminal_crt`. No username, password or screen text is ever sent.
+- The terminal and its touch keys are `rr-block`, plus `data-replay-block-selector`, so session replay never records them.
+- Verified in headless Chromium against the local binary, with event uploads intercepted rather than sent:
+  - The script and its tracking config loaded with no CSP errors.
+  - The pageview and funnel events fired, including `terminal_closed` with `reason: no_password`.
+  - No upload contained the username.
+- Review fix: the screen-reader announcer (`#announcer`) repeats close reasons, which can include the username, so it is now `rr-block` and in the replay block selector too. The test checks all three elements.
+- Review fix: Rybbit's copy tracking ignores replay blocks. It is off in the site's tracking config today (replay, copy, button and form tracking are all off), but the page no longer relies on that.
+  - A capture-phase `copy` guard stops copies whose selection touches the terminal, keys or announcer before Rybbit's document listener sees them.
+  - The browser's own copy still works, and copies from xterm's focused textarea are left alone.
+  - `input_change` tracking never sends values, so it needed no change.
+
