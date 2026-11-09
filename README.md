@@ -66,7 +66,7 @@ If a client requests `/` with `Accept: text/markdown`, the server now serves the
 - Analytics: the page loads Rybbit (`analytics.plover.digital`, the same site ID as the homepage).
   - It sends funnel events: `terminal_ready`, `terminal_core_failed`, `terminal_connect`, `terminal_prompted`, `terminal_signed_in`, `terminal_closed` (with reason category, stage, prompt count and seconds) and `terminal_crt`.
   - Events never include the username, the password or anything on screen.
-  - The terminal and its keys are `rr-block`, so session replay, if enabled in Rybbit, leaves them out.
+  - The terminal, its keys and the screen-reader announcer, which repeats close reasons including the username, are `rr-block`. Session replay, if enabled in Rybbit, leaves them out.
 - `killdeer-ssh.wasm` and `wasm_exec.js` are build outputs, so they are not in git.
   The Containerfile builds them, and `scripts/build-ssh-wasm.sh` does the same for `go run .`.
   `wasm_exec.js` must come from the same Go toolchain as the wasm.

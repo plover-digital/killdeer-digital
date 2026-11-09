@@ -185,11 +185,12 @@
       <a href="https://status.plover.digital/">Service status</a>
     </footer>
   </div>
-  <p class="sr-only" id="announcer" role="status" aria-live="polite"></p>
+  <p class="sr-only rr-block" id="announcer" role="status" aria-live="polite"></p>
   <script src="wasm_exec.js"></script>
   <script type="module" src="terminal.js"></script>
-  <!-- Rybbit, as on the homepage. The terminal (.screen) and its keys are
-       rr-block, so session replay, if enabled, never records them. -->
-  <script src="https://analytics.plover.digital/api/script.js" data-site-id="bf210ad5f698" data-replay-block-selector="#screen, #keys, #terminal" defer></script>
+  <!-- Rybbit, as on the homepage. The terminal, its keys and the
+       screen-reader announcer (which repeats close reasons, including the
+       username) are rr-block, so session replay never records them. -->
+  <script src="https://analytics.plover.digital/api/script.js" data-site-id="bf210ad5f698" data-replay-block-selector="#screen, #keys, #terminal, #announcer" defer></script>
 </body>
 </html>

@@ -24,8 +24,16 @@ func TestTerminalHandler(t *testing.T) {
 	if page.Code != http.StatusOK || !strings.Contains(page.Body.String(), "terminal.js") {
 		t.Fatalf("GET /ssh/ = %d, want the terminal page", page.Code)
 	}
-	if !strings.Contains(page.Body.String(), analyticsOrigin+"/api/script.js") || !strings.Contains(page.Body.String(), `class="screen rr-block"`) {
-		t.Error("terminal page should load Rybbit and keep the terminal out of session replay")
+	body := page.Body.String()
+	if !strings.Contains(body, analyticsOrigin+"/api/script.js") {
+		t.Error("terminal page should load Rybbit")
+	}
+	// Everything that can show the username or terminal text stays out of
+	// session replay.
+	for _, el := range []string{`class="screen rr-block" id="screen"`, `class="keys rr-block" id="keys"`, `class="sr-only rr-block" id="announcer"`} {
+		if !strings.Contains(body, el) {
+			t.Errorf("terminal page is missing %s", el)
+		}
 	}
 	csp := page.Header().Get("Content-Security-Policy")
 	for _, want := range []string{"'wasm-unsafe-eval'", "frame-ancestors 'none'", "default-src 'none'"} {

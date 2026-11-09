@@ -2606,4 +2606,4 @@ Follow-up direction: use Rybbit analytics everywhere possible to track user beha
   - The script and its tracking config loaded with no CSP errors.
   - The pageview and funnel events fired, including `terminal_closed` with `reason: no_password`.
   - No upload contained the username.
-
+- Review fix: the screen-reader announcer (`#announcer`) repeats close reasons, which can include the username, so it is now `rr-block` and in the replay block selector too. The test checks all three elements.
