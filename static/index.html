@@ -61,6 +61,9 @@
     .command { display: flex; align-items: flex-start; gap: .5rem; background: var(--wash); border-left: 2px solid var(--ink); padding: .75rem; margin: .85rem 0 .75rem; }
     .command code { white-space: pre-wrap; line-height: 1.9; min-width: 0; }
     .token { white-space: nowrap; }
+    .try { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; margin: 1.1rem 0 1.25rem; }
+    .button { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; padding: .5rem 1rem; font-family: var(--mono); font-size: .875rem; text-decoration: none; color: var(--paper); background: var(--ink); border: 1px solid var(--ink); }
+    .button:hover { color: var(--ink); background: var(--paper); }
     .prompt { font-family: var(--mono); user-select: none; line-height: 1.9; font-size: .875rem; color: var(--muted); }
     .pricing { border-collapse: collapse; width: 100%; font-size: .875rem; line-height: 1.6; font-variant-numeric: tabular-nums; }
     .pricing caption { text-align: left; font-family: system-ui, sans-serif; font-size: 1rem; margin-bottom: 1rem; color: var(--muted); }
@@ -146,7 +149,7 @@
         <p>Open the terminal UI (TUI) to sign up or manage your VMs:</p>
         <div class="command"><span class="prompt" aria-hidden="true">$</span><code>ssh [username]@killdeer.digital</code></div>
         <p>Use your username, or choose an available one to create an account on first sign-in. New accounts get <strong>$20 credit</strong>.</p>
-        <p>No SSH client handy? <a href="/ssh/">Open the terminal in your browser</a> and sign in with your username and password.</p>
+        <p class="try"><a class="button" href="/ssh/">Try it in your browser <span aria-hidden="true">&rarr;</span></a> <span class="note">No SSH client needed. Sign in with your username and password.</span></p>
         <p>You can also create a VM directly from the command line. For example:</p>
         <div class="command"><span class="prompt" aria-hidden="true">$</span><code>ssh [username]@killdeer.digital create <span class="token">test-vm</span> micro <span class="token">alpine-3.23</span> <span class="token">--ipv6</span></code></div>
         <p class="note">This example creates an IPv6-only Micro VM named <code>test-vm</code> running Alpine Linux. <a href="/ssh-help.txt">All commands</a>.</p>
